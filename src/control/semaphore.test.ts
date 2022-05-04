@@ -68,14 +68,22 @@ describe('semaphore', () => {
 
   it('should be able to revoke', async () => {
     const sem = new Semaphore(1)
-    const release = await sem.acquire()
     await sem.revoke(1)
     expect(sem.permits).toBe(0)
     expect(sem.acquire(0)).rejects.toThrowErrorMatchingInlineSnapshot(`"timeout"`)
     jest.runAllTimers()
+    expect(sem.acquire)
 
-    expect(sem.revoke(1)).rejects.toThrowErrorMatchingInlineSnapshot(`"does not have that much permits"`)
     expect(sem.revoke(-1)).rejects.toThrowErrorMatchingInlineSnapshot(`"permits must be positive"`)
+  })
+
+  it('can revoke then grant again', async () => {
+    const sem = new Semaphore(1)
+    await sem.revoke(1)
+    expect(sem.permits).toBe(0)
+    sem.grant(1)
+    expect(sem.permits).toBe(1)
+    expect(sem.acquire()).resolves.toBeDefined()
   })
 
   it('grant and revoke infinity should work', async () => {
@@ -99,7 +107,7 @@ describe('semaphore', () => {
     expect(sem1.remain).toBe(0)
     expect(sem2.remain).toBe(0)
     expect(sem1.isFull).toBe(true)
-    expect(sem1.permits).toBe(0)
+    expect(sem1.permits).toBe(1)
     expect(sem2.permits).toBe(1)
     release1()
     release2()

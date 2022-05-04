@@ -13,16 +13,19 @@ import { Future } from './future'
  */
 export class Semaphore {
   #permits: number
-  #debt = 0
   // the first {permits} items in the queue are running, others are waiting
   #queue: Future<void>[] = []
 
+  /**
+   * constructs a new Semaphore with n permits
+   * @param permits number of permits
+   */
   constructor(permits?: number) {
     this.#permits = permits ?? Infinity
   }
 
   /**
-   * acquire semaphore
+   * acquire a permit, will not resolve if the semaphore is full
    * @returns a function to release semaphore
    */
   async acquire(timeout?: number) {
@@ -46,6 +49,10 @@ export class Semaphore {
     return this.#release(self)
   }
 
+  /**
+   * try to synchronosly acquire if the semaphore is not full
+   * @throws Error if semaphore is full
+   */
   tryAcquire() {
     if (this.#queue.length < this.#permits) {
       const self = new Future<void>()
@@ -55,22 +62,35 @@ export class Semaphore {
     throw new Error("can't acquire semaphore")
   }
 
+  /**
+   * add n permits to semaphore, will immediately start this number of waiting tasks
+   * @param permits
+   */
   grant(permits: number = 1) {
     if (permits < 0) throw new Error('permits must be positive')
     this.#resolveNext(permits)
     this.#permits += permits
   }
 
+  /**
+   * reduce the number of permits by n, effective until `remain` fills the n permits
+   *
+   * **note**: you may need to check if `permits > semaphore.permits`, or it will wait until granted that many permits
+   * @param permits number of permits
+   */
   async revoke(permits: number = 1) {
-    if (permits > this.#permits) throw new Error('does not have that much permits')
     if (permits < 0) throw new Error('permits must be positive')
+    // if n is Infinity, will wait until all running tasks are released
+    const tokens = Array.from({ length: Number.isFinite(permits) ? permits : this.#queue.length })
+      .fill(0)
+      .map(() => this.acquire())
+    const release = await Promise.all(tokens)
     if (!Number.isFinite(permits)) {
       this.#permits = 0
-      this.#debt += this.#queue.length
     } else {
       this.#permits -= permits
-      this.#debt += permits
     }
+    release.forEach((r) => r())
   }
 
   get remain() {
@@ -93,11 +113,7 @@ export class Semaphore {
     // return a function to release semaphore
     // should not provide `release` on semaphore instance because the order of `release` is not guaranteed
     return once(() => {
-      if (this.#debt) {
-        this.#debt--
-      } else {
-        this.#resolveNext()
-      }
+      this.#resolveNext()
       this.#remove(token)
     })
   }
@@ -118,7 +134,13 @@ export class Semaphore {
   }
 }
 
-export const transfer = async (from: Semaphore, to: Semaphore, tokens: number) => {
+/**
+ * transfer n permits from one semaphore to another
+ * @param from semaphore to revoke permits
+ * @param to semaphore to grant permits
+ * @param tokens number of permits, defaults to 1
+ */
+export const transfer = async (from: Semaphore, to: Semaphore, tokens: number = 1) => {
   await from.revoke(tokens)
   to.grant(tokens)
 }
