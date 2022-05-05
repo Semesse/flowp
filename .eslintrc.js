@@ -1,5 +1,5 @@
 module.exports = {
-  extends: ['alloy'],
+  extends: ['alloy', 'alloy/typescript'],
   env: {},
   globals: {},
   rules: {
