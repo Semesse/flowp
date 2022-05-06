@@ -32,6 +32,8 @@
     "jest": "^27.5.1",
     "prettier": "^2.6.2",
     "typedoc": "^0.22.15",
+    "typedoc-github-wiki-theme": "^1.0.0",
+    "typedoc-plugin-markdown": "^3.12.1",
     "typescript": "next"
   },
   "engines": {
