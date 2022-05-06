@@ -63,5 +63,40 @@ describe('channel', () => {
     const channel = new Channel()
     channel.close()
     expect(channel.send(42)).rejects.toThrow(ClosedChannelError)
+    expect(channel.receive)
+  })
+
+  it('should pipe', async () => {
+    const channel1 = new Channel()
+    const channel2 = new Channel()
+    channel1.pipe(channel2)
+    await channel1.send(42)
+    expect(await channel2.receive()).toBe(42)
+    channel1.unpipe()
+    await channel1.send(42)
+    expect(channel2.tryReceive()).toBeUndefined()
+  })
+
+  it('can have only one receivers', async () => {
+    const channel = new Channel()
+    const value = 42
+    await channel.send(value)
+    const receiver = jest.fn()
+    const a = channel.stream()
+    const b = channel.stream()
+    channel.close()
+    await Promise.all([
+      (async () => {
+        for await (const v of a) {
+          receiver(v)
+        }
+      })(),
+      (async () => {
+        for await (const v of b) {
+          receiver(v)
+        }
+      })(),
+    ])
+    expect(receiver).toHaveBeenCalledTimes(1)
   })
 })

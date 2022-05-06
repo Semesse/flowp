@@ -1,15 +1,22 @@
+import { PipeSource, PipeTarget, read } from './pipeable'
 import { Semaphore, transfer } from './semaphore'
 
 export class ClosedChannelError extends Error {
   message = 'channel is closed'
 }
 
-export class Channel<T> {
+export interface ChannelStream<T> extends AsyncIterable<T> {
+  next(): Promise<T>
+}
+
+export class Channel<T> implements PipeSource<T>, PipeTarget<T> {
   #closed = false
   #capacity
   #queue: T[] = []
   #sendSem: Semaphore
   #recvSem: Semaphore
+  #pipeTarget: PipeTarget<T> | null = null
+
   /**
    * create a new multi-producer-single-consumer channel with specified capacity
    * @param capacity channel capacity, defaults to `Infinity`
@@ -25,8 +32,12 @@ export class Channel<T> {
 
   async send(value: T) {
     if (this.#closed) throw new ClosedChannelError()
-    await transfer(this.#sendSem, this.#recvSem, 1)
-    this.#queue.push(value)
+    if (this.#pipeTarget) {
+      await this.#pipeTarget[read](value)
+    } else {
+      await transfer(this.#sendSem, this.#recvSem, 1)
+      this.#queue.push(value)
+    }
   }
 
   async receive() {
@@ -52,9 +63,10 @@ export class Channel<T> {
     return this.#queue.shift()
   }
 
-  stream(): AsyncIterable<T> {
+  stream(): ChannelStream<T> {
     const self = this
     return {
+      next: () => self.#next().then(({ value, done }) => (done ? Promise.reject() : value)),
       [Symbol.asyncIterator]() {
         return {
           next: () => self.#next(),
@@ -62,6 +74,18 @@ export class Channel<T> {
         }
       },
     }
+  }
+
+  [read](value: T) {
+    this.send(value)
+  }
+
+  pipe(target: PipeTarget<T>) {
+    this.#pipeTarget = target
+  }
+
+  unpipe() {
+    this.#pipeTarget = null
   }
 
   close() {
