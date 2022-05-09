@@ -1,0 +1,6 @@
+.vscode
+.husky
+.github
+coverage
+docs
+examples
