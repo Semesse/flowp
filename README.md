@@ -1,6 +1,8 @@
 # flowp
 
 ![](https://img.shields.io/github/checks-status/Semesse/flowp/master?label=CI&style=flat-square)
+![](https://img.shields.io/codeclimate/maintainability/Semesse/flowp?style=flat-square)
+![](https://img.shields.io/codeclimate/coverage-letter/Semesse/flowp?style=flat-square)
 
 flowp is a promise based utility library, providing asynchronos components like
 
