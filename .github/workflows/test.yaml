@@ -1,13 +1,29 @@
 name: Run tests
-on: [push]
+on:
+  push:
+    branches:
+      - '*'
+    tags:
+      - '!*' # Do not execute on tags
+  pull_request:
+    paths:
+      - '!*.MD'
 jobs:
   run-tests:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        platform: [ubuntu-latest]
+        node: ['16']
+    name: test/node ${{ matrix.node }}/${{ matrix.platform }}
+    runs-on: ${{ matrix.platform }}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: '16'
+          node-version: ${{ matrix.node }}
       - run: npm i -g pnpm
       - run: pnpm i
       - run: pnpm test
+      - uses: paambaati/codeclimate-action@v3.0.0
+        env:
+          CC_TEST_REPORTER_ID: ${{secrets.CODECLIMATE_REPORTER_ID}}
