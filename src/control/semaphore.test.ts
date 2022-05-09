@@ -1,4 +1,3 @@
-import { noExit } from './no_exit'
 import { Semaphore, transfer } from './semaphore'
 
 describe('semaphore', () => {

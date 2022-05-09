@@ -1,3 +1,16 @@
+/**
+ * Future is a resolve-later Promise, you can resolve it any time after a future is created.
+ *
+ * @example
+ *
+ * ```typescript
+ * const future = new Future<number>()
+ * // somewhere
+ * const count = await future
+ * // elsewhere, and the future becomes `fullfilled`
+ * future.resolve(count)
+ * ```
+ */
 export class Future<T> extends Promise<T> {
   static #constructors: [(value: any | PromiseLike<any>) => void, (error: unknown) => void][] = []
   #resolve: (value: T | PromiseLike<T>) => void

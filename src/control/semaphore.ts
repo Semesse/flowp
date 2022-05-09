@@ -1,4 +1,4 @@
-import { once } from '../functools'
+import { once } from '../utils/functools'
 import { Future } from './future'
 
 /**
@@ -13,7 +13,7 @@ import { Future } from './future'
  */
 export class Semaphore {
   #permits: number
-  // the first {permits} items in the queue are running, others are waiting
+  // the first {#permits} items in the queue are running, others are waiting
   #queue: Future<void>[] = []
 
   /**
@@ -25,7 +25,7 @@ export class Semaphore {
   }
 
   /**
-   * acquire a permit, will not resolve if the semaphore is full
+   * Acquire a permit, will not resolve if the semaphore is full
    * @returns a function to release semaphore
    */
   async acquire(timeout?: number) {
@@ -50,7 +50,7 @@ export class Semaphore {
   }
 
   /**
-   * try to synchronosly acquire if the semaphore is not full
+   * Try to synchronosly acquire if the semaphore is not full
    * @throws Error if semaphore is full
    */
   tryAcquire() {
@@ -63,20 +63,22 @@ export class Semaphore {
   }
 
   /**
-   * add n permits to semaphore, will immediately start this number of waiting tasks
+   * Give n permits to semaphore, will immediately start this number of waiting tasks if any
    * @param permits
+   * @throws RangeError if permits < 0
    */
   grant(permits: number = 1) {
-    if (permits < 0) throw new Error('permits must be positive')
+    if (permits < 0) throw RangeError('permits must be positive')
     this.#resolveNext(permits)
     this.#permits += permits
   }
 
   /**
-   * reduce the number of permits by n, effective until `remain` fills the n permits
+   * Destroy n permits, effective until `remain` fills the n permits
    *
    * **note**: you may need to check if `permits > semaphore.permits`, or it will wait until granted that many permits
    * @param permits number of permits
+   * @throws RangeError if permits < 0
    */
   async revoke(permits: number = 1) {
     if (permits < 0) throw new Error('permits must be positive')
@@ -93,18 +95,30 @@ export class Semaphore {
     release.forEach((r) => r())
   }
 
+  /**
+   * Get the number of remaining permits
+   */
   get remain() {
     return Math.max(this.#permits - this.#queue.length, 0)
   }
 
+  /**
+   * Get the number of total permits currently
+   */
   get permits() {
     return this.#permits
   }
 
+  /**
+   * Check if all permits are being used
+   */
   get isFull() {
     return this.#queue.length >= this.#permits
   }
 
+  /**
+   * Check if no task is using the semaphore
+   */
   get isEmpty() {
     return this.#queue.length === 0
   }
