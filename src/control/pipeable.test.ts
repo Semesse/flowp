@@ -1,5 +1,4 @@
-import exp from 'constants'
-import { Channel, ClosedChannelError } from './channel'
+import { Channel } from './channel'
 import { PipeAdapter } from './pipeable'
 
 describe('pipeable', () => {

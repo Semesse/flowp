@@ -2,19 +2,19 @@ import { Semaphore } from './semaphore'
 
 export class Mutex {
   #semaphore: Semaphore
-  constructor() {
+  public constructor() {
     this.#semaphore = new Semaphore(1)
   }
 
-  async acquire() {
+  public async acquire() {
     return await this.#semaphore.acquire()
   }
 
-  get isFull() {
+  public get isFull() {
     return this.#semaphore.isFull
   }
 
-  get isEmpty() {
+  public get isEmpty() {
     return this.#semaphore.isEmpty
   }
 }

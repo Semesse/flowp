@@ -20,7 +20,7 @@ export class Semaphore {
    * constructs a new Semaphore with n permits
    * @param permits number of permits
    */
-  constructor(permits?: number) {
+  public constructor(permits?: number) {
     this.#permits = permits ?? Infinity
   }
 
@@ -28,7 +28,7 @@ export class Semaphore {
    * Acquire a permit, will not resolve if the semaphore is full
    * @returns a function to release semaphore
    */
-  async acquire(timeout?: number) {
+  public async acquire(timeout?: number) {
     const self = new Future<void>()
     this.#queue.push(self)
 
@@ -53,7 +53,7 @@ export class Semaphore {
    * Try to synchronosly acquire if the semaphore is not full
    * @throws Error if semaphore is full
    */
-  tryAcquire() {
+  public tryAcquire() {
     if (this.#queue.length < this.#permits) {
       const self = new Future<void>()
       this.#queue.push(self)
@@ -67,7 +67,7 @@ export class Semaphore {
    * @param permits
    * @throws RangeError if permits < 0
    */
-  grant(permits: number = 1) {
+  public grant(permits = 1) {
     if (permits < 0) throw RangeError('permits must be positive')
     this.#resolveNext(permits)
     this.#permits += permits
@@ -80,7 +80,7 @@ export class Semaphore {
    * @param permits number of permits
    * @throws RangeError if permits < 0
    */
-  async revoke(permits: number = 1) {
+  public async revoke(permits = 1) {
     if (permits < 0) throw new Error('permits must be positive')
     // if n is Infinity, will wait until all running tasks are released
     const tokens = Array.from({ length: Number.isFinite(permits) ? permits : this.#queue.length })
@@ -98,28 +98,28 @@ export class Semaphore {
   /**
    * Get the number of remaining permits
    */
-  get remain() {
+  public get remain() {
     return Math.max(this.#permits - this.#queue.length, 0)
   }
 
   /**
    * Get the number of total permits currently
    */
-  get permits() {
+  public get permits() {
     return this.#permits
   }
 
   /**
    * Check if all permits are being used
    */
-  get isFull() {
+  public get isFull() {
     return this.#queue.length >= this.#permits
   }
 
   /**
    * Check if no task is using the semaphore
    */
-  get isEmpty() {
+  public get isEmpty() {
     return this.#queue.length === 0
   }
 
@@ -132,7 +132,7 @@ export class Semaphore {
     })
   }
 
-  #resolveNext(count: number = 1) {
+  #resolveNext(count = 1) {
     for (let i = this.#permits; i < this.#permits + count; i++) {
       this.#queue.at(i)?.resolve()
     }
@@ -154,7 +154,7 @@ export class Semaphore {
  * @param to semaphore to grant permits
  * @param tokens number of permits, defaults to 1
  */
-export const transfer = async (from: Semaphore, to: Semaphore, tokens: number = 1) => {
+export const transfer = async (from: Semaphore, to: Semaphore, tokens = 1) => {
   await from.revoke(tokens)
   to.grant(tokens)
 }

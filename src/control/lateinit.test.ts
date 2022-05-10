@@ -1,7 +1,11 @@
 import { Future } from './future'
 import { lateinit } from './lateinit'
 
-const tee = lateinit(new Promise<Console>((resolve) => setTimeout(() => resolve(console), 1000)))
+const tee = lateinit(
+  new Promise<Console>((resolve) => {
+    setTimeout(() => resolve(console), 1000)
+  })
+)
 const fs = lateinit(import('fs'))
 const u = lateinit(Promise.resolve({ universe: { value: 42 } }))
 const future = lateinit(new Future<number>())

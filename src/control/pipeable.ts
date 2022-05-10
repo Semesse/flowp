@@ -4,8 +4,8 @@ export const read = Symbol('pipeable')
  * a pipe source should be able to write its output to a pipe target
  */
 export interface PipeSource<T> {
-  pipe(target: PipeTarget<T>): void
-  unpipe(): void
+  pipe: (target: PipeTarget<T>) => void
+  unpipe: () => void
 }
 
 /**
@@ -23,19 +23,19 @@ export class PipeAdapter<TIn, TOut> implements PipeSource<TOut>, PipeTarget<TIn>
    * creates a pipe that transforms data from `TIn` to `TOut`
    * @param handler transform data in pipe
    */
-  constructor(handler: (value: TIn) => TOut) {
+  public constructor(handler: (value: TIn) => TOut) {
     this.handler = handler
   }
 
-  pipe(target: PipeTarget<TOut>): void {
+  public pipe(target: PipeTarget<TOut>): void {
     this.#target = target
   }
 
-  unpipe(): void {
+  public unpipe(): void {
     this.#target = null
   }
 
-  [read](value: TIn): void {
+  public [read](value: TIn): void {
     this.#target?.[read](this.handler(value))
   }
 }

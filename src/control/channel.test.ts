@@ -31,10 +31,12 @@ describe('channel', () => {
 
     const channel2 = new Channel()
     channel2.send(value)
+    // eslint-disable-next-line no-unreachable-loop
     for await (const v of channel2.stream()) {
       expect(v).toBe(value)
       break
     }
+    channel2.close()
   })
 
   it('try send', async () => {

@@ -16,11 +16,11 @@ export class Future<T> extends Promise<T> {
   #resolve: (value: T | PromiseLike<T>) => void
   #reject: (error: unknown) => void
 
-  static get [Symbol.species]() {
+  public static get [Symbol.species]() {
     return Promise
   }
 
-  constructor() {
+  public constructor() {
     // executor is called immediately in Promise constructor
     // https://tc39.es/ecma262/#sec-promise-executor
     super((resolve, reject) => {
