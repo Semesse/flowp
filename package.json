@@ -11,7 +11,8 @@
   "scripts": {
     "build": "tsc -p ./tsconfig.build.json",
     "test": "jest",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "setup-ci": "npm i -g pnpm && pnpm i"
   },
   "author": "Semesse",
   "repository": "https://github.com/Semesse/flowp",
