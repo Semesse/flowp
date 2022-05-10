@@ -9,7 +9,7 @@ on:
     paths:
       - '!*.MD'
 jobs:
-  run-tests:
+  build:
     strategy:
       matrix:
         platform: [ubuntu-latest]
@@ -23,7 +23,28 @@ jobs:
           node-version: ${{ matrix.node }}
       - run: npm i -g pnpm
       - run: pnpm i
+      - run: pnpm build
       - run: pnpm test
+      - uses: actions/upload-artifact@v3
+        with:
+          name: coverage
+          path: coverage
+  coverage:
+    name: coverage
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: coverage
       - uses: paambaati/codeclimate-action@v3.0.0
         env:
           CC_TEST_REPORTER_ID: ${{secrets.CODECLIMATE_REPORTER_ID}}
+  lint:
+    name: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+      - run: npx eslint ./src
