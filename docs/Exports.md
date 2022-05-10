@@ -20,6 +20,13 @@
 
 ▸ **lateinit**<`T`\>(`value`): `Delegated`<`T`\>
 
+Delegates method calls and member access to the resolved value
+
+**`example`**
+const promise = Promise.resolve({ foo: { bar: 'baz' } })
+const delegated = lateinit(promise)
+await delegated.$foo.$bar // 'baz'
+
 #### Type parameters
 
 | Name | Type |
@@ -28,14 +35,16 @@
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `value` | `T` |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `value` | `T` | value to delegate to, must be a promise and should not be resolve with primitives |
 
 #### Returns
 
 `Delegated`<`T`\>
 
+the delegated object, access delegated properties with `${key}`
+
 #### Defined in
 
-[src/control/lateinit.ts:77](https://github.com/Semesse/flowp/blob/5067796/src/control/lateinit.ts#L77)
+[src/control/lateinit.ts:25](https://github.com/Semesse/flowp/blob/d536b99/src/control/lateinit.ts#L25)

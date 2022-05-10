@@ -54,7 +54,7 @@ constructs a new Semaphore with n permits
 
 #### Defined in
 
-[src/control/semaphore.ts:23](https://github.com/Semesse/flowp/blob/5067796/src/control/semaphore.ts#L23)
+[src/control/semaphore.ts:23](https://github.com/Semesse/flowp/blob/d536b99/src/control/semaphore.ts#L23)
 
 ## Properties
 
@@ -64,7 +64,7 @@ constructs a new Semaphore with n permits
 
 #### Defined in
 
-[src/control/semaphore.ts:15](https://github.com/Semesse/flowp/blob/5067796/src/control/semaphore.ts#L15)
+[src/control/semaphore.ts:15](https://github.com/Semesse/flowp/blob/d536b99/src/control/semaphore.ts#L15)
 
 ___
 
@@ -74,7 +74,7 @@ ___
 
 #### Defined in
 
-[src/control/semaphore.ts:17](https://github.com/Semesse/flowp/blob/5067796/src/control/semaphore.ts#L17)
+[src/control/semaphore.ts:17](https://github.com/Semesse/flowp/blob/d536b99/src/control/semaphore.ts#L17)
 
 ## Accessors
 
@@ -82,13 +82,15 @@ ___
 
 • `get` **isEmpty**(): `boolean`
 
+Check if no task is using the semaphore
+
 #### Returns
 
 `boolean`
 
 #### Defined in
 
-[src/control/semaphore.ts:108](https://github.com/Semesse/flowp/blob/5067796/src/control/semaphore.ts#L108)
+[src/control/semaphore.ts:122](https://github.com/Semesse/flowp/blob/d536b99/src/control/semaphore.ts#L122)
 
 ___
 
@@ -96,13 +98,15 @@ ___
 
 • `get` **isFull**(): `boolean`
 
+Check if all permits are being used
+
 #### Returns
 
 `boolean`
 
 #### Defined in
 
-[src/control/semaphore.ts:104](https://github.com/Semesse/flowp/blob/5067796/src/control/semaphore.ts#L104)
+[src/control/semaphore.ts:115](https://github.com/Semesse/flowp/blob/d536b99/src/control/semaphore.ts#L115)
 
 ___
 
@@ -110,13 +114,15 @@ ___
 
 • `get` **permits**(): `number`
 
+Get the number of total permits currently
+
 #### Returns
 
 `number`
 
 #### Defined in
 
-[src/control/semaphore.ts:100](https://github.com/Semesse/flowp/blob/5067796/src/control/semaphore.ts#L100)
+[src/control/semaphore.ts:108](https://github.com/Semesse/flowp/blob/d536b99/src/control/semaphore.ts#L108)
 
 ___
 
@@ -124,13 +130,15 @@ ___
 
 • `get` **remain**(): `number`
 
+Get the number of remaining permits
+
 #### Returns
 
 `number`
 
 #### Defined in
 
-[src/control/semaphore.ts:96](https://github.com/Semesse/flowp/blob/5067796/src/control/semaphore.ts#L96)
+[src/control/semaphore.ts:101](https://github.com/Semesse/flowp/blob/d536b99/src/control/semaphore.ts#L101)
 
 ## Methods
 
@@ -156,7 +164,7 @@ ___
 
 #### Defined in
 
-[src/control/semaphore.ts:112](https://github.com/Semesse/flowp/blob/5067796/src/control/semaphore.ts#L112)
+[src/control/semaphore.ts:126](https://github.com/Semesse/flowp/blob/d536b99/src/control/semaphore.ts#L126)
 
 ___
 
@@ -176,7 +184,7 @@ ___
 
 #### Defined in
 
-[src/control/semaphore.ts:127](https://github.com/Semesse/flowp/blob/5067796/src/control/semaphore.ts#L127)
+[src/control/semaphore.ts:141](https://github.com/Semesse/flowp/blob/d536b99/src/control/semaphore.ts#L141)
 
 ___
 
@@ -196,7 +204,7 @@ ___
 
 #### Defined in
 
-[src/control/semaphore.ts:121](https://github.com/Semesse/flowp/blob/5067796/src/control/semaphore.ts#L121)
+[src/control/semaphore.ts:135](https://github.com/Semesse/flowp/blob/d536b99/src/control/semaphore.ts#L135)
 
 ___
 
@@ -204,7 +212,7 @@ ___
 
 ▸ **acquire**(`timeout?`): `Promise`<() => `void`\>
 
-acquire a permit, will not resolve if the semaphore is full
+Acquire a permit, will not resolve if the semaphore is full
 
 #### Parameters
 
@@ -220,7 +228,7 @@ a function to release semaphore
 
 #### Defined in
 
-[src/control/semaphore.ts:31](https://github.com/Semesse/flowp/blob/5067796/src/control/semaphore.ts#L31)
+[src/control/semaphore.ts:31](https://github.com/Semesse/flowp/blob/d536b99/src/control/semaphore.ts#L31)
 
 ___
 
@@ -228,7 +236,9 @@ ___
 
 ▸ **grant**(`permits?`): `void`
 
-add n permits to semaphore, will immediately start this number of waiting tasks
+Give n permits to semaphore, will immediately start this number of waiting tasks if any
+
+**`throws`** RangeError if permits < 0
 
 #### Parameters
 
@@ -242,7 +252,7 @@ add n permits to semaphore, will immediately start this number of waiting tasks
 
 #### Defined in
 
-[src/control/semaphore.ts:69](https://github.com/Semesse/flowp/blob/5067796/src/control/semaphore.ts#L69)
+[src/control/semaphore.ts:70](https://github.com/Semesse/flowp/blob/d536b99/src/control/semaphore.ts#L70)
 
 ___
 
@@ -250,9 +260,11 @@ ___
 
 ▸ **revoke**(`permits?`): `Promise`<`void`\>
 
-reduce the number of permits by n, effective until `remain` fills the n permits
+Destroy n permits, effective until `remain` fills the n permits
 
 **note**: you may need to check if `permits > semaphore.permits`, or it will wait until granted that many permits
+
+**`throws`** RangeError if permits < 0
 
 #### Parameters
 
@@ -266,7 +278,7 @@ reduce the number of permits by n, effective until `remain` fills the n permits
 
 #### Defined in
 
-[src/control/semaphore.ts:81](https://github.com/Semesse/flowp/blob/5067796/src/control/semaphore.ts#L81)
+[src/control/semaphore.ts:83](https://github.com/Semesse/flowp/blob/d536b99/src/control/semaphore.ts#L83)
 
 ___
 
@@ -274,7 +286,7 @@ ___
 
 ▸ **tryAcquire**(): () => `void`
 
-try to synchronosly acquire if the semaphore is not full
+Try to synchronosly acquire if the semaphore is not full
 
 **`throws`** Error if semaphore is full
 
@@ -290,4 +302,4 @@ try to synchronosly acquire if the semaphore is not full
 
 #### Defined in
 
-[src/control/semaphore.ts:56](https://github.com/Semesse/flowp/blob/5067796/src/control/semaphore.ts#L56)
+[src/control/semaphore.ts:56](https://github.com/Semesse/flowp/blob/d536b99/src/control/semaphore.ts#L56)

@@ -3,6 +3,7 @@
 Future is a resolve-later Promise, you can resolve it any time after a future is created.
 
 **`example`**
+
 ```typescript
 const future = new Future<number>()
 // somewhere
@@ -72,7 +73,7 @@ Promise&lt;T\&gt;.constructor
 
 #### Defined in
 
-[src/control/future.ts:22](https://github.com/Semesse/flowp/blob/5067796/src/control/future.ts#L22)
+[src/control/future.ts:23](https://github.com/Semesse/flowp/blob/d536b99/src/control/future.ts#L23)
 
 ## Properties
 
@@ -96,7 +97,7 @@ Promise&lt;T\&gt;.constructor
 
 #### Defined in
 
-[src/control/future.ts:16](https://github.com/Semesse/flowp/blob/5067796/src/control/future.ts#L16)
+[src/control/future.ts:17](https://github.com/Semesse/flowp/blob/d536b99/src/control/future.ts#L17)
 
 ___
 
@@ -120,7 +121,7 @@ ___
 
 #### Defined in
 
-[src/control/future.ts:15](https://github.com/Semesse/flowp/blob/5067796/src/control/future.ts#L15)
+[src/control/future.ts:16](https://github.com/Semesse/flowp/blob/d536b99/src/control/future.ts#L16)
 
 ___
 
@@ -130,11 +131,11 @@ ___
 
 #### Inherited from
 
-Promise.\_\_@toStringTag@212
+Promise.\_\_@toStringTag@336
 
 #### Defined in
 
-node_modules/.pnpm/typescript@4.7.0-dev.20220506/node_modules/typescript/lib/lib.es2015.symbol.wellknown.d.ts:174
+node_modules/.pnpm/typescript@4.8.0-dev.20220510/node_modules/typescript/lib/lib.es2015.symbol.wellknown.d.ts:174
 
 ___
 
@@ -144,7 +145,7 @@ ___
 
 #### Defined in
 
-[src/control/future.ts:14](https://github.com/Semesse/flowp/blob/5067796/src/control/future.ts#L14)
+[src/control/future.ts:15](https://github.com/Semesse/flowp/blob/d536b99/src/control/future.ts#L15)
 
 ## Accessors
 
@@ -158,11 +159,11 @@ ___
 
 #### Overrides
 
-Promise.\_\_@species@375
+Promise.\_\_@species@332
 
 #### Defined in
 
-[src/control/future.ts:18](https://github.com/Semesse/flowp/blob/5067796/src/control/future.ts#L18)
+[src/control/future.ts:19](https://github.com/Semesse/flowp/blob/d536b99/src/control/future.ts#L19)
 
 ## Methods
 
@@ -196,7 +197,7 @@ Promise.catch
 
 #### Defined in
 
-node_modules/.pnpm/typescript@4.7.0-dev.20220506/node_modules/typescript/lib/lib.es5.d.ts:1515
+node_modules/.pnpm/typescript@4.8.0-dev.20220510/node_modules/typescript/lib/lib.es5.d.ts:1515
 
 ___
 
@@ -225,7 +226,7 @@ Promise.finally
 
 #### Defined in
 
-node_modules/.pnpm/typescript@4.7.0-dev.20220506/node_modules/typescript/lib/lib.es2018.promise.d.ts:31
+node_modules/.pnpm/typescript@4.8.0-dev.20220510/node_modules/typescript/lib/lib.es2018.promise.d.ts:31
 
 ___
 
@@ -245,7 +246,7 @@ ___
 
 #### Defined in
 
-[src/control/future.ts:36](https://github.com/Semesse/flowp/blob/5067796/src/control/future.ts#L36)
+[src/control/future.ts:37](https://github.com/Semesse/flowp/blob/d536b99/src/control/future.ts#L37)
 
 ___
 
@@ -265,7 +266,7 @@ ___
 
 #### Defined in
 
-[src/control/future.ts:32](https://github.com/Semesse/flowp/blob/5067796/src/control/future.ts#L32)
+[src/control/future.ts:33](https://github.com/Semesse/flowp/blob/d536b99/src/control/future.ts#L33)
 
 ___
 
@@ -301,7 +302,7 @@ Promise.then
 
 #### Defined in
 
-node_modules/.pnpm/typescript@4.7.0-dev.20220506/node_modules/typescript/lib/lib.es5.d.ts:1508
+node_modules/.pnpm/typescript@4.8.0-dev.20220510/node_modules/typescript/lib/lib.es5.d.ts:1508
 
 ___
 
@@ -336,7 +337,7 @@ Promise.all
 
 #### Defined in
 
-node_modules/.pnpm/typescript@4.7.0-dev.20220506/node_modules/typescript/lib/lib.es2015.iterable.d.ts:227
+node_modules/.pnpm/typescript@4.8.0-dev.20220510/node_modules/typescript/lib/lib.es2015.iterable.d.ts:227
 
 ▸ `Static` **all**<`T`\>(`values`): `Promise`<{ -readonly [P in string \| number \| symbol]: Awaited<T[P]\> }\>
 
@@ -367,7 +368,7 @@ Promise.all
 
 #### Defined in
 
-node_modules/.pnpm/typescript@4.7.0-dev.20220506/node_modules/typescript/lib/lib.es2015.promise.d.ts:41
+node_modules/.pnpm/typescript@4.8.0-dev.20220510/node_modules/typescript/lib/lib.es2015.promise.d.ts:41
 
 ___
 
@@ -402,7 +403,7 @@ Promise.allSettled
 
 #### Defined in
 
-node_modules/.pnpm/typescript@4.7.0-dev.20220506/node_modules/typescript/lib/lib.es2020.promise.d.ts:40
+node_modules/.pnpm/typescript@4.8.0-dev.20220510/node_modules/typescript/lib/lib.es2020.promise.d.ts:40
 
 ▸ `Static` **allSettled**<`T`\>(`values`): `Promise`<`PromiseSettledResult`<`Awaited`<`T`\>\>[]\>
 
@@ -433,7 +434,7 @@ Promise.allSettled
 
 #### Defined in
 
-node_modules/.pnpm/typescript@4.7.0-dev.20220506/node_modules/typescript/lib/lib.es2020.promise.d.ts:48
+node_modules/.pnpm/typescript@4.8.0-dev.20220510/node_modules/typescript/lib/lib.es2020.promise.d.ts:48
 
 ___
 
@@ -467,7 +468,7 @@ Promise.any
 
 #### Defined in
 
-node_modules/.pnpm/typescript@4.7.0-dev.20220506/node_modules/typescript/lib/lib.es2021.promise.d.ts:42
+node_modules/.pnpm/typescript@4.8.0-dev.20220510/node_modules/typescript/lib/lib.es2021.promise.d.ts:42
 
 ▸ `Static` **any**<`T`\>(`values`): `Promise`<`Awaited`<`T`\>\>
 
@@ -497,7 +498,7 @@ Promise.any
 
 #### Defined in
 
-node_modules/.pnpm/typescript@4.7.0-dev.20220506/node_modules/typescript/lib/lib.es2021.promise.d.ts:49
+node_modules/.pnpm/typescript@4.8.0-dev.20220510/node_modules/typescript/lib/lib.es2021.promise.d.ts:49
 
 ___
 
@@ -532,7 +533,7 @@ Promise.race
 
 #### Defined in
 
-node_modules/.pnpm/typescript@4.7.0-dev.20220506/node_modules/typescript/lib/lib.es2015.iterable.d.ts:235
+node_modules/.pnpm/typescript@4.8.0-dev.20220510/node_modules/typescript/lib/lib.es2015.iterable.d.ts:235
 
 ▸ `Static` **race**<`T`\>(`values`): `Promise`<`Awaited`<`T`[`number`]\>\>
 
@@ -563,7 +564,7 @@ Promise.race
 
 #### Defined in
 
-node_modules/.pnpm/typescript@4.7.0-dev.20220506/node_modules/typescript/lib/lib.es2015.promise.d.ts:52
+node_modules/.pnpm/typescript@4.8.0-dev.20220510/node_modules/typescript/lib/lib.es2015.promise.d.ts:52
 
 ___
 
@@ -597,7 +598,7 @@ Promise.reject
 
 #### Defined in
 
-node_modules/.pnpm/typescript@4.7.0-dev.20220506/node_modules/typescript/lib/lib.es2015.promise.d.ts:62
+node_modules/.pnpm/typescript@4.8.0-dev.20220510/node_modules/typescript/lib/lib.es2015.promise.d.ts:62
 
 ___
 
@@ -619,7 +620,7 @@ Promise.resolve
 
 #### Defined in
 
-node_modules/.pnpm/typescript@4.7.0-dev.20220506/node_modules/typescript/lib/lib.es2015.promise.d.ts:68
+node_modules/.pnpm/typescript@4.8.0-dev.20220510/node_modules/typescript/lib/lib.es2015.promise.d.ts:68
 
 ▸ `Static` **resolve**<`T`\>(`value`): `Promise`<`T`\>
 
@@ -649,4 +650,4 @@ Promise.resolve
 
 #### Defined in
 
-node_modules/.pnpm/typescript@4.7.0-dev.20220506/node_modules/typescript/lib/lib.es2015.promise.d.ts:75
+node_modules/.pnpm/typescript@4.8.0-dev.20220510/node_modules/typescript/lib/lib.es2015.promise.d.ts:75
