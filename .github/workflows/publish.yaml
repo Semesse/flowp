@@ -13,6 +13,7 @@ jobs:
           node-version: '16'
       - run: npm i -g pnpm
       - run: pnpm i
-      - run: npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_PUBLISH_TOKEN}}
+      - run: pnpm build
+      - uses: JS-DevTools/npm-publish@v1
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
