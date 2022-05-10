@@ -1,6 +1,6 @@
 # flowp
 
-![](https://img.shields.io/github/workflow/status/Semesse/flowp/Run%20tests/master?label=CI&style=flat-square)
+![](https://img.shields.io/github/workflow/status/Semesse/flowp/Build,%20Test%20and%20Lint/master?style=flat-square)
 ![](https://img.shields.io/codeclimate/maintainability/Semesse/flowp?style=flat-square)
 ![](https://img.shields.io/codeclimate/coverage/Semesse/flowp?style=flat-square)
 
