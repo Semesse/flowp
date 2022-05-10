@@ -9,6 +9,6 @@
     ],
     "skipDefaultLibCheck": true,
     "skipLibCheck": true,
-    "outDir": "dist"
+    "declaration": true
   }
 }

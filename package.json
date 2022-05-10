@@ -7,8 +7,9 @@
   "exports": {
     ".": "./dist/"
   },
+  "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "tsc -p .",
+    "build": "tsc -p ./tsconfig.build.json",
     "test": "jest",
     "prepare": "husky install"
   },
