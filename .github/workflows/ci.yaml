@@ -1,4 +1,4 @@
-name: Run tests
+name: Build, Test and Lint
 on:
   push:
     branches:
@@ -25,23 +25,7 @@ jobs:
       - run: pnpm i
       - run: pnpm build
       - run: pnpm test
-      - uses: actions/upload-artifact@v3
-        with:
-          name: coverage
-          path: coverage
-  coverage:
-    name: coverage
-    needs: [build]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/download-artifact@v3
-        with:
-          name: coverage
       - uses: paambaati/codeclimate-action@v3.0.0
-        with:
-          coverageLocations: |
-            ${{github.workspace}}/coverage/lcov.info:lcov
         env:
           CC_TEST_REPORTER_ID: ${{secrets.CODECLIMATE_REPORTER_ID}}
   lint:
@@ -52,4 +36,5 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '16'
-      - run: npx eslint ./src --ext .ts
+      - run: pnpm i
+      - run: pnpm eslint ./src --ext .ts
