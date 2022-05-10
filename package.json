@@ -14,7 +14,8 @@
     "build": "tsup",
     "test": "jest",
     "prepare": "husky install",
-    "setup-ci": "npm i -g pnpm && pnpm i"
+    "setup-ci": "npm i -g pnpm && pnpm i",
+    "gen-docs": "typedoc"
   },
   "author": "Semesse",
   "repository": "https://github.com/Semesse/flowp",
