@@ -16,14 +16,15 @@ describe('lateinit', () => {
   it('should work with async/await', async () => {
     expect(await tee).toEqual(console)
     expect(await u).toEqual({ universe: { value: 42 } })
+    expect(await u.$universe).toEqual({ value: 42 })
+    expect(await u.$universe.$value).toEqual(42)
   })
 
   it('should work with then/catch/finally', async () => {
-    const then = jest.fn()
     const _catch = jest.fn()
     const _finally = jest.fn()
-    await fs.$promises.$readFile('./package.json').then(then).catch(_catch).finally(_finally)
-    expect(then).toHaveBeenCalledTimes(1)
+    const content: Buffer = await fs.$promises.$readFile('./package.json').catch(_catch).finally(_finally)
+    expect(JSON.parse(content.toString()).name).toMatchInlineSnapshot(`"flowp"`)
     expect(_catch).toHaveBeenCalledTimes(0)
     expect(_finally).toHaveBeenCalledTimes(1)
   })
