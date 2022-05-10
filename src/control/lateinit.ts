@@ -23,6 +23,7 @@ function isPromiseProtoMethods(
  * await delegated.$foo.$bar // 'baz'
  */
 export function lateinit<T extends Promise<unknown>>(value: T): Delegated<T> {
+  // eslint-disable-next-line no-new-func
   return new Proxy(new Function() as unknown as T, {
     get(_, key, receiver) {
       if (typeof key === 'string' && key.startsWith('$')) {

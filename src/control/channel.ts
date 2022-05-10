@@ -2,11 +2,11 @@ import { PipeSource, PipeTarget, read } from './pipeable'
 import { Semaphore, transfer } from './semaphore'
 
 export class ClosedChannelError extends Error {
-  message = 'channel is closed'
+  public message = 'channel is closed'
 }
 
 export interface ChannelStream<T> extends AsyncIterable<T> {
-  next(): Promise<T>
+  next: () => Promise<T>
 }
 
 export class Channel<T> implements PipeSource<T>, PipeTarget<T> {
@@ -21,7 +21,7 @@ export class Channel<T> implements PipeSource<T>, PipeTarget<T> {
    * create a new multi-producer-single-consumer channel with specified capacity
    * @param capacity channel capacity, defaults to `Infinity`
    */
-  constructor(capacity: number = Infinity) {
+  public constructor(capacity = Infinity) {
     if (capacity < 0 || Number.isNaN(capacity)) {
       throw new RangeError('capacity cannot be negative or NaN')
     }
@@ -30,7 +30,7 @@ export class Channel<T> implements PipeSource<T>, PipeTarget<T> {
     this.#recvSem = new Semaphore(0)
   }
 
-  async send(value: T) {
+  public async send(value: T) {
     if (this.#closed) throw new ClosedChannelError()
     if (this.#pipeTarget) {
       await this.#pipeTarget[read](value)
@@ -40,18 +40,18 @@ export class Channel<T> implements PipeSource<T>, PipeTarget<T> {
     }
   }
 
-  async receive() {
+  public async receive() {
     await transfer(this.#recvSem, this.#sendSem, 1)
     const value = this.#queue.shift()!
     return value
   }
 
-  trySend(value: T) {
+  public trySend(value: T) {
     if (this.#queue.length + 1 > this.#capacity) throw new Error('queue is full')
     this.#queue.push(value)
   }
 
-  sendAsync(value: Promise<T>) {
+  public sendAsync(value: Promise<T>) {
     return value.then((v) => this.send(v))
   }
 
@@ -59,40 +59,39 @@ export class Channel<T> implements PipeSource<T>, PipeTarget<T> {
    * try receive one message
    * @returns message `T` or `undefined` if no messages in the queue
    */
-  tryReceive() {
+  public tryReceive() {
     return this.#queue.shift()
   }
 
-  stream(): ChannelStream<T> {
-    const self = this
+  public stream(): ChannelStream<T> {
     return {
-      next: () => self.#next().then(({ value, done }) => (done ? Promise.reject() : value)),
-      [Symbol.asyncIterator]() {
+      next: () => this.#next().then(({ value, done }) => (done ? Promise.reject(new Error('Finished')) : value)),
+      [Symbol.asyncIterator]: () => {
         return {
-          next: () => self.#next(),
+          next: () => this.#next(),
           return: () => Promise.resolve({ value: undefined, done: true }),
         }
       },
     }
   }
 
-  [read](value: T) {
+  public [read](value: T) {
     this.send(value)
   }
 
-  pipe(target: PipeTarget<T>) {
+  public pipe(target: PipeTarget<T>) {
     this.#pipeTarget = target
   }
 
-  unpipe() {
+  public unpipe() {
     this.#pipeTarget = null
   }
 
-  close() {
+  public close() {
     this.#closed = true
   }
 
-  get capacity() {
+  public get capacity() {
     return this.#capacity
   }
 
