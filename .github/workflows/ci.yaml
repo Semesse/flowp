@@ -21,8 +21,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
-      - run: npm i -g pnpm
-      - run: pnpm i
+      - run: npm run setup-ci
       - run: pnpm build
       - run: pnpm test
       - uses: paambaati/codeclimate-action@v3.0.0
@@ -36,5 +35,5 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '16'
-      - run: pnpm i
+      - run: npm run setup-ci
       - run: pnpm eslint ./src --ext .ts
