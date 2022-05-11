@@ -1,6 +1,5 @@
 import { Callable } from '../types'
 
-
 type Delegated<T> = {
   readonly [K in keyof Awaited<T> & string as `$${K}`]: Awaited<T>[K] extends Callable
     ? (...args: Parameters<Awaited<T>[K]>) => ReturnType<Awaited<T>[K]>
@@ -13,6 +12,8 @@ function isPromiseProtoMethods(
   return v === Promise.prototype.then || v === Promise.prototype.catch || v === Promise.prototype.finally
 }
 
+const raw = Symbol('get the raw untouched value')
+
 /**
  * Delegates method calls and member access to the resolved value
  * @param value value to delegate to, must be a promise and should not be resolve with primitives
@@ -23,9 +24,11 @@ function isPromiseProtoMethods(
  * await delegated.$foo.$bar // 'baz'
  */
 export function lateinit<T extends Promise<unknown>>(value: T): Delegated<T> {
+  // proxy on a function so the returned value is callable
   // eslint-disable-next-line no-new-func
   return new Proxy(new Function() as unknown as T, {
     get(_, key, receiver) {
+      if (key === raw) return value
       if (typeof key === 'string' && key.startsWith('$')) {
         return lateinit(
           value.then((v) => {
@@ -43,8 +46,12 @@ export function lateinit<T extends Promise<unknown>>(value: T): Delegated<T> {
       }
       return prop
     },
-    apply(_, thisArg, args) {
-      return value.then((v) => Reflect.apply(v as Function, v, args))
+    apply(_, thisPromise, args) {
+      return (async () => {
+        const thisArg = await thisPromise[raw]
+        const fn = (await value) as Function
+        return Reflect.apply(fn, thisArg, args)
+      })()
     },
   }) as T & Delegated<T>
 }

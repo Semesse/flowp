@@ -55,4 +55,23 @@ describe('lateinit', () => {
     expect(_catch).toHaveBeenCalledTimes(1)
     expect(_finally).toHaveBeenCalledTimes(1)
   })
+
+  it('preserves this', async () => {
+    class Foo {
+      constructor(public v: number) {}
+      public async foo() {
+        return this
+      }
+      public bar() {
+        return this.v
+      }
+    }
+    const foo = new Foo(42)
+    const delegated = lateinit(Promise.resolve(foo))
+    expect(await delegated.$foo()).toBe(foo)
+    expect(await delegated.$bar()).toBe(42)
+    const f = await delegated.$bar
+    expect(Reflect.apply(f.bind({ v: 114514 }), null, [])).toBe(114514)
+    expect(Reflect.apply(f, { v: 114514 }, [])).toBe(114514)
+  })
 })
