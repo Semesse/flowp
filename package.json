@@ -20,6 +20,7 @@
   "author": "Semesse",
   "repository": "https://github.com/Semesse/flowp",
   "license": "MIT",
+  "sideEffects": "false",
   "devDependencies": {
     "@babel/core": "^7.17.9",
     "@babel/eslint-parser": "^7.17.0",
