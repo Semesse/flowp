@@ -58,7 +58,10 @@ describe('lateinit', () => {
 
   it('preserves this', async () => {
     class Foo {
-      constructor(public v: number) {}
+      // eslint-disable-next-line @typescript-eslint/no-parameter-properties
+      public constructor(public v: number) {
+        this.v = v
+      }
       public async foo() {
         return this
       }
