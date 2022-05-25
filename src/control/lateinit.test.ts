@@ -8,13 +8,20 @@ const tee = lateinit(
 )
 const fs = lateinit(import('fs'))
 const u = lateinit(Promise.resolve({ universe: { value: 42 } }))
-const future = lateinit(new Future<number>())
+class TestClass extends Promise<any> {
+  public test = 42
+  public constructor(resolve: any) {
+    super(resolve)
+  }
+}
 
 describe('lateinit', () => {
   it('should not proxy other properties', async () => {
+    const v = new TestClass(() => 42)
+    const delegated = lateinit(v)
     // typescript does not support HKTs the return type is always `Promise`
     // @ts-ignore
-    expect(future.resolve).toBe(Future.prototype.resolve)
+    expect(delegated.test).toBe(v.test)
   })
 
   it('should work with async/await', async () => {
