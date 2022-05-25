@@ -30,11 +30,21 @@ export class Future<T> extends Promise<T> {
     ;[this.#resolve, this.#reject] = Future.#constructors.pop()!
   }
 
-  public resolve(value: T | PromiseLike<T>) {
-    this.#resolve(value)
+  /**
+   * resolve the future with given value
+   *
+   * tips: the method has already bound to `this`, so you can write `emitter.on('event', future.resolve)`
+   */
+  public get resolve(): (value: T | PromiseLike<T>) => void {
+    return (value) => this.#resolve(value)
   }
 
-  public reject(error: unknown) {
-    this.#reject(error)
+  /**
+   * resolve the future with given value
+   *
+   * tips: the method has already bound to `this`, so you can write `emitter.on('error', future.reject)`
+   */
+  public get reject(): (error: unknown) => void {
+    return (error) => this.#reject(error)
   }
 }
