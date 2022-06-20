@@ -1,6 +1,17 @@
 .vscode
 .husky
 .github
+
+# configurations
+./*.config.js
+./*.config.cjs
+./*.config.json
+./*rc
+
+# lock
+pnpm-lock.yaml
+
+# folders
 coverage
 docs
 examples
