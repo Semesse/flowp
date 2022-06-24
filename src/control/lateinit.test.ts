@@ -1,6 +1,21 @@
 import { Future } from './future'
 import { lateinit } from './lateinit'
 
+class TestClass extends Promise<any> {
+  public test = 42
+  public constructor(resolve: any) {
+    super(resolve)
+  }
+}
+class PrivateClass {
+  #field = 1
+  public get field() {
+    return this.#field
+  }
+  public fn() {
+    return this.#field
+  }
+}
 const tee = lateinit(
   new Promise<Console>((resolve) => {
     setTimeout(() => resolve(console), 1000)
@@ -8,12 +23,7 @@ const tee = lateinit(
 )
 const fs = lateinit(import('fs'))
 const u = lateinit(Promise.resolve({ universe: { value: 42 } }))
-class TestClass extends Promise<any> {
-  public test = 42
-  public constructor(resolve: any) {
-    super(resolve)
-  }
-}
+const objectWithPrivateField = lateinit(Promise.resolve(new PrivateClass()))
 
 describe('lateinit', () => {
   it('should not proxy other properties', async () => {
@@ -61,6 +71,11 @@ describe('lateinit', () => {
     expect(then).toHaveBeenCalledTimes(0)
     expect(_catch).toHaveBeenCalledTimes(1)
     expect(_finally).toHaveBeenCalledTimes(1)
+  })
+
+  it('work with instances that access private fields', async () => {
+    expect(await objectWithPrivateField.$field).toBe(1)
+    expect(await objectWithPrivateField.$fn()).toBe(1)
   })
 
   it('preserves this', async () => {
