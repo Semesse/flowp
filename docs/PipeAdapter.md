@@ -52,7 +52,7 @@ creates a pipe that transforms data from `TIn` to `TOut`
 
 #### Defined in
 
-[src/control/pipeable.ts:26](https://github.com/Semesse/flowp/blob/d536b99/src/control/pipeable.ts#L26)
+[src/control/pipeable.ts:26](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/pipeable.ts#L26)
 
 ## Properties
 
@@ -62,7 +62,7 @@ creates a pipe that transforms data from `TIn` to `TOut`
 
 #### Defined in
 
-[src/control/pipeable.ts:20](https://github.com/Semesse/flowp/blob/d536b99/src/control/pipeable.ts#L20)
+[src/control/pipeable.ts:20](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/pipeable.ts#L20)
 
 ___
 
@@ -86,7 +86,7 @@ ___
 
 #### Defined in
 
-[src/control/pipeable.ts:19](https://github.com/Semesse/flowp/blob/d536b99/src/control/pipeable.ts#L19)
+[src/control/pipeable.ts:19](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/pipeable.ts#L19)
 
 ## Methods
 
@@ -106,11 +106,11 @@ ___
 
 #### Implementation of
 
-PipeTarget.\_\_@read@147
+PipeTarget.\_\_@read@149
 
 #### Defined in
 
-[src/control/pipeable.ts:38](https://github.com/Semesse/flowp/blob/d536b99/src/control/pipeable.ts#L38)
+[src/control/pipeable.ts:38](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/pipeable.ts#L38)
 
 ___
 
@@ -134,7 +134,7 @@ PipeSource.pipe
 
 #### Defined in
 
-[src/control/pipeable.ts:30](https://github.com/Semesse/flowp/blob/d536b99/src/control/pipeable.ts#L30)
+[src/control/pipeable.ts:30](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/pipeable.ts#L30)
 
 ___
 
@@ -152,4 +152,4 @@ PipeSource.unpipe
 
 #### Defined in
 
-[src/control/pipeable.ts:34](https://github.com/Semesse/flowp/blob/d536b99/src/control/pipeable.ts#L34)
+[src/control/pipeable.ts:34](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/pipeable.ts#L34)

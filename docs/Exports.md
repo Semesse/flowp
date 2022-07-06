@@ -47,4 +47,4 @@ the delegated object, access delegated properties with `${key}`
 
 #### Defined in
 
-[src/control/lateinit.ts:25](https://github.com/Semesse/flowp/blob/d536b99/src/control/lateinit.ts#L25)
+[src/control/lateinit.ts:26](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/lateinit.ts#L26)

@@ -39,14 +39,14 @@ future.resolve(count)
 
 ### Accessors
 
+- [reject](../wiki/Future#reject-2)
+- [resolve](../wiki/Future#resolve-2)
 - [[species]](../wiki/Future#%5Bspecies%5D-1)
 
 ### Methods
 
 - [catch](../wiki/Future#catch-1)
 - [finally](../wiki/Future#finally-1)
-- [reject](../wiki/Future#reject-2)
-- [resolve](../wiki/Future#resolve-2)
 - [then](../wiki/Future#then-1)
 - [all](../wiki/Future#all-1)
 - [allSettled](../wiki/Future#allsettled-1)
@@ -73,7 +73,7 @@ Promise&lt;T\&gt;.constructor
 
 #### Defined in
 
-[src/control/future.ts:23](https://github.com/Semesse/flowp/blob/d536b99/src/control/future.ts#L23)
+[src/control/future.ts:23](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/future.ts#L23)
 
 ## Properties
 
@@ -97,7 +97,7 @@ Promise&lt;T\&gt;.constructor
 
 #### Defined in
 
-[src/control/future.ts:17](https://github.com/Semesse/flowp/blob/d536b99/src/control/future.ts#L17)
+[src/control/future.ts:17](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/future.ts#L17)
 
 ___
 
@@ -121,7 +121,7 @@ ___
 
 #### Defined in
 
-[src/control/future.ts:16](https://github.com/Semesse/flowp/blob/d536b99/src/control/future.ts#L16)
+[src/control/future.ts:16](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/future.ts#L16)
 
 ___
 
@@ -131,7 +131,7 @@ ___
 
 #### Inherited from
 
-Promise.\_\_@toStringTag@336
+Promise.\_\_@toStringTag@338
 
 #### Defined in
 
@@ -145,9 +145,77 @@ ___
 
 #### Defined in
 
-[src/control/future.ts:15](https://github.com/Semesse/flowp/blob/d536b99/src/control/future.ts#L15)
+[src/control/future.ts:15](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/future.ts#L15)
 
 ## Accessors
+
+### reject
+
+• `get` **reject**(): (`error`: `unknown`) => `void`
+
+resolve the future with given value
+
+tips: the method has already bound to `this`, so you can write `emitter.on('error', future.reject)`
+
+#### Returns
+
+`fn`
+
+▸ (`error`): `void`
+
+resolve the future with given value
+
+tips: the method has already bound to `this`, so you can write `emitter.on('error', future.reject)`
+
+##### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `error` | `unknown` |
+
+##### Returns
+
+`void`
+
+#### Defined in
+
+[src/control/future.ts:47](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/future.ts#L47)
+
+___
+
+### resolve
+
+• `get` **resolve**(): (`value`: `T` \| `PromiseLike`<`T`\>) => `void`
+
+resolve the future with given value
+
+tips: the method has already bound to `this`, so you can write `emitter.on('event', future.resolve)`
+
+#### Returns
+
+`fn`
+
+▸ (`value`): `void`
+
+resolve the future with given value
+
+tips: the method has already bound to `this`, so you can write `emitter.on('event', future.resolve)`
+
+##### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `value` | `T` \| `PromiseLike`<`T`\> |
+
+##### Returns
+
+`void`
+
+#### Defined in
+
+[src/control/future.ts:38](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/future.ts#L38)
+
+___
 
 ### [species]
 
@@ -159,11 +227,11 @@ ___
 
 #### Overrides
 
-Promise.\_\_@species@332
+Promise.\_\_@species@334
 
 #### Defined in
 
-[src/control/future.ts:19](https://github.com/Semesse/flowp/blob/d536b99/src/control/future.ts#L19)
+[src/control/future.ts:19](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/future.ts#L19)
 
 ## Methods
 
@@ -227,46 +295,6 @@ Promise.finally
 #### Defined in
 
 node_modules/.pnpm/typescript@4.8.0-dev.20220510/node_modules/typescript/lib/lib.es2018.promise.d.ts:31
-
-___
-
-### reject
-
-▸ **reject**(`error`): `void`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `error` | `unknown` |
-
-#### Returns
-
-`void`
-
-#### Defined in
-
-[src/control/future.ts:37](https://github.com/Semesse/flowp/blob/d536b99/src/control/future.ts#L37)
-
-___
-
-### resolve
-
-▸ **resolve**(`value`): `void`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `value` | `T` \| `PromiseLike`<`T`\> |
-
-#### Returns
-
-`void`
-
-#### Defined in
-
-[src/control/future.ts:33](https://github.com/Semesse/flowp/blob/d536b99/src/control/future.ts#L33)
 
 ___
 

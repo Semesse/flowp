@@ -1,17 +1,19 @@
 # flowp
 
-![](https://img.shields.io/github/workflow/status/Semesse/flowp/Run%20tests/master?label=CI&style=flat-square)
+![](https://img.shields.io/github/workflow/status/Semesse/flowp/Build,%20Test%20and%20Lint/master?style=flat-square)
 ![](https://img.shields.io/codeclimate/maintainability/Semesse/flowp?style=flat-square)
 ![](https://img.shields.io/codeclimate/coverage/Semesse/flowp?style=flat-square)
 
-CJS and ESM are both supported, requires node.js 16+ or a transpiler
+CJS and ESM are both supported; require node.js 16+ or a transpiler
 
 flowp is a promise based utility library, providing asynchronous components like
 
 - **[Semaphore](./docs/Semaphore.md) / [Mutex](./docs/Mutex.md)**: controls max concurrency
-- **[Channel](./docs/Channel.md)**: multi producer single consumer channel
+- **[Channel](./docs/Channel.md)**: multi producer single consumer channel, you can also use ChannelHub and ChannelSplitter
 - **[Future](./docs/Future.md)**: Promise that can be resolved anywhere other than where it's defined
 - **[lateinit](./docs/Exports.md)**: delegate method calls and property accesses to the fulfilled value of Promises
+- a bunch of features are under development 🚧  
+  there will be a refactor recently
 
 ### Have a quick look
 
@@ -20,12 +22,12 @@ flowp is a promise based utility library, providing asynchronous components like
 const waitUntilNextEvent = () => {
   const e = new EventEmitter()
   const f = new Future<Event>()
-  e.on('event', f.resolve.bind(f))
+  e.on('event', f.resolve)
   return f
 }
 ```
 
-**[lateinit](./docs/Exports.md)** some configurations are initialized asynchronously, and you may need to await it every time before using it. With `lateinit` you can just call methods and get properties with prefix `$` and you'll get a new promise representing this action
+**[lateinit](./docs/Exports.md)** pretty like the [wavy dot proposal](https://github.com/tc39/proposal-wavy-dot), some configurations are initialized asynchronously, and you may need to await it every time before using it. With `lateinit` you can just call methods and get properties with the prefix `$` and you'll get a new promise representing this action
 
 ```typescript
 export const client = initClient()
@@ -58,7 +60,7 @@ release()
 
 ### Contribute
 
-Feedback & PRs are welcomed🥰
+Feedback & PRs are welcomed 🥰
 
 ### License
 

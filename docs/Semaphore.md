@@ -54,7 +54,7 @@ constructs a new Semaphore with n permits
 
 #### Defined in
 
-[src/control/semaphore.ts:23](https://github.com/Semesse/flowp/blob/d536b99/src/control/semaphore.ts#L23)
+[src/control/semaphore.ts:23](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/semaphore.ts#L23)
 
 ## Properties
 
@@ -64,7 +64,7 @@ constructs a new Semaphore with n permits
 
 #### Defined in
 
-[src/control/semaphore.ts:15](https://github.com/Semesse/flowp/blob/d536b99/src/control/semaphore.ts#L15)
+[src/control/semaphore.ts:15](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/semaphore.ts#L15)
 
 ___
 
@@ -74,7 +74,7 @@ ___
 
 #### Defined in
 
-[src/control/semaphore.ts:17](https://github.com/Semesse/flowp/blob/d536b99/src/control/semaphore.ts#L17)
+[src/control/semaphore.ts:17](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/semaphore.ts#L17)
 
 ## Accessors
 
@@ -90,7 +90,7 @@ Check if no task is using the semaphore
 
 #### Defined in
 
-[src/control/semaphore.ts:122](https://github.com/Semesse/flowp/blob/d536b99/src/control/semaphore.ts#L122)
+[src/control/semaphore.ts:122](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/semaphore.ts#L122)
 
 ___
 
@@ -106,7 +106,7 @@ Check if all permits are being used
 
 #### Defined in
 
-[src/control/semaphore.ts:115](https://github.com/Semesse/flowp/blob/d536b99/src/control/semaphore.ts#L115)
+[src/control/semaphore.ts:115](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/semaphore.ts#L115)
 
 ___
 
@@ -122,7 +122,7 @@ Get the number of total permits currently
 
 #### Defined in
 
-[src/control/semaphore.ts:108](https://github.com/Semesse/flowp/blob/d536b99/src/control/semaphore.ts#L108)
+[src/control/semaphore.ts:108](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/semaphore.ts#L108)
 
 ___
 
@@ -138,7 +138,7 @@ Get the number of remaining permits
 
 #### Defined in
 
-[src/control/semaphore.ts:101](https://github.com/Semesse/flowp/blob/d536b99/src/control/semaphore.ts#L101)
+[src/control/semaphore.ts:101](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/semaphore.ts#L101)
 
 ## Methods
 
@@ -164,7 +164,7 @@ Get the number of remaining permits
 
 #### Defined in
 
-[src/control/semaphore.ts:126](https://github.com/Semesse/flowp/blob/d536b99/src/control/semaphore.ts#L126)
+[src/control/semaphore.ts:126](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/semaphore.ts#L126)
 
 ___
 
@@ -184,7 +184,7 @@ ___
 
 #### Defined in
 
-[src/control/semaphore.ts:141](https://github.com/Semesse/flowp/blob/d536b99/src/control/semaphore.ts#L141)
+[src/control/semaphore.ts:141](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/semaphore.ts#L141)
 
 ___
 
@@ -204,7 +204,7 @@ ___
 
 #### Defined in
 
-[src/control/semaphore.ts:135](https://github.com/Semesse/flowp/blob/d536b99/src/control/semaphore.ts#L135)
+[src/control/semaphore.ts:135](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/semaphore.ts#L135)
 
 ___
 
@@ -228,7 +228,7 @@ a function to release semaphore
 
 #### Defined in
 
-[src/control/semaphore.ts:31](https://github.com/Semesse/flowp/blob/d536b99/src/control/semaphore.ts#L31)
+[src/control/semaphore.ts:31](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/semaphore.ts#L31)
 
 ___
 
@@ -252,7 +252,7 @@ Give n permits to semaphore, will immediately start this number of waiting tasks
 
 #### Defined in
 
-[src/control/semaphore.ts:70](https://github.com/Semesse/flowp/blob/d536b99/src/control/semaphore.ts#L70)
+[src/control/semaphore.ts:70](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/semaphore.ts#L70)
 
 ___
 
@@ -278,7 +278,7 @@ Destroy n permits, effective until `remain` fills the n permits
 
 #### Defined in
 
-[src/control/semaphore.ts:83](https://github.com/Semesse/flowp/blob/d536b99/src/control/semaphore.ts#L83)
+[src/control/semaphore.ts:83](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/semaphore.ts#L83)
 
 ___
 
@@ -302,4 +302,4 @@ Try to synchronosly acquire if the semaphore is not full
 
 #### Defined in
 
-[src/control/semaphore.ts:56](https://github.com/Semesse/flowp/blob/d536b99/src/control/semaphore.ts#L56)
+[src/control/semaphore.ts:56](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/semaphore.ts#L56)
