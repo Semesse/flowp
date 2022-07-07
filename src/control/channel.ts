@@ -33,7 +33,7 @@ export class Channel<T> implements PipeSource<T>, PipeTarget<T> {
   public async send(value: T) {
     if (this.#closed) throw new ClosedChannelError()
     if (this.#pipeTarget) {
-      await this.#pipeTarget[read](value)
+      await this.#pipeTarget[read](value, this)
     } else {
       await transfer(this.#sendSem, this.#recvSem, 1)
       this.#queue.push(value)

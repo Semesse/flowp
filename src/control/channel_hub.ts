@@ -1,32 +1,46 @@
 import { Channel } from './channel'
-import { PipeAdapter } from './pipeable'
+import { Pipe, PipeSource, PipeTarget, read } from './pipeable'
 
 /**
  * compose multiple channels into one
  */
-export class ChannelHub {
-  public static from(...channels: Channel<unknown>[]) {
+export class ChannelHub<T = unknown> implements Pipe<T, T> {
+  public static from<T>(...channels: Channel<T>[]) {
     return new ChannelHub(...channels)
   }
 
-  #channels: Set<Channel<unknown>> = new Set()
-  #channel: Channel<readonly [unknown, Channel<unknown>]> = new Channel()
+  #channels: Set<Channel<T>> = new Set()
+  #channel: Channel<T> = new Channel()
 
-  public constructor(...channels: Channel<unknown>[]) {
+  public constructor(...channels: Channel<T>[]) {
     channels.forEach((c) => this.plug(c))
   }
 
-  public plug(channel: Channel<unknown>) {
-    this.#channels.add(channel)
-    const adapter = new PipeAdapter((v) => [v, channel] as const)
-    channel.pipe(adapter)
-    adapter.pipe(this.#channel)
+  public [read](value: T, source?: PipeSource<T>) {
+    this.#channel.send(value)
+  }
+  public pipe(target: PipeTarget<T>) {
+    this.#channel.pipe(target)
+  }
+  public unpipe() {
+    this.#channel.unpipe()
   }
 
-  public unplug(channel: Channel<unknown>) {
+  public plug(channel: Channel<T>) {
+    this.#channels.add(channel)
+    channel.pipe(this.#channel)
+  }
+
+  public unplug(channel: Channel<T>) {
     if (!this.#channels.has(channel)) return
     this.#channels.delete(channel)
     channel.unpipe()
+  }
+
+  public fork() {
+    const channel = new Channel<T>()
+    this.plug(channel)
+    return channel
   }
 
   public stream() {

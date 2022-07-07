@@ -1,10 +1,10 @@
 import { Channel } from './channel'
-import { PipeAdapter } from './pipeable'
+import { Pipe, PipeAdapter, PipeSource, PipeTarget, read } from './pipeable'
 
 /**
  * Broadcast data from a single channel
  */
-export class ChannelSplitter<T> {
+export class ChannelSplitter<T> implements PipeTarget<T> {
   public static from<T>(channel: Channel<T>) {
     return new ChannelSplitter(channel)
   }
@@ -16,8 +16,12 @@ export class ChannelSplitter<T> {
     this.broadcast()
   }
 
+  public [read](value: T, source?: PipeSource<T>) {
+    this.#channel.send(value)
+  }
+
   /** create a fork that reveives message channel */
-  public fork(): Channel<Readonly<T>> {
+  public fork(): Channel<T> {
     const channel = new Channel<T>()
     this.#channels.push(channel)
     return channel

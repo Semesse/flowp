@@ -11,12 +11,14 @@ export interface PipeSource<T> {
 /**
  * a pipe target can receive data from a pipe source
  */
-export interface PipeTarget<T> {
-  [read]: (value: T) => void
+export interface PipeTarget<T, S = PipeSource<T>> {
+  [read]: (value: T, source?: S) => void
 }
 
-export class PipeAdapter<TIn, TOut> implements PipeSource<TOut>, PipeTarget<TIn> {
-  public handler: (value: TIn) => TOut
+export interface Pipe<TIn, TOut> extends PipeTarget<TIn>, PipeSource<TOut> {}
+
+export class PipeAdapter<TIn, TOut> implements PipeTarget<TIn, PipeAdapter<TIn, TOut>>, PipeSource<TOut> {
+  public handler: (value: TIn, source?: PipeSource<TOut>) => TOut
   #target: PipeTarget<TOut> | null = null
 
   /**
@@ -35,7 +37,23 @@ export class PipeAdapter<TIn, TOut> implements PipeSource<TOut>, PipeTarget<TIn>
     this.#target = null
   }
 
-  public [read](value: TIn): void {
-    this.#target?.[read](this.handler(value))
+  public [read](value: TIn, source?: PipeSource<TOut>): void {
+    this.#target?.[read](this.handler(value, source), this)
+  }
+}
+
+export class PipeEndpoint<TIn> implements PipeTarget<TIn> {
+  public handler: (value: TIn, source?: PipeSource<TIn>) => TIn
+
+  /**
+   * creates a pipe that transforms data from `TIn` to `TOut`
+   * @param handler transform data in pipe
+   */
+  public constructor(handler: (value: TIn) => any) {
+    this.handler = handler
+  }
+
+  public [read](value: TIn, source?: PipeSource<TIn>): void {
+    this.handler(value, source)
   }
 }

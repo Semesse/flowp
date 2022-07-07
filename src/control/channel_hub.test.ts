@@ -11,9 +11,9 @@ describe('channel hub', () => {
     await channel1.send('a')
     await channel2.send('b')
     await channel3.send('c')
-    expect(await stream.next()).toEqual(['a', channel1])
-    expect(await stream.next()).toEqual(['b', channel2])
-    expect(await stream.next()).toEqual(['c', channel3])
+    expect(await stream.next()).toEqual('a')
+    expect(await stream.next()).toEqual('b')
+    expect(await stream.next()).toEqual('c')
     channelHub.close()
   })
 
