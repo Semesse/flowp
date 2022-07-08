@@ -42,18 +42,12 @@ export class PipeAdapter<TIn, TOut> implements PipeTarget<TIn, PipeAdapter<TIn, 
   }
 }
 
-export class PipeEndpoint<TIn> implements PipeTarget<TIn> {
-  public handler: (value: TIn, source?: PipeSource<TIn>) => TIn
+export const to = <T>(fn: (v: T, s?: PipeSource<T>) => any): PipeTarget<T> => {
+  return { [read]: fn }
+}
 
-  /**
-   * creates a pipe that transforms data from `TIn` to `TOut`
-   * @param handler transform data in pipe
-   */
-  public constructor(handler: (value: TIn) => any) {
-    this.handler = handler
-  }
-
-  public [read](value: TIn, source?: PipeSource<TIn>): void {
-    this.handler(value, source)
+export class PipeToConsole implements PipeTarget<any, PipeSource<any>> {
+  public [read](value: any, source?: PipeSource<any>) {
+    console.log(source, value)
   }
 }
