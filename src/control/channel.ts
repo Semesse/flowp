@@ -16,6 +16,11 @@ export class Channel<T> implements PipeSource<T>, PipeTarget<T> {
   #sendSem: Semaphore
   #recvSem: Semaphore
   #pipeTarget: PipeTarget<T> | null = null
+  /**
+   * should use Semaphore to control max capacity,
+   * `false` if capacity is Infinity
+   */
+  #useSem: boolean
 
   /**
    * create a new multi-producer-single-consumer channel with specified capacity
@@ -26,6 +31,7 @@ export class Channel<T> implements PipeSource<T>, PipeTarget<T> {
       throw new RangeError('capacity cannot be negative or NaN')
     }
     this.#capacity = capacity
+    this.#useSem = !Number.isFinite(capacity)
     this.#sendSem = new Semaphore(capacity)
     this.#recvSem = new Semaphore(0)
   }
@@ -35,13 +41,13 @@ export class Channel<T> implements PipeSource<T>, PipeTarget<T> {
     if (this.#pipeTarget) {
       await this.#pipeTarget[read](value, this)
     } else {
-      await transfer(this.#sendSem, this.#recvSem, 1)
+      this.#useSem && (await transfer(this.#sendSem, this.#recvSem, 1))
       this.#queue.push(value)
     }
   }
 
   public async receive() {
-    await transfer(this.#recvSem, this.#sendSem, 1)
+    this.#useSem && (await transfer(this.#recvSem, this.#sendSem, 1))
     const value = this.#queue.shift()!
     return value
   }
