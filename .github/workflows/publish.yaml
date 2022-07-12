@@ -14,6 +14,6 @@ jobs:
       - run: npm i -g pnpm
       - run: pnpm i
       - run: pnpm build
-      - uses: JS-DevTools/npm-publish@v1
-        with:
+      - run: npm publish --access public --tag `node scripts/publish-tag.js`
+        env:
           token: ${{ secrets.NPM_PUBLISH_TOKEN }}
