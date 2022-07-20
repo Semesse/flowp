@@ -3,10 +3,15 @@
 .github
 
 # configurations
-./*.config.js
-./*.config.cjs
-./*.config.json
-./*rc
+*.config.js
+*.config.cjs
+*.config.json
+*rc
+*rc.js
+*rc.json
+*.toml
+tsconfig*
+typedoc.json
 
 # lock
 pnpm-lock.yaml
@@ -16,3 +21,4 @@ coverage
 docs
 examples
 src
+scripts
