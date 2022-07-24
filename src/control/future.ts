@@ -1,6 +1,7 @@
 /**
  * Future is a resolve-later Promise, you can resolve it any time after a future is created.
  *
+ * @stable this feature is stable and is guaranteed to not have breaking change before v1.0.0
  * @example
  *
  * ```typescript
@@ -12,9 +13,9 @@
  * ```
  */
 export class Future<T> extends Promise<T> {
-  static #constructors: [(value: any | PromiseLike<any>) => void, (error: unknown) => void][] = []
-  #resolve: (value: T | PromiseLike<T>) => void
-  #reject: (error: unknown) => void
+  private static _constructors: [(value: any | PromiseLike<any>) => void, (error: unknown) => void][] = []
+  private _resolve: (value: T | PromiseLike<T>) => void
+  private _reject: (error: unknown) => void
 
   public static get [Symbol.species]() {
     return Promise
@@ -25,9 +26,9 @@ export class Future<T> extends Promise<T> {
     // https://tc39.es/ecma262/#sec-promise-executor
     super((resolve, reject) => {
       // since `this` is not accessible before super() finished
-      Future.#constructors.push([resolve, reject])
+      Future._constructors.push([resolve, reject])
     })
-    ;[this.#resolve, this.#reject] = Future.#constructors.pop()!
+    ;[this._resolve, this._reject] = Future._constructors.pop()!
   }
 
   /**
@@ -36,7 +37,7 @@ export class Future<T> extends Promise<T> {
    * tips: the method has already bound to `this`, so you can write `emitter.on('event', future.resolve)`
    */
   public get resolve(): (value: T | PromiseLike<T>) => void {
-    return (value) => this.#resolve(value)
+    return (value) => this._resolve(value)
   }
 
   /**
@@ -45,6 +46,6 @@ export class Future<T> extends Promise<T> {
    * tips: the method has already bound to `this`, so you can write `emitter.on('error', future.reject)`
    */
   public get reject(): (error: unknown) => void {
-    return (error) => this.#reject(error)
+    return (error) => this._reject(error)
   }
 }
