@@ -17,8 +17,8 @@ export interface PipeTarget<T, S = PipeSource<T>> {
 
 export interface Pipe<TIn, TOut> extends PipeTarget<TIn>, PipeSource<TOut> {}
 
-export class PipeAdapter<TIn, TOut> implements PipeTarget<TIn, PipeAdapter<TIn, TOut>>, PipeSource<TOut> {
-  public handler: (value: TIn, source?: PipeSource<TOut>) => TOut
+export class PipeAdapter<TIn, TOut> implements PipeTarget<TIn, PipeSource<TIn>>, PipeSource<TOut> {
+  public handler: (value: TIn, source?: PipeSource<TIn>) => TOut
   #target: PipeTarget<TOut> | null = null
 
   /**
@@ -37,7 +37,7 @@ export class PipeAdapter<TIn, TOut> implements PipeTarget<TIn, PipeAdapter<TIn, 
     this.#target = null
   }
 
-  public [read](value: TIn, source?: PipeSource<TOut>): void {
+  public [read](value: TIn, source?: PipeSource<TIn>): void {
     this.#target?.[read](this.handler(value, source), this)
   }
 }
