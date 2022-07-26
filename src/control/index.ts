@@ -1,6 +1,5 @@
 export { Channel } from './channel'
 export { ChannelHub } from './channel_hub'
-export { ChannelSplitter } from './channel_splitter'
 export { Mutex } from './mutex'
 export { Semaphore } from './semaphore'
 export { Future } from './future'

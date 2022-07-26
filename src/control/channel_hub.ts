@@ -1,5 +1,5 @@
 import { Channel } from './channel'
-import { Pipe, PipeSource, PipeTarget, read } from './pipeable'
+import { PipeTarget, read } from './pipeable'
 
 /**
  * compose multiple channels into one
