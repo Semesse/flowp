@@ -1,5 +1,7 @@
 # Class: Channel<T\>
 
+a pipe source should be able to write its output to a pipe target
+
 ## Type parameters
 
 | Name |
@@ -8,41 +10,42 @@
 
 ## Implements
 
-- `PipeSource`<`T`\>
-- `PipeTarget`<`T`\>
+- [`PipeSource`](../wiki/pipe.PipeSource)<`T`\>
+- [`PipeTarget`](../wiki/pipe.PipeTarget)<`T`\>
 
 ## Table of contents
 
 ### Constructors
 
-- [constructor](../wiki/Channel#constructor-1)
+- [constructor](../wiki/Channel#constructor)
 
 ### Properties
 
-- [#capacity](../wiki/Channel##capacity-1)
-- [#closed](../wiki/Channel##closed-1)
-- [#pipeTarget](../wiki/Channel##pipetarget-1)
-- [#queue](../wiki/Channel##queue-1)
-- [#recvSem](../wiki/Channel##recvsem-1)
-- [#sendSem](../wiki/Channel##sendsem-1)
+- [#capacity](../wiki/Channel##capacity)
+- [#closed](../wiki/Channel##closed)
+- [#pipeTarget](../wiki/Channel##pipetarget)
+- [#queue](../wiki/Channel##queue)
+- [#recvSem](../wiki/Channel##recvsem)
+- [#sendSem](../wiki/Channel##sendsem)
+- [#useSem](../wiki/Channel##usesem)
 
 ### Accessors
 
-- [capacity](../wiki/Channel#capacity-1)
+- [capacity](../wiki/Channel#capacity)
 
 ### Methods
 
-- [#next](../wiki/Channel##next-1)
-- [[read]](../wiki/Channel#%5Bread%5D-1)
-- [close](../wiki/Channel#close-1)
-- [pipe](../wiki/Channel#pipe-1)
-- [receive](../wiki/Channel#receive-1)
-- [send](../wiki/Channel#send-1)
-- [sendAsync](../wiki/Channel#sendasync-1)
-- [stream](../wiki/Channel#stream-1)
-- [tryReceive](../wiki/Channel#tryreceive-1)
-- [trySend](../wiki/Channel#trysend-1)
-- [unpipe](../wiki/Channel#unpipe-1)
+- [#next](../wiki/Channel##next)
+- [[read]](../wiki/Channel#%5Bread%5D)
+- [close](../wiki/Channel#close)
+- [pipe](../wiki/Channel#pipe)
+- [receive](../wiki/Channel#receive)
+- [send](../wiki/Channel#send)
+- [sendAsync](../wiki/Channel#sendasync)
+- [stream](../wiki/Channel#stream)
+- [tryReceive](../wiki/Channel#tryreceive)
+- [trySend](../wiki/Channel#trysend)
+- [unpipe](../wiki/Channel#unpipe)
 
 ## Constructors
 
@@ -66,7 +69,7 @@ create a new multi-producer-single-consumer channel with specified capacity
 
 #### Defined in
 
-[src/control/channel.ts:24](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/channel.ts#L24)
+[src/control/channel.ts:29](https://github.com/Semesse/flowp/blob/165e59c/src/control/channel.ts#L29)
 
 ## Properties
 
@@ -76,7 +79,7 @@ create a new multi-producer-single-consumer channel with specified capacity
 
 #### Defined in
 
-[src/control/channel.ts:14](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/channel.ts#L14)
+[src/control/channel.ts:14](https://github.com/Semesse/flowp/blob/165e59c/src/control/channel.ts#L14)
 
 ___
 
@@ -86,17 +89,17 @@ ___
 
 #### Defined in
 
-[src/control/channel.ts:13](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/channel.ts#L13)
+[src/control/channel.ts:13](https://github.com/Semesse/flowp/blob/165e59c/src/control/channel.ts#L13)
 
 ___
 
 ### #pipeTarget
 
-• `Private` **#pipeTarget**: ``null`` \| `PipeTarget`<`T`\> = `null`
+• `Private` **#pipeTarget**: ``null`` \| [`PipeTarget`](../wiki/pipe.PipeTarget)<`T`, [`PipeSource`](../wiki/pipe.PipeSource)<`T`\>\> = `null`
 
 #### Defined in
 
-[src/control/channel.ts:18](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/channel.ts#L18)
+[src/control/channel.ts:18](https://github.com/Semesse/flowp/blob/165e59c/src/control/channel.ts#L18)
 
 ___
 
@@ -106,7 +109,7 @@ ___
 
 #### Defined in
 
-[src/control/channel.ts:15](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/channel.ts#L15)
+[src/control/channel.ts:15](https://github.com/Semesse/flowp/blob/165e59c/src/control/channel.ts#L15)
 
 ___
 
@@ -116,7 +119,7 @@ ___
 
 #### Defined in
 
-[src/control/channel.ts:17](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/channel.ts#L17)
+[src/control/channel.ts:17](https://github.com/Semesse/flowp/blob/165e59c/src/control/channel.ts#L17)
 
 ___
 
@@ -126,7 +129,20 @@ ___
 
 #### Defined in
 
-[src/control/channel.ts:16](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/channel.ts#L16)
+[src/control/channel.ts:16](https://github.com/Semesse/flowp/blob/165e59c/src/control/channel.ts#L16)
+
+___
+
+### #useSem
+
+• `Private` **#useSem**: `boolean`
+
+should use Semaphore to control max capacity,
+`false` if capacity is Infinity
+
+#### Defined in
+
+[src/control/channel.ts:23](https://github.com/Semesse/flowp/blob/165e59c/src/control/channel.ts#L23)
 
 ## Accessors
 
@@ -140,7 +156,7 @@ ___
 
 #### Defined in
 
-[src/control/channel.ts:94](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/channel.ts#L94)
+[src/control/channel.ts:100](https://github.com/Semesse/flowp/blob/165e59c/src/control/channel.ts#L100)
 
 ## Methods
 
@@ -154,7 +170,7 @@ ___
 
 #### Defined in
 
-[src/control/channel.ts:98](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/channel.ts#L98)
+[src/control/channel.ts:104](https://github.com/Semesse/flowp/blob/165e59c/src/control/channel.ts#L104)
 
 ___
 
@@ -174,11 +190,11 @@ ___
 
 #### Implementation of
 
-PipeTarget.\_\_@read@149
+PipeTarget.\_\_@read@177
 
 #### Defined in
 
-[src/control/channel.ts:78](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/channel.ts#L78)
+[src/control/channel.ts:84](https://github.com/Semesse/flowp/blob/165e59c/src/control/channel.ts#L84)
 
 ___
 
@@ -192,7 +208,7 @@ ___
 
 #### Defined in
 
-[src/control/channel.ts:90](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/channel.ts#L90)
+[src/control/channel.ts:96](https://github.com/Semesse/flowp/blob/165e59c/src/control/channel.ts#L96)
 
 ___
 
@@ -204,7 +220,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `target` | `PipeTarget`<`T`\> |
+| `target` | [`PipeTarget`](../wiki/pipe.PipeTarget)<`T`, [`PipeSource`](../wiki/pipe.PipeSource)<`T`\>\> |
 
 #### Returns
 
@@ -216,7 +232,7 @@ PipeSource.pipe
 
 #### Defined in
 
-[src/control/channel.ts:82](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/channel.ts#L82)
+[src/control/channel.ts:88](https://github.com/Semesse/flowp/blob/165e59c/src/control/channel.ts#L88)
 
 ___
 
@@ -230,7 +246,7 @@ ___
 
 #### Defined in
 
-[src/control/channel.ts:43](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/channel.ts#L43)
+[src/control/channel.ts:49](https://github.com/Semesse/flowp/blob/165e59c/src/control/channel.ts#L49)
 
 ___
 
@@ -250,7 +266,7 @@ ___
 
 #### Defined in
 
-[src/control/channel.ts:33](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/channel.ts#L33)
+[src/control/channel.ts:39](https://github.com/Semesse/flowp/blob/165e59c/src/control/channel.ts#L39)
 
 ___
 
@@ -270,7 +286,7 @@ ___
 
 #### Defined in
 
-[src/control/channel.ts:54](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/channel.ts#L54)
+[src/control/channel.ts:60](https://github.com/Semesse/flowp/blob/165e59c/src/control/channel.ts#L60)
 
 ___
 
@@ -284,7 +300,7 @@ ___
 
 #### Defined in
 
-[src/control/channel.ts:66](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/channel.ts#L66)
+[src/control/channel.ts:72](https://github.com/Semesse/flowp/blob/165e59c/src/control/channel.ts#L72)
 
 ___
 
@@ -302,7 +318,7 @@ message `T` or `undefined` if no messages in the queue
 
 #### Defined in
 
-[src/control/channel.ts:62](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/channel.ts#L62)
+[src/control/channel.ts:68](https://github.com/Semesse/flowp/blob/165e59c/src/control/channel.ts#L68)
 
 ___
 
@@ -322,7 +338,7 @@ ___
 
 #### Defined in
 
-[src/control/channel.ts:49](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/channel.ts#L49)
+[src/control/channel.ts:55](https://github.com/Semesse/flowp/blob/165e59c/src/control/channel.ts#L55)
 
 ___
 
@@ -340,4 +356,4 @@ PipeSource.unpipe
 
 #### Defined in
 
-[src/control/channel.ts:86](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/channel.ts#L86)
+[src/control/channel.ts:92](https://github.com/Semesse/flowp/blob/165e59c/src/control/channel.ts#L92)

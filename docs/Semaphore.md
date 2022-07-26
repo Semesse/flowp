@@ -2,41 +2,46 @@
 
 Semaphore
 
-**`param`** number of permits
+**`Param`**
 
-**`example`**
+number of permits
+
+**`Example`**
+
+```ts
 const sem = new Semaphore(5)
 const release = await sem.acquire()
 // do something
 release()
+```
 
 ## Table of contents
 
 ### Constructors
 
-- [constructor](../wiki/Semaphore#constructor-1)
+- [constructor](../wiki/Semaphore#constructor)
 
 ### Properties
 
-- [#permits](../wiki/Semaphore##permits-1)
-- [#queue](../wiki/Semaphore##queue-1)
+- [#permits](../wiki/Semaphore##permits)
+- [#queue](../wiki/Semaphore##queue)
 
 ### Accessors
 
-- [isEmpty](../wiki/Semaphore#isempty-1)
-- [isFull](../wiki/Semaphore#isfull-1)
-- [permits](../wiki/Semaphore#permits-1)
-- [remain](../wiki/Semaphore#remain-1)
+- [isEmpty](../wiki/Semaphore#isempty)
+- [isFull](../wiki/Semaphore#isfull)
+- [permits](../wiki/Semaphore#permits)
+- [remain](../wiki/Semaphore#remain)
 
 ### Methods
 
-- [#release](../wiki/Semaphore##release-1)
-- [#remove](../wiki/Semaphore##remove-1)
-- [#resolveNext](../wiki/Semaphore##resolvenext-1)
-- [acquire](../wiki/Semaphore#acquire-1)
-- [grant](../wiki/Semaphore#grant-1)
-- [revoke](../wiki/Semaphore#revoke-1)
-- [tryAcquire](../wiki/Semaphore#tryacquire-1)
+- [#release](../wiki/Semaphore##release)
+- [#remove](../wiki/Semaphore##remove)
+- [#resolveNext](../wiki/Semaphore##resolvenext)
+- [acquire](../wiki/Semaphore#acquire)
+- [grant](../wiki/Semaphore#grant)
+- [revoke](../wiki/Semaphore#revoke)
+- [tryAcquire](../wiki/Semaphore#tryacquire)
 
 ## Constructors
 
@@ -54,7 +59,7 @@ constructs a new Semaphore with n permits
 
 #### Defined in
 
-[src/control/semaphore.ts:23](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/semaphore.ts#L23)
+[src/control/semaphore.ts:23](https://github.com/Semesse/flowp/blob/165e59c/src/control/semaphore.ts#L23)
 
 ## Properties
 
@@ -64,7 +69,7 @@ constructs a new Semaphore with n permits
 
 #### Defined in
 
-[src/control/semaphore.ts:15](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/semaphore.ts#L15)
+[src/control/semaphore.ts:15](https://github.com/Semesse/flowp/blob/165e59c/src/control/semaphore.ts#L15)
 
 ___
 
@@ -74,7 +79,7 @@ ___
 
 #### Defined in
 
-[src/control/semaphore.ts:17](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/semaphore.ts#L17)
+[src/control/semaphore.ts:17](https://github.com/Semesse/flowp/blob/165e59c/src/control/semaphore.ts#L17)
 
 ## Accessors
 
@@ -90,7 +95,7 @@ Check if no task is using the semaphore
 
 #### Defined in
 
-[src/control/semaphore.ts:122](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/semaphore.ts#L122)
+[src/control/semaphore.ts:122](https://github.com/Semesse/flowp/blob/165e59c/src/control/semaphore.ts#L122)
 
 ___
 
@@ -106,7 +111,7 @@ Check if all permits are being used
 
 #### Defined in
 
-[src/control/semaphore.ts:115](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/semaphore.ts#L115)
+[src/control/semaphore.ts:115](https://github.com/Semesse/flowp/blob/165e59c/src/control/semaphore.ts#L115)
 
 ___
 
@@ -122,7 +127,7 @@ Get the number of total permits currently
 
 #### Defined in
 
-[src/control/semaphore.ts:108](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/semaphore.ts#L108)
+[src/control/semaphore.ts:108](https://github.com/Semesse/flowp/blob/165e59c/src/control/semaphore.ts#L108)
 
 ___
 
@@ -138,7 +143,7 @@ Get the number of remaining permits
 
 #### Defined in
 
-[src/control/semaphore.ts:101](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/semaphore.ts#L101)
+[src/control/semaphore.ts:101](https://github.com/Semesse/flowp/blob/165e59c/src/control/semaphore.ts#L101)
 
 ## Methods
 
@@ -164,7 +169,7 @@ Get the number of remaining permits
 
 #### Defined in
 
-[src/control/semaphore.ts:126](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/semaphore.ts#L126)
+[src/control/semaphore.ts:126](https://github.com/Semesse/flowp/blob/165e59c/src/control/semaphore.ts#L126)
 
 ___
 
@@ -184,7 +189,7 @@ ___
 
 #### Defined in
 
-[src/control/semaphore.ts:141](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/semaphore.ts#L141)
+[src/control/semaphore.ts:141](https://github.com/Semesse/flowp/blob/165e59c/src/control/semaphore.ts#L141)
 
 ___
 
@@ -204,7 +209,7 @@ ___
 
 #### Defined in
 
-[src/control/semaphore.ts:135](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/semaphore.ts#L135)
+[src/control/semaphore.ts:135](https://github.com/Semesse/flowp/blob/165e59c/src/control/semaphore.ts#L135)
 
 ___
 
@@ -228,7 +233,7 @@ a function to release semaphore
 
 #### Defined in
 
-[src/control/semaphore.ts:31](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/semaphore.ts#L31)
+[src/control/semaphore.ts:31](https://github.com/Semesse/flowp/blob/165e59c/src/control/semaphore.ts#L31)
 
 ___
 
@@ -238,7 +243,9 @@ ___
 
 Give n permits to semaphore, will immediately start this number of waiting tasks if any
 
-**`throws`** RangeError if permits < 0
+**`Throws`**
+
+RangeError if permits < 0
 
 #### Parameters
 
@@ -252,7 +259,7 @@ Give n permits to semaphore, will immediately start this number of waiting tasks
 
 #### Defined in
 
-[src/control/semaphore.ts:70](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/semaphore.ts#L70)
+[src/control/semaphore.ts:70](https://github.com/Semesse/flowp/blob/165e59c/src/control/semaphore.ts#L70)
 
 ___
 
@@ -264,7 +271,9 @@ Destroy n permits, effective until `remain` fills the n permits
 
 **note**: you may need to check if `permits > semaphore.permits`, or it will wait until granted that many permits
 
-**`throws`** RangeError if permits < 0
+**`Throws`**
+
+RangeError if permits < 0
 
 #### Parameters
 
@@ -278,7 +287,7 @@ Destroy n permits, effective until `remain` fills the n permits
 
 #### Defined in
 
-[src/control/semaphore.ts:83](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/semaphore.ts#L83)
+[src/control/semaphore.ts:83](https://github.com/Semesse/flowp/blob/165e59c/src/control/semaphore.ts#L83)
 
 ___
 
@@ -288,7 +297,9 @@ ___
 
 Try to synchronosly acquire if the semaphore is not full
 
-**`throws`** Error if semaphore is full
+**`Throws`**
+
+Error if semaphore is full
 
 #### Returns
 
@@ -302,4 +313,4 @@ Try to synchronosly acquire if the semaphore is not full
 
 #### Defined in
 
-[src/control/semaphore.ts:56](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/semaphore.ts#L56)
+[src/control/semaphore.ts:56](https://github.com/Semesse/flowp/blob/165e59c/src/control/semaphore.ts#L56)

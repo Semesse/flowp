@@ -4,20 +4,20 @@
 
 ### Constructors
 
-- [constructor](../wiki/Mutex#constructor-1)
+- [constructor](../wiki/Mutex#constructor)
 
 ### Properties
 
-- [#semaphore](../wiki/Mutex##semaphore-1)
+- [#semaphore](../wiki/Mutex##semaphore)
 
 ### Accessors
 
-- [isEmpty](../wiki/Mutex#isempty-1)
-- [isFull](../wiki/Mutex#isfull-1)
+- [isEmpty](../wiki/Mutex#isempty)
+- [isFull](../wiki/Mutex#isfull)
 
 ### Methods
 
-- [acquire](../wiki/Mutex#acquire-1)
+- [acquire](../wiki/Mutex#acquire)
 
 ## Constructors
 
@@ -27,7 +27,7 @@
 
 #### Defined in
 
-[src/control/mutex.ts:5](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/mutex.ts#L5)
+[src/control/mutex.ts:5](https://github.com/Semesse/flowp/blob/165e59c/src/control/mutex.ts#L5)
 
 ## Properties
 
@@ -37,7 +37,7 @@
 
 #### Defined in
 
-[src/control/mutex.ts:4](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/mutex.ts#L4)
+[src/control/mutex.ts:4](https://github.com/Semesse/flowp/blob/165e59c/src/control/mutex.ts#L4)
 
 ## Accessors
 
@@ -51,7 +51,7 @@
 
 #### Defined in
 
-[src/control/mutex.ts:17](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/mutex.ts#L17)
+[src/control/mutex.ts:17](https://github.com/Semesse/flowp/blob/165e59c/src/control/mutex.ts#L17)
 
 ___
 
@@ -65,7 +65,7 @@ ___
 
 #### Defined in
 
-[src/control/mutex.ts:13](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/mutex.ts#L13)
+[src/control/mutex.ts:13](https://github.com/Semesse/flowp/blob/165e59c/src/control/mutex.ts#L13)
 
 ## Methods
 
@@ -79,4 +79,4 @@ ___
 
 #### Defined in
 
-[src/control/mutex.ts:9](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/mutex.ts#L9)
+[src/control/mutex.ts:9](https://github.com/Semesse/flowp/blob/165e59c/src/control/mutex.ts#L9)

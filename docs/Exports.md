@@ -2,17 +2,21 @@
 
 ## Table of contents
 
+### Namespaces
+
+- [pipe](../wiki/pipe)
+
 ### Classes
 
 - [Channel](../wiki/Channel)
+- [ChannelHub](../wiki/ChannelHub)
 - [Future](../wiki/Future)
 - [Mutex](../wiki/Mutex)
-- [PipeAdapter](../wiki/PipeAdapter)
 - [Semaphore](../wiki/Semaphore)
 
 ### Functions
 
-- [lateinit](../wiki/Exports#lateinit-1)
+- [lateinit](../wiki/Exports#lateinit)
 
 ## Functions
 
@@ -22,10 +26,13 @@
 
 Delegates method calls and member access to the resolved value
 
-**`example`**
+**`Example`**
+
+```ts
 const promise = Promise.resolve({ foo: { bar: 'baz' } })
 const delegated = lateinit(promise)
 await delegated.$foo.$bar // 'baz'
+```
 
 #### Type parameters
 
@@ -47,4 +54,4 @@ the delegated object, access delegated properties with `${key}`
 
 #### Defined in
 
-[src/control/lateinit.ts:26](https://github.com/Semesse/flowp/blob/2fd91f2/src/control/lateinit.ts#L26)
+[src/control/lateinit.ts:26](https://github.com/Semesse/flowp/blob/165e59c/src/control/lateinit.ts#L26)

@@ -4,9 +4,9 @@
 ![](https://img.shields.io/codeclimate/maintainability/Semesse/flowp?style=flat-square)
 ![](https://img.shields.io/codeclimate/coverage/Semesse/flowp?style=flat-square)
 
-CJS and ESM are both supported; require node.js 16+ or a transpiler
+CJS and ESM are both supported; require node.js 16+, latest bun or a transpiler
 
-flowp is a promise based utility library, providing asynchronous components like
+flowp is a promise-based utility library, providing asynchronous components like
 
 - **[Semaphore](./docs/Semaphore.md) / [Mutex](./docs/Mutex.md)**: controls max concurrency
 - **[Channel](./docs/Channel.md)**: multi producer single consumer channel, you can also use ChannelHub and ChannelSplitter
