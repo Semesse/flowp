@@ -5,6 +5,7 @@
 # configurations
 *.config.js
 *.config.cjs
+*.config.ts
 *.config.json
 *rc
 *rc.js
