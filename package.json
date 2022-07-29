@@ -1,6 +1,6 @@
 {
   "name": "flowp",
-  "version": "0.0.7",
+  "version": "0.1.0",
   "description": "Promise based utilities",
   "main": "dist/index.js",
   "exports": {
