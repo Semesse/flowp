@@ -1,6 +1,6 @@
 import { Callable } from '../types'
 
-type Delegated<T> = {
+export type Delegated<T> = {
   readonly [K in keyof Awaited<T> & string as `$${K}`]: Awaited<T>[K] extends Callable
     ? (...args: Parameters<Awaited<T>[K]>) => ReturnType<Awaited<T>[K]>
     : Delegated<Awaited<T>[K]>

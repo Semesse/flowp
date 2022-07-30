@@ -1,6 +1,6 @@
 import { Channel } from './channel'
 import { ChannelHub } from './channel_hub'
-import { to } from './pipeable'
+import { to } from '../protocol/pipeable'
 
 describe('channel hub', () => {
   it('should compose multiple channels into one', async () => {

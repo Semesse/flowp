@@ -1,4 +1,4 @@
-import { PipeSource, PipeTarget, read } from './pipeable'
+import { PipeSource, PipeTarget, read } from '../protocol/pipeable'
 import { Semaphore, transfer } from './semaphore'
 
 export class ClosedChannelError extends Error {

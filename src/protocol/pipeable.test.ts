@@ -1,4 +1,4 @@
-import { Channel } from './channel'
+import { Channel } from '../control'
 import { PipeAdapter } from './pipeable'
 
 describe('pipeable', () => {
@@ -18,6 +18,7 @@ describe('pipeable', () => {
     const channel = new Channel<number>()
     channel.pipe(pipe)
     pipe.unpipe()
+    channel.send(42)
     expect(handler).toBeCalledTimes(0)
   })
 })

@@ -42,12 +42,13 @@ export class PipeAdapter<TIn, TOut> implements PipeTarget<TIn, PipeSource<TIn>>,
   }
 }
 
-export const to = <T>(fn: (v: T, s?: PipeSource<T>) => any): PipeTarget<T> => {
+const to = <T>(fn: (v: T, s?: PipeSource<T>) => any): PipeTarget<T> => {
   return { [read]: fn }
 }
 
-export class PipeToConsole implements PipeTarget<any, PipeSource<any>> {
-  public [read](value: any, source?: PipeSource<any>) {
-    console.log(source, value)
-  }
+type ConsoleLevel = 'debug' | 'log' | 'warn' | 'error'
+to.console = (level: ConsoleLevel = 'log') => {
+  return { [read]: console[level] }
 }
+
+export { to }
