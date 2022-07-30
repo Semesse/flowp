@@ -1,4 +1,4 @@
-import { Channel, ClosedChannelError } from './channel'
+import { Channel, ChannelFullError, ClosedChannelError } from './channel'
 
 describe('channel', () => {
   it('unbound channel should be able to send and receive', async () => {
@@ -39,7 +39,7 @@ describe('channel', () => {
     channel2.close()
   })
 
-  it('try send', async () => {
+  it('try send to unbound channel', async () => {
     const channel = new Channel(1)
     const value = 42
 
@@ -54,10 +54,25 @@ describe('channel', () => {
     await channel.sendAsync(Promise.resolve(value))
     expect(await channel.receive()).toBe(value)
 
+    // send an error
     expect(channel.sendAsync(Promise.reject(new Error('test')))).rejects.toThrow('test')
   })
 
-  it('valite channel capacity', () => {
+  it('try send to bound channel exceeding its capacity', async () => {
+    const channel = new Channel(1)
+    expect(channel.capacity).toBe(1)
+    const value = 42
+    channel.trySend(value)
+    expect(() => channel.trySend(value)).toThrow(ChannelFullError)
+  })
+
+  it('try send to closed channel', async () => {
+    const channel = new Channel()
+    channel.close()
+    expect(() => channel.trySend(42)).toThrow(ClosedChannelError)
+  })
+
+  it('validate channel capacity', () => {
     expect(() => new Channel(-1)).toThrow(RangeError)
   })
 
@@ -68,15 +83,50 @@ describe('channel', () => {
     expect(channel.receive)
   })
 
-  it('should pipe', async () => {
+  it('unbound channel should pipe', async () => {
     const channel1 = new Channel()
     const channel2 = new Channel()
     channel1.pipe(channel2)
     await channel1.send(42)
+    await channel1.send(1024)
     expect(await channel2.receive()).toBe(42)
+    expect(await channel2.receive()).toBe(1024)
     channel1.unpipe()
     await channel1.send(42)
     expect(channel2.tryReceive()).toBeUndefined()
+  })
+
+  it('bound channel should pipe', async () => {
+    const channel1 = new Channel(1)
+    const channel2 = new Channel(5)
+    channel1.pipe(channel2)
+    await channel1.send(42)
+    // since it pipes to a channel with larger capcacity, we can send ignoring channel1's capacity
+    await channel1.send('hello')
+    expect(await channel2.receive()).toBe(42)
+    expect(await channel2.receive()).toBe('hello')
+
+    channel1.unpipe()
+    await channel1.send(42)
+    expect(channel2.tryReceive()).toBeUndefined()
+  })
+
+  it('do nothing when piping to closed channels', async () => {
+    const channel1 = new Channel()
+    const channel2 = new Channel()
+    channel1.pipe(channel2)
+    channel2.close()
+    channel1.send(test).catch(console.error)
+  })
+
+  it('custom handler when writing to closed channels', async () => {
+    const channel1 = new Channel()
+    const channel2 = new Channel()
+    const handler = jest.fn()
+    channel1.pipe(channel2, { onPipeError: handler })
+    channel2.close()
+    await channel1.send(0)
+    expect(handler).toBeCalledWith(expect.any(ClosedChannelError))
   })
 
   it('can have only one receivers', async () => {

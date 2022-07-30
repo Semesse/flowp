@@ -2,61 +2,89 @@ import { PipeSource, PipeTarget, read } from './pipeable'
 import { Semaphore, transfer } from './semaphore'
 
 export class ClosedChannelError extends Error {
-  public message = 'channel is closed'
+  public message = 'write on closed channel'
+}
+
+export class ChannelFullError extends Error {
+  public message = 'channel queue is full'
 }
 
 export interface ChannelStream<T> extends AsyncIterable<T> {
   next: () => Promise<T>
 }
 
+export interface ChannelPipeOptions {
+  /**
+   * called when piping to a closed target or throws, might be called multiple times
+   */
+  onPipeError?: (err: unknown) => any
+}
+
 export class Channel<T> implements PipeSource<T>, PipeTarget<T> {
-  #closed = false
-  #capacity
-  #queue: T[] = []
-  #sendSem: Semaphore
-  #recvSem: Semaphore
-  #pipeTarget: PipeTarget<T> | null = null
+  private closed = false
+  private _capacity
+  private queue: T[] = []
+  private sendSem: Semaphore
+  private recvSem: Semaphore
+  private pipeTarget: PipeTarget<T> | null = null
+  private pipeOptions?: ChannelPipeOptions
   /**
    * should use Semaphore to control max capacity,
    * `false` if capacity is Infinity
    */
-  #useSem: boolean
+  private useSem: boolean
 
   /**
    * create a new multi-producer-single-consumer channel with specified capacity
    * @param capacity channel capacity, defaults to `Infinity`
+   *
+   * @throws {RangeError} capacity is negative or NaN
    */
   public constructor(capacity = Infinity) {
     if (capacity < 0 || Number.isNaN(capacity)) {
       throw new RangeError('capacity cannot be negative or NaN')
     }
-    this.#capacity = capacity
-    this.#useSem = !Number.isFinite(capacity)
-    this.#sendSem = new Semaphore(capacity)
-    this.#recvSem = new Semaphore(0)
+    this._capacity = capacity
+    this.useSem = Number.isFinite(capacity)
+    this.sendSem = new Semaphore(capacity)
+    this.recvSem = new Semaphore(0)
   }
 
+  /**
+   * send a value to channel
+   *
+   * @throws {ClosedChannelError} throw if channel is closed
+   */
   public async send(value: T) {
-    if (this.#closed) throw new ClosedChannelError()
-    if (this.#pipeTarget) {
-      await this.#pipeTarget[read](value, this)
-    } else {
-      this.#useSem && (await transfer(this.#sendSem, this.#recvSem, 1))
-      this.#queue.push(value)
-    }
+    if (this.closed) throw new ClosedChannelError()
+    if (this.useSem && !this.pipeTarget) await transfer(this.sendSem, this.recvSem, 1)
+    this.writeValue(value)
   }
 
+  /**
+   * retrieve a value from channel
+   */
   public async receive() {
-    this.#useSem && (await transfer(this.#recvSem, this.#sendSem, 1))
-    const value = this.#queue.shift()!
+    this.useSem && (await transfer(this.recvSem, this.sendSem, 1))
+    const value = this.queue.shift()!
     return value
   }
 
+  /**
+   * try to send a value synchronosly
+   *
+   * @throws {ClosedChannelError} channel is closed
+   * @throws {ChannelFullError} channel is full
+   */
   public trySend(value: T) {
-    if (this.#queue.length + 1 > this.#capacity) throw new Error('queue is full')
-    this.#queue.push(value)
+    if (this.closed) throw new ClosedChannelError()
+    if (this.queue.length + 1 > this._capacity) throw new ChannelFullError()
+    this.writeValue(value)
   }
 
+  /**
+   * send a promise to channel
+   */
   public sendAsync(value: Promise<T>) {
     return value.then((v) => this.send(v))
   }
@@ -66,15 +94,15 @@ export class Channel<T> implements PipeSource<T>, PipeTarget<T> {
    * @returns message `T` or `undefined` if no messages in the queue
    */
   public tryReceive() {
-    return this.#queue.shift()
+    return this.queue.shift()
   }
 
   public stream(): ChannelStream<T> {
     return {
-      next: () => this.#next().then(({ value, done }) => (done ? Promise.reject(new Error('Finished')) : value)),
+      next: () => this.next().then(({ value, done }) => (done ? Promise.reject(new Error('Finished')) : value)),
       [Symbol.asyncIterator]: () => {
         return {
-          next: () => this.#next(),
+          next: () => this.next(),
           return: () => Promise.resolve({ value: undefined, done: true }),
         }
       },
@@ -82,28 +110,59 @@ export class Channel<T> implements PipeSource<T>, PipeTarget<T> {
   }
 
   public [read](value: T) {
-    this.send(value)
+    // synchronos call to wait and write
+    if (this.closed) throw new ClosedChannelError()
+    if (this.useSem) {
+      transfer(this.sendSem, this.recvSem, 1).then(() => this.writeValue(value))
+    } else {
+      this.writeValue(value)
+    }
   }
 
-  public pipe(target: PipeTarget<T>) {
-    this.#pipeTarget = target
+  public pipe(target: PipeTarget<T>, options?: ChannelPipeOptions) {
+    this.pipeTarget = target
+    this.pipeOptions = options
   }
 
   public unpipe() {
-    this.#pipeTarget = null
+    this.pipeTarget = null
+    this.pipeOptions = undefined
   }
 
+  /**
+   * close the channel, future `send` will throw a `ClosedChannelError`
+   *
+   * and
+   */
   public close() {
-    this.#closed = true
+    this.closed = true
   }
 
   public get capacity() {
-    return this.#capacity
+    return this._capacity
   }
 
-  async #next(): Promise<IteratorResult<T, undefined>> {
-    if (this.#closed) {
-      const value = this.#queue.shift()
+  /**
+   * **SHOULD** check `capacity` and `closed` state before calling this method.
+   *
+   * if check inside `writeValue`, there is a chance that `close` is called immediately after `send`
+   * while writeValue is `asynchronosly` called in `send` and will unexpectedly throw an error
+   */
+  private writeValue(value: T) {
+    if (this.pipeTarget) {
+      try {
+        this.pipeTarget[read](value, this)
+      } catch (err) {
+        this.pipeOptions?.onPipeError?.(err)
+      }
+    } else {
+      this.queue.push(value)
+    }
+  }
+
+  private async next(): Promise<IteratorResult<T, undefined>> {
+    if (this.closed) {
+      const value = this.queue.shift()
       return value === undefined ? { value: undefined, done: true } : { value, done: false }
     }
     return this.receive().then((value) => ({ value, done: false }))
