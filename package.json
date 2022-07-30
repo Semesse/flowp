@@ -2,6 +2,12 @@
   "name": "flowp",
   "version": "0.1.0",
   "description": "Promise based utilities",
+  "keywords": [
+    "promise",
+    "mutex",
+    "semaphore",
+    "channel"
+  ],
   "main": "dist/index.js",
   "exports": {
     ".": {
@@ -31,10 +37,12 @@
     "@swc/core": "^1.2.218",
     "@swc/jest": "^0.2.22",
     "@swc/register": "^0.1.10",
+    "@types/benchmark": "^2.1.1",
     "@types/jest": "^27.5.2",
     "@types/node": "^18.6.1",
     "@typescript-eslint/eslint-plugin": "^5.31.0",
     "@typescript-eslint/parser": "^5.31.0",
+    "benchmark": "^2.1.4",
     "eslint": "^8.20.0",
     "eslint-config-alloy": "^4.6.2",
     "husky": "^7.0.4",
