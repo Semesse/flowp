@@ -10,7 +10,7 @@ compose multiple channels into one
 
 ## Implements
 
-- [`PipeTarget`](../wiki/pipe.PipeTarget)<`T`\>
+- [`PipeTarget`](../wiki/PipeTarget)<`T`\>
 
 ## Table of contents
 
@@ -53,7 +53,7 @@ compose multiple channels into one
 
 #### Defined in
 
-[src/control/channel_hub.ts:16](https://github.com/Semesse/flowp/blob/165e59c/src/control/channel_hub.ts#L16)
+[src/control/channel_hub.ts:16](https://github.com/Semesse/flowp/blob/588de37/src/control/channel_hub.ts#L16)
 
 ## Properties
 
@@ -63,7 +63,7 @@ compose multiple channels into one
 
 #### Defined in
 
-[src/control/channel_hub.ts:13](https://github.com/Semesse/flowp/blob/165e59c/src/control/channel_hub.ts#L13)
+[src/control/channel_hub.ts:13](https://github.com/Semesse/flowp/blob/588de37/src/control/channel_hub.ts#L13)
 
 ___
 
@@ -73,7 +73,7 @@ ___
 
 #### Defined in
 
-[src/control/channel_hub.ts:14](https://github.com/Semesse/flowp/blob/165e59c/src/control/channel_hub.ts#L14)
+[src/control/channel_hub.ts:14](https://github.com/Semesse/flowp/blob/588de37/src/control/channel_hub.ts#L14)
 
 ## Methods
 
@@ -93,11 +93,11 @@ ___
 
 #### Implementation of
 
-PipeTarget.\_\_@read@177
+PipeTarget.\_\_@read@785
 
 #### Defined in
 
-[src/control/channel_hub.ts:50](https://github.com/Semesse/flowp/blob/165e59c/src/control/channel_hub.ts#L50)
+[src/control/channel_hub.ts:50](https://github.com/Semesse/flowp/blob/588de37/src/control/channel_hub.ts#L50)
 
 ___
 
@@ -119,7 +119,7 @@ send a valut to the hub, will be received by all readers or pipe target
 
 #### Defined in
 
-[src/control/channel_hub.ts:26](https://github.com/Semesse/flowp/blob/165e59c/src/control/channel_hub.ts#L26)
+[src/control/channel_hub.ts:26](https://github.com/Semesse/flowp/blob/588de37/src/control/channel_hub.ts#L26)
 
 ___
 
@@ -133,7 +133,7 @@ ___
 
 #### Defined in
 
-[src/control/channel_hub.ts:54](https://github.com/Semesse/flowp/blob/165e59c/src/control/channel_hub.ts#L54)
+[src/control/channel_hub.ts:54](https://github.com/Semesse/flowp/blob/588de37/src/control/channel_hub.ts#L54)
 
 ___
 
@@ -150,7 +150,7 @@ you can only use one of pipe or readers at the same time
 
 #### Defined in
 
-[src/control/channel_hub.ts:34](https://github.com/Semesse/flowp/blob/165e59c/src/control/channel_hub.ts#L34)
+[src/control/channel_hub.ts:34](https://github.com/Semesse/flowp/blob/588de37/src/control/channel_hub.ts#L34)
 
 ___
 
@@ -166,7 +166,7 @@ get a writer channel that can send messages to channel hub
 
 #### Defined in
 
-[src/control/channel_hub.ts:43](https://github.com/Semesse/flowp/blob/165e59c/src/control/channel_hub.ts#L43)
+[src/control/channel_hub.ts:43](https://github.com/Semesse/flowp/blob/588de37/src/control/channel_hub.ts#L43)
 
 ___
 
@@ -195,4 +195,4 @@ a helper function, equivalant to ChannelHub.constructor
 
 #### Defined in
 
-[src/control/channel_hub.ts:9](https://github.com/Semesse/flowp/blob/165e59c/src/control/channel_hub.ts#L9)
+[src/control/channel_hub.ts:9](https://github.com/Semesse/flowp/blob/588de37/src/control/channel_hub.ts#L9)

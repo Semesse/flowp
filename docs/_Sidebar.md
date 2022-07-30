@@ -5,4 +5,4 @@
 
 ### Namespaces
 
-- [pipe](../wiki/pipe)
+- [to](../wiki/to)

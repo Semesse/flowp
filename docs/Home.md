@@ -4,13 +4,17 @@
 ![](https://img.shields.io/codeclimate/maintainability/Semesse/flowp?style=flat-square)
 ![](https://img.shields.io/codeclimate/coverage/Semesse/flowp?style=flat-square)
 
-CJS and ESM are both supported; require node.js 16+, latest bun or a transpiler
+> CJS and ESM are both supported
+>
+> Zero dependency & written in pure TS
+>
+> Targeting ES2019 and can be run directly on Node.js 16+, or with a transpiler (babel, esbuild, swc, etc.)
 
 flowp is a promise-based utility library, providing asynchronous components like
 
+- **[Future](./docs/Future.md)**: {@stable} Promise that can be resolved anywhere other than where it's defined
 - **[Semaphore](./docs/Semaphore.md) / [Mutex](./docs/Mutex.md)**: controls max concurrency
-- **[Channel](./docs/Channel.md)**: multi producer single consumer channel, you can also use ChannelHub and ChannelSplitter
-- **[Future](./docs/Future.md)**: Promise that can be resolved anywhere other than where it's defined
+- **[Channel](./docs/Channel.md)**: multi producer single consumer channel, includes utilities like ChannelHub
 - **[lateinit](./docs/Exports.md)**: delegate method calls and property accesses to the fulfilled value of Promises
 - a bunch of features are under development 🚧  
   there will be a refactor recently
@@ -18,12 +22,23 @@ flowp is a promise-based utility library, providing asynchronous components like
 ### Have a quick look
 
 **[Future](./docs/Future.md)** can be used as a promise, but you can resolve it anywhere, especially useful in tasks like EventEmitter or on other occasions you don't know what to execute immediately in the promise constructor
+
 ```typescript
 const waitUntilNextEvent = () => {
   const e = new EventEmitter()
   const f = new Future<Event>()
   e.on('event', f.resolve)
   return f
+}
+// or
+class MyClass {
+  constructor() {
+    this.ready = new Future()
+  }
+  // called by other processes
+  init() {
+    this.ready.resolve()
+  }
 }
 ```
 
@@ -32,15 +47,17 @@ const waitUntilNextEvent = () => {
 ```typescript
 export const client = initClient()
 // you need to await to use the client every time
-return client.then(c => c.something)
-(await client).fetchI18nTexts(navigator.locale)
+return client
+  .then((c) => c.something)(await client)
+  .fetchI18nTexts(navigator.locale)
 
 // with lateinit, you can access the result directly like it's not a promise
 export const client = lateinit(initClient())
-return client.$fetchI18nTexts(navigator.locale)
+return client.$fetchI18nTexts(navigator.locale).$t('hello')
 ```
 
 **[Semaphore](./docs/Semaphore.md)** controls max concurrency like how many requests can be started at the same time. Unlike other implementations, you can change the capacity by `grant` or `revoke`
+
 ```typescript
 const sem = new Semaphore(concurrency)
 const release = await sem.acquire()
@@ -51,6 +68,7 @@ await sem.revoke()
 ```
 
 **[Mutex](./docs/Mutex.md)** specialized semaphore with maximum concurrency of 1
+
 ```typescript
 const mutex = new Mutex()
 const release = await mutex.acquire()
@@ -60,7 +78,7 @@ release()
 
 ### Contribute
 
-Feedback & PRs are welcomed 🥰
+Feature requests, issues & PRs are welcomed 🥰
 
 ### License
 

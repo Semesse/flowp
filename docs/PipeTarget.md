@@ -1,7 +1,5 @@
 # Interface: PipeTarget<T, S\>
 
-[pipe](../wiki/pipe).PipeTarget
-
 a pipe target can receive data from a pipe source
 
 ## Type parameters
@@ -9,26 +7,25 @@ a pipe target can receive data from a pipe source
 | Name | Type |
 | :------ | :------ |
 | `T` | `T` |
-| `S` | [`PipeSource`](../wiki/pipe.PipeSource)<`T`\> |
+| `S` | [`PipeSource`](../wiki/PipeSource)<`T`\> |
 
 ## Hierarchy
 
 - **`PipeTarget`**
 
-  ↳ [`Pipe`](../wiki/pipe.Pipe)
+  ↳ [`Pipe`](../wiki/Pipe)
 
 ## Implemented by
 
 - [`Channel`](../wiki/Channel)
 - [`ChannelHub`](../wiki/ChannelHub)
-- [`PipeAdapter`](../wiki/pipe.PipeAdapter)
-- [`PipeToConsole`](../wiki/pipe.PipeToConsole)
+- [`PipeAdapter`](../wiki/PipeAdapter)
 
 ## Table of contents
 
 ### Properties
 
-- [[read]](../wiki/pipe.PipeTarget#%5Bread%5D)
+- [[read]](../wiki/PipeTarget#%5Bread%5D)
 
 ## Properties
 
@@ -53,4 +50,4 @@ a pipe target can receive data from a pipe source
 
 #### Defined in
 
-[src/control/pipeable.ts:15](https://github.com/Semesse/flowp/blob/165e59c/src/control/pipeable.ts#L15)
+[src/protocol/pipeable.ts:15](https://github.com/Semesse/flowp/blob/588de37/src/protocol/pipeable.ts#L15)
