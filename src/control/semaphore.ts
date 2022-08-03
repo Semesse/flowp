@@ -1,5 +1,5 @@
 import { once } from '../utils/functools'
-import { Future } from './future'
+import { Future } from '../promise/future'
 
 /**
  * Semaphore

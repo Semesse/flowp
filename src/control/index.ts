@@ -1,4 +1,4 @@
-export { Future } from './future'
+export { Future } from '../promise/future'
 export { Semaphore } from './semaphore'
 export { Mutex } from './mutex'
 export { Channel } from './channel'

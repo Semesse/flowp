@@ -14,6 +14,14 @@ describe('future', () => {
     await expect(future).rejects.toThrow('test')
   })
 
+  it('should finally', async () => {
+    const fin = jest.fn().mockImplementation(console.log)
+    const future = new Future<number>()
+    future.resolve(42)
+    await future.finally(fin)
+    expect(fin).toBeCalledTimes(1)
+  })
+
   it('should work with EventEmitter', async () => {
     const future = new Future<number>()
     const emitter = new EventEmitter()

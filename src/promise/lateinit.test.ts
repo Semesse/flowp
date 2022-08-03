@@ -1,4 +1,3 @@
-import { Future } from './future'
 import { lateinit } from './lateinit'
 
 class TestClass extends Promise<any> {
