@@ -1,1 +1,1 @@
-export * from './pipeable'
+export * as pipe from './pipeable'
