@@ -77,7 +77,7 @@ Promise&lt;T\&gt;.constructor
 
 #### Defined in
 
-[src/promise/future.ts:24](https://github.com/Semesse/flowp/blob/242138c/src/promise/future.ts#L24)
+[src/promise/future.ts:24](https://github.com/Semesse/flowp/blob/49faea8/src/promise/future.ts#L24)
 
 ## Properties
 
@@ -115,7 +115,7 @@ ___
 
 #### Defined in
 
-[src/promise/future.ts:18](https://github.com/Semesse/flowp/blob/242138c/src/promise/future.ts#L18)
+[src/promise/future.ts:18](https://github.com/Semesse/flowp/blob/49faea8/src/promise/future.ts#L18)
 
 ___
 
@@ -139,7 +139,7 @@ ___
 
 #### Defined in
 
-[src/promise/future.ts:17](https://github.com/Semesse/flowp/blob/242138c/src/promise/future.ts#L17)
+[src/promise/future.ts:17](https://github.com/Semesse/flowp/blob/49faea8/src/promise/future.ts#L17)
 
 ___
 
@@ -149,7 +149,7 @@ ___
 
 #### Defined in
 
-[src/promise/future.ts:16](https://github.com/Semesse/flowp/blob/242138c/src/promise/future.ts#L16)
+[src/promise/future.ts:16](https://github.com/Semesse/flowp/blob/49faea8/src/promise/future.ts#L16)
 
 ## Accessors
 
@@ -183,7 +183,7 @@ tips: the method has already bound to `this`, so you can write `emitter.on('erro
 
 #### Defined in
 
-[src/promise/future.ts:48](https://github.com/Semesse/flowp/blob/242138c/src/promise/future.ts#L48)
+[src/promise/future.ts:48](https://github.com/Semesse/flowp/blob/49faea8/src/promise/future.ts#L48)
 
 ___
 
@@ -217,7 +217,7 @@ tips: the method has already bound to `this`, so you can write `emitter.on('even
 
 #### Defined in
 
-[src/promise/future.ts:39](https://github.com/Semesse/flowp/blob/242138c/src/promise/future.ts#L39)
+[src/promise/future.ts:39](https://github.com/Semesse/flowp/blob/49faea8/src/promise/future.ts#L39)
 
 ___
 
@@ -235,7 +235,7 @@ Promise.\_\_@species@283
 
 #### Defined in
 
-[src/promise/future.ts:20](https://github.com/Semesse/flowp/blob/242138c/src/promise/future.ts#L20)
+[src/promise/future.ts:20](https://github.com/Semesse/flowp/blob/49faea8/src/promise/future.ts#L20)
 
 ## Methods
 

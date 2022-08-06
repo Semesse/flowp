@@ -8,7 +8,7 @@
 >
 > Zero dependency & written in pure TS
 >
-> Targeting ES2019 and can be run directly on Node.js 16+, or with a transpiler (babel, esbuild, swc, etc.)
+> Targeting ES2020 and can be run directly on Node.js 16+, or with a transpiler (babel, esbuild, swc, etc.)
 
 flowp is a promise-based utility library, providing asynchronous components like
 

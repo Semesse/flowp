@@ -73,7 +73,7 @@ capacity is negative or NaN
 
 #### Defined in
 
-[src/control/channel.ts:43](https://github.com/Semesse/flowp/blob/242138c/src/control/channel.ts#L43)
+[src/control/channel.ts:43](https://github.com/Semesse/flowp/blob/49faea8/src/control/channel.ts#L43)
 
 ## Properties
 
@@ -83,7 +83,7 @@ capacity is negative or NaN
 
 #### Defined in
 
-[src/control/channel.ts:25](https://github.com/Semesse/flowp/blob/242138c/src/control/channel.ts#L25)
+[src/control/channel.ts:25](https://github.com/Semesse/flowp/blob/49faea8/src/control/channel.ts#L25)
 
 ___
 
@@ -93,7 +93,7 @@ ___
 
 #### Defined in
 
-[src/control/channel.ts:24](https://github.com/Semesse/flowp/blob/242138c/src/control/channel.ts#L24)
+[src/control/channel.ts:24](https://github.com/Semesse/flowp/blob/49faea8/src/control/channel.ts#L24)
 
 ___
 
@@ -103,7 +103,7 @@ ___
 
 #### Defined in
 
-[src/control/channel.ts:30](https://github.com/Semesse/flowp/blob/242138c/src/control/channel.ts#L30)
+[src/control/channel.ts:30](https://github.com/Semesse/flowp/blob/49faea8/src/control/channel.ts#L30)
 
 ___
 
@@ -113,7 +113,7 @@ ___
 
 #### Defined in
 
-[src/control/channel.ts:29](https://github.com/Semesse/flowp/blob/242138c/src/control/channel.ts#L29)
+[src/control/channel.ts:29](https://github.com/Semesse/flowp/blob/49faea8/src/control/channel.ts#L29)
 
 ___
 
@@ -123,7 +123,7 @@ ___
 
 #### Defined in
 
-[src/control/channel.ts:26](https://github.com/Semesse/flowp/blob/242138c/src/control/channel.ts#L26)
+[src/control/channel.ts:26](https://github.com/Semesse/flowp/blob/49faea8/src/control/channel.ts#L26)
 
 ___
 
@@ -133,7 +133,7 @@ ___
 
 #### Defined in
 
-[src/control/channel.ts:28](https://github.com/Semesse/flowp/blob/242138c/src/control/channel.ts#L28)
+[src/control/channel.ts:28](https://github.com/Semesse/flowp/blob/49faea8/src/control/channel.ts#L28)
 
 ___
 
@@ -143,7 +143,7 @@ ___
 
 #### Defined in
 
-[src/control/channel.ts:27](https://github.com/Semesse/flowp/blob/242138c/src/control/channel.ts#L27)
+[src/control/channel.ts:27](https://github.com/Semesse/flowp/blob/49faea8/src/control/channel.ts#L27)
 
 ___
 
@@ -156,7 +156,7 @@ should use Semaphore to control max capacity,
 
 #### Defined in
 
-[src/control/channel.ts:35](https://github.com/Semesse/flowp/blob/242138c/src/control/channel.ts#L35)
+[src/control/channel.ts:35](https://github.com/Semesse/flowp/blob/49faea8/src/control/channel.ts#L35)
 
 ## Accessors
 
@@ -170,7 +170,7 @@ should use Semaphore to control max capacity,
 
 #### Defined in
 
-[src/control/channel.ts:141](https://github.com/Semesse/flowp/blob/242138c/src/control/channel.ts#L141)
+[src/control/channel.ts:152](https://github.com/Semesse/flowp/blob/49faea8/src/control/channel.ts#L152)
 
 ## Methods
 
@@ -194,7 +194,7 @@ PipeTarget.\_\_@read@457
 
 #### Defined in
 
-[src/control/channel.ts:112](https://github.com/Semesse/flowp/blob/242138c/src/control/channel.ts#L112)
+[src/control/channel.ts:119](https://github.com/Semesse/flowp/blob/49faea8/src/control/channel.ts#L119)
 
 ___
 
@@ -204,15 +204,13 @@ ___
 
 close the channel, future `send` will throw a `ClosedChannelError`
 
-and
-
 #### Returns
 
 `void`
 
 #### Defined in
 
-[src/control/channel.ts:137](https://github.com/Semesse/flowp/blob/242138c/src/control/channel.ts#L137)
+[src/control/channel.ts:148](https://github.com/Semesse/flowp/blob/49faea8/src/control/channel.ts#L148)
 
 ___
 
@@ -226,13 +224,15 @@ ___
 
 #### Defined in
 
-[src/control/channel.ts:163](https://github.com/Semesse/flowp/blob/242138c/src/control/channel.ts#L163)
+[src/control/channel.ts:174](https://github.com/Semesse/flowp/blob/49faea8/src/control/channel.ts#L174)
 
 ___
 
 ### pipe
 
 ▸ **pipe**(`target`, `options?`): `void`
+
+pipe channel output to target
 
 #### Parameters
 
@@ -251,7 +251,7 @@ PipeSource.pipe
 
 #### Defined in
 
-[src/control/channel.ts:122](https://github.com/Semesse/flowp/blob/242138c/src/control/channel.ts#L122)
+[src/control/channel.ts:132](https://github.com/Semesse/flowp/blob/49faea8/src/control/channel.ts#L132)
 
 ___
 
@@ -261,13 +261,17 @@ ___
 
 retrieve a value from channel
 
+will never resolve if [pipe](../wiki/Channel#pipe) or is enabled;
+will race with [stream](../wiki/Channel#stream)
+![img](file:///home/semesse/code/workspace/semlab/npkg/libsems/valcat.jpg)
+
 #### Returns
 
 `Promise`<`NonNullable`<`T`\>\>
 
 #### Defined in
 
-[src/control/channel.ts:67](https://github.com/Semesse/flowp/blob/242138c/src/control/channel.ts#L67)
+[src/control/channel.ts:71](https://github.com/Semesse/flowp/blob/49faea8/src/control/channel.ts#L71)
 
 ___
 
@@ -293,7 +297,7 @@ throw if channel is closed
 
 #### Defined in
 
-[src/control/channel.ts:58](https://github.com/Semesse/flowp/blob/242138c/src/control/channel.ts#L58)
+[src/control/channel.ts:58](https://github.com/Semesse/flowp/blob/49faea8/src/control/channel.ts#L58)
 
 ___
 
@@ -315,7 +319,7 @@ send a promise to channel
 
 #### Defined in
 
-[src/control/channel.ts:88](https://github.com/Semesse/flowp/blob/242138c/src/control/channel.ts#L88)
+[src/control/channel.ts:92](https://github.com/Semesse/flowp/blob/49faea8/src/control/channel.ts#L92)
 
 ___
 
@@ -323,13 +327,15 @@ ___
 
 ▸ **stream**(): `ChannelStream`<`T`\>
 
+get a stream to read from the channel, internally uses [receive](../wiki/Channel#receive)
+
 #### Returns
 
 `ChannelStream`<`T`\>
 
 #### Defined in
 
-[src/control/channel.ts:100](https://github.com/Semesse/flowp/blob/242138c/src/control/channel.ts#L100)
+[src/control/channel.ts:107](https://github.com/Semesse/flowp/blob/49faea8/src/control/channel.ts#L107)
 
 ___
 
@@ -347,7 +353,7 @@ message `T` or `undefined` if no messages in the queue
 
 #### Defined in
 
-[src/control/channel.ts:96](https://github.com/Semesse/flowp/blob/242138c/src/control/channel.ts#L96)
+[src/control/channel.ts:100](https://github.com/Semesse/flowp/blob/49faea8/src/control/channel.ts#L100)
 
 ___
 
@@ -377,13 +383,15 @@ channel is full
 
 #### Defined in
 
-[src/control/channel.ts:79](https://github.com/Semesse/flowp/blob/242138c/src/control/channel.ts#L79)
+[src/control/channel.ts:83](https://github.com/Semesse/flowp/blob/49faea8/src/control/channel.ts#L83)
 
 ___
 
 ### unpipe
 
 ▸ **unpipe**(): `void`
+
+unlink output with target, future input will be stored in channel's internal buffer
 
 #### Returns
 
@@ -395,7 +403,7 @@ PipeSource.unpipe
 
 #### Defined in
 
-[src/control/channel.ts:127](https://github.com/Semesse/flowp/blob/242138c/src/control/channel.ts#L127)
+[src/control/channel.ts:140](https://github.com/Semesse/flowp/blob/49faea8/src/control/channel.ts#L140)
 
 ___
 
@@ -420,4 +428,4 @@ while writeValue is `asynchronosly` called in `send` and will unexpectedly throw
 
 #### Defined in
 
-[src/control/channel.ts:151](https://github.com/Semesse/flowp/blob/242138c/src/control/channel.ts#L151)
+[src/control/channel.ts:162](https://github.com/Semesse/flowp/blob/49faea8/src/control/channel.ts#L162)

@@ -27,7 +27,7 @@
 
 #### Defined in
 
-[src/control/mutex.ts:5](https://github.com/Semesse/flowp/blob/242138c/src/control/mutex.ts#L5)
+[src/control/mutex.ts:5](https://github.com/Semesse/flowp/blob/49faea8/src/control/mutex.ts#L5)
 
 ## Properties
 
@@ -37,7 +37,7 @@
 
 #### Defined in
 
-[src/control/mutex.ts:4](https://github.com/Semesse/flowp/blob/242138c/src/control/mutex.ts#L4)
+[src/control/mutex.ts:4](https://github.com/Semesse/flowp/blob/49faea8/src/control/mutex.ts#L4)
 
 ## Accessors
 
@@ -51,7 +51,7 @@
 
 #### Defined in
 
-[src/control/mutex.ts:17](https://github.com/Semesse/flowp/blob/242138c/src/control/mutex.ts#L17)
+[src/control/mutex.ts:17](https://github.com/Semesse/flowp/blob/49faea8/src/control/mutex.ts#L17)
 
 ___
 
@@ -65,7 +65,7 @@ ___
 
 #### Defined in
 
-[src/control/mutex.ts:13](https://github.com/Semesse/flowp/blob/242138c/src/control/mutex.ts#L13)
+[src/control/mutex.ts:13](https://github.com/Semesse/flowp/blob/49faea8/src/control/mutex.ts#L13)
 
 ## Methods
 
@@ -79,4 +79,4 @@ ___
 
 #### Defined in
 
-[src/control/mutex.ts:9](https://github.com/Semesse/flowp/blob/242138c/src/control/mutex.ts#L9)
+[src/control/mutex.ts:9](https://github.com/Semesse/flowp/blob/49faea8/src/control/mutex.ts#L9)

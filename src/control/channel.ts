@@ -63,6 +63,10 @@ export class Channel<T> implements PipeSource<T>, PipeTarget<T> {
 
   /**
    * retrieve a value from channel
+   *
+   * will never resolve if {@link Channel.pipe} or is enabled;
+   * will race with {@link Channel.stream}
+   * ![img](file:///home/semesse/code/workspace/semlab/npkg/libsems/valcat.jpg)
    */
   public async receive() {
     this.useSem && (await transfer(this.recvSem, this.sendSem, 1))
@@ -97,6 +101,9 @@ export class Channel<T> implements PipeSource<T>, PipeTarget<T> {
     return this.queue.shift()
   }
 
+  /**
+   * get a stream to read from the channel, internally uses {@link Channel.receive}
+   */
   public stream(): ChannelStream<T> {
     return {
       next: () => this.next().then(({ value, done }) => (done ? Promise.reject(new Error('Finished')) : value)),
@@ -119,11 +126,17 @@ export class Channel<T> implements PipeSource<T>, PipeTarget<T> {
     }
   }
 
+  /**
+   * pipe channel output to target
+   */
   public pipe(target: PipeTarget<T>, options?: ChannelPipeOptions) {
     this.pipeTarget = target
     this.pipeOptions = options
   }
 
+  /**
+   * unlink output with target, future input will be stored in channel's internal buffer
+   */
   public unpipe() {
     this.pipeTarget = null
     this.pipeOptions = undefined
@@ -131,8 +144,6 @@ export class Channel<T> implements PipeSource<T>, PipeTarget<T> {
 
   /**
    * close the channel, future `send` will throw a `ClosedChannelError`
-   *
-   * and
    */
   public close() {
     this.closed = true
