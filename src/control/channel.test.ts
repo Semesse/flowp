@@ -68,8 +68,10 @@ describe('channel', () => {
 
   it('try send to closed channel', async () => {
     const channel = new Channel()
+    expect(channel.closed).toBe(false)
     channel.close()
     expect(() => channel.trySend(42)).toThrow(ClosedChannelError)
+    expect(channel.closed).toBe(true)
   })
 
   it('validate channel capacity', () => {

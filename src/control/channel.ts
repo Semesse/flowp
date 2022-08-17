@@ -21,7 +21,7 @@ export interface ChannelPipeOptions {
 }
 
 export class Channel<T> implements PipeSource<T>, PipeTarget<T> {
-  private closed = false
+  private _closed = false
   private _capacity
   private queue: T[] = []
   private sendSem: Semaphore
@@ -56,7 +56,7 @@ export class Channel<T> implements PipeSource<T>, PipeTarget<T> {
    * @throws {ClosedChannelError} throw if channel is closed
    */
   public async send(value: T) {
-    if (this.closed) throw new ClosedChannelError()
+    if (this._closed) throw new ClosedChannelError()
     if (this.useSem && !this.pipeTarget) await transfer(this.sendSem, this.recvSem, 1)
     this.writeValue(value)
   }
@@ -80,7 +80,7 @@ export class Channel<T> implements PipeSource<T>, PipeTarget<T> {
    * @throws {ChannelFullError} channel is full
    */
   public trySend(value: T) {
-    if (this.closed) throw new ClosedChannelError()
+    if (this._closed) throw new ClosedChannelError()
     if (this.queue.length + 1 > this._capacity) throw new ChannelFullError()
     this.writeValue(value)
   }
@@ -117,7 +117,7 @@ export class Channel<T> implements PipeSource<T>, PipeTarget<T> {
 
   public [read](value: T) {
     // synchronos call to wait and write
-    if (this.closed) throw new ClosedChannelError()
+    if (this._closed) throw new ClosedChannelError()
     if (this.useSem) {
       transfer(this.sendSem, this.recvSem, 1).then(() => this.writeValue(value))
     } else {
@@ -145,7 +145,11 @@ export class Channel<T> implements PipeSource<T>, PipeTarget<T> {
    * close the channel, future `send` will throw a `ClosedChannelError`
    */
   public close() {
-    this.closed = true
+    this._closed = true
+  }
+
+  public get closed() {
+    return this._closed
   }
 
   public get capacity() {
@@ -171,7 +175,7 @@ export class Channel<T> implements PipeSource<T>, PipeTarget<T> {
   }
 
   private async next(): Promise<IteratorResult<T, undefined>> {
-    if (this.closed) {
+    if (this._closed) {
       const value = this.queue.shift()
       return value === undefined ? { value: undefined, done: true } : { value, done: false }
     }
