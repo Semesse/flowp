@@ -66,7 +66,6 @@ export class Channel<T> implements PipeSource<T>, PipeTarget<T> {
    *
    * will never resolve if {@link Channel.pipe} or is enabled;
    * will race with {@link Channel.stream}
-   * ![img](file:///home/semesse/code/workspace/semlab/npkg/libsems/valcat.jpg)
    */
   public async receive() {
     this.useSem && (await transfer(this.recvSem, this.sendSem, 1))

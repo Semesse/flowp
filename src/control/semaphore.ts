@@ -51,6 +51,7 @@ export class Semaphore {
 
   /**
    * Try to synchronosly acquire if the semaphore is not full
+   * @returns a function to release the semaphore
    * @throws Error if semaphore is full
    */
   public tryAcquire() {

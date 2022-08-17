@@ -2,19 +2,42 @@ import { Semaphore } from './semaphore'
 
 export class Mutex {
   #semaphore: Semaphore
+
+  /**
+   * {@link Semaphore} with capacity of 1
+   */
   public constructor() {
     this.#semaphore = new Semaphore(1)
   }
 
+  /**
+   * alias for {@link acquire}
+   */
+  public async lock() {
+    return this.acquire()
+  }
+
+  /**
+   * acquire mutex lock, will resolve once ready
+   * @returns a function to release lock
+   */
   public async acquire() {
     return await this.#semaphore.acquire()
   }
 
-  public get isFull() {
-    return this.#semaphore.isFull
+  /**
+   * Try to synchronosly acquire
+   * @returns a function to release mutex lock
+   * @throws Error if mutex is already acquired
+   */
+  public tryAcquire() {
+    return this.#semaphore.tryAcquire()
   }
 
-  public get isEmpty() {
+  /**
+   * check if mutex is available
+   */
+  public get canLock() {
     return this.#semaphore.isEmpty
   }
 }
