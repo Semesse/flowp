@@ -12,7 +12,7 @@
  * future.resolve(count)
  * ```
  */
-export class Future<T> extends Promise<T> {
+export class Future<T = unknown> extends Promise<T> {
   private static _constructors: [(value: any | PromiseLike<any>) => void, (error: unknown) => void][] = []
   private _resolve: (value: T | PromiseLike<T>) => void
   private _reject: (error: unknown) => void
