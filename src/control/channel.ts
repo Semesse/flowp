@@ -29,10 +29,10 @@ export class Channel<T> implements PipeSource<T>, PipeTarget<T> {
   private pipeTarget: PipeTarget<T> | null = null
   private pipeOptions?: ChannelPipeOptions
   /**
-   * should use Semaphore to control max capacity,
+   * should use sendSem to control maximum messages queued,
    * `false` if capacity is Infinity
    */
-  private useSem: boolean
+  private bounded: boolean
 
   /**
    * create a new multi-producer-single-consumer channel with specified capacity
@@ -45,7 +45,7 @@ export class Channel<T> implements PipeSource<T>, PipeTarget<T> {
       throw new RangeError('capacity cannot be negative or NaN')
     }
     this._capacity = capacity
-    this.useSem = Number.isFinite(capacity)
+    this.bounded = Number.isFinite(capacity)
     this.sendSem = new Semaphore(capacity)
     this.recvSem = new Semaphore(0)
   }
@@ -57,7 +57,7 @@ export class Channel<T> implements PipeSource<T>, PipeTarget<T> {
    */
   public async send(value: T) {
     if (this._closed) throw new ClosedChannelError()
-    if (this.useSem && !this.pipeTarget) await transfer(this.sendSem, this.recvSem, 1)
+    if (!this.pipeTarget) this.bounded ? await transfer(this.sendSem, this.recvSem, 1) : this.recvSem.grant()
     this.writeValue(value)
   }
 
@@ -67,8 +67,9 @@ export class Channel<T> implements PipeSource<T>, PipeTarget<T> {
    * will never resolve if {@link Channel.pipe} or is enabled;
    * will race with {@link Channel.stream}
    */
-  public async receive() {
-    this.useSem && (await transfer(this.recvSem, this.sendSem, 1))
+  public async receive(): Promise<T> {
+    this.bounded ? await transfer(this.recvSem, this.sendSem, 1) : await this.recvSem.revoke()
+    if (!this.queue.length) throw new Error('queue is empty, this is a bug in library `flowp`')
     const value = this.queue.shift()!
     return value
   }
@@ -118,9 +119,10 @@ export class Channel<T> implements PipeSource<T>, PipeTarget<T> {
   public [read](value: T) {
     // synchronos call to wait and write
     if (this._closed) throw new ClosedChannelError()
-    if (this.useSem) {
+    if (this.bounded) {
       transfer(this.sendSem, this.recvSem, 1).then(() => this.writeValue(value))
     } else {
+      this.recvSem.grant()
       this.writeValue(value)
     }
   }

@@ -74,6 +74,40 @@ describe('channel', () => {
     expect(channel.closed).toBe(true)
   })
 
+  it('receive from empty unbound channel', async () => {
+    const channel = new Channel()
+    expect(
+      Promise.race([
+        channel.receive(),
+        new Promise((_, reject) => {
+          setTimeout(reject, 100)
+        }),
+      ])
+    ).rejects.toThrow()
+  })
+
+  it('receive from empty bound channel', async () => {
+    const channel = new Channel(1)
+    expect(
+      Promise.race([
+        channel.receive(),
+        new Promise((_, reject) => {
+          setTimeout(reject, 100)
+        }),
+      ])
+    ).rejects.toThrow()
+  })
+
+  it('try receive from empty unbound channel', async () => {
+    const channel = new Channel()
+    expect(channel.tryReceive()).toBe(undefined)
+  })
+
+  it('try receive from empty bound channel', async () => {
+    const channel = new Channel(1)
+    expect(channel.tryReceive()).toBe(undefined)
+  })
+
   it('validate channel capacity', () => {
     expect(() => new Channel(-1)).toThrow(RangeError)
   })
