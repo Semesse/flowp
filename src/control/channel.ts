@@ -69,6 +69,7 @@ export class Channel<T> implements PipeSource<T>, PipeTarget<T> {
    */
   public async receive(): Promise<T> {
     this.bounded ? await transfer(this.recvSem, this.sendSem, 1) : await this.recvSem.revoke()
+    // istanbul ignore if
     if (!this.queue.length) throw new Error('queue is empty, this is a bug in library `flowp`')
     const value = this.queue.shift()!
     return value
@@ -133,6 +134,11 @@ export class Channel<T> implements PipeSource<T>, PipeTarget<T> {
   public pipe(target: PipeTarget<T>, options?: ChannelPipeOptions) {
     this.pipeTarget = target
     this.pipeOptions = options
+    // empty current queue
+    for (const v of this.queue) {
+      this.writeValue(v)
+    }
+    this.queue = []
   }
 
   /**

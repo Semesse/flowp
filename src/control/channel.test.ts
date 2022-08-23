@@ -1,3 +1,4 @@
+import { pipe } from '../protocol'
 import { Channel, ChannelFullError, ClosedChannelError } from './channel'
 
 describe('channel', () => {
@@ -145,6 +146,20 @@ describe('channel', () => {
     channel1.unpipe()
     await channel1.send(42)
     expect(channel2.tryReceive()).toBeUndefined()
+  })
+
+  it('pipe should clear existing queue', async () => {
+    const channel1 = new Channel(1)
+    const channel2 = new Channel()
+    await channel1.send(1)
+    await channel2.send(2)
+    await channel2.send(3)
+    const fn1 = jest.fn()
+    const fn2 = jest.fn()
+    channel1.pipe(pipe.to(fn1))
+    channel2.pipe(pipe.to(fn2))
+    expect(fn1).toHaveBeenCalledTimes(1)
+    expect(fn2).toHaveBeenCalledTimes(2)
   })
 
   it('do nothing when piping to closed channels', async () => {
