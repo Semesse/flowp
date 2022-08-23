@@ -81,10 +81,10 @@ describe('channel', () => {
       Promise.race([
         channel.receive(),
         new Promise((_, reject) => {
-          setTimeout(reject, 100)
+          setTimeout(() => reject(new Error()), 100)
         }),
       ])
-    ).rejects.toThrow()
+    ).rejects.toBeTruthy()
   })
 
   it('receive from empty bound channel', async () => {
@@ -93,10 +93,10 @@ describe('channel', () => {
       Promise.race([
         channel.receive(),
         new Promise((_, reject) => {
-          setTimeout(reject, 100)
+          setTimeout(() => reject(new Error()), 100)
         }),
       ])
-    ).rejects.toThrow()
+    ).rejects.toBeTruthy()
   })
 
   it('try receive from empty unbound channel', async () => {
