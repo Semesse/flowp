@@ -85,6 +85,41 @@ describe('semaphore', () => {
     expect(sem.acquire()).resolves.toBeDefined()
   })
 
+  it('acquire after freeze', async () => {
+    const sem = new Semaphore(1)
+    sem.freeze()
+    expect(() => sem.tryAcquire()).toThrowError()
+    expect(sem.remain).toBe(1)
+    expect(sem.acquire(100)).rejects.toThrowErrorMatchingInlineSnapshot(`"timeout"`)
+
+    jest.runAllTimers()
+    sem.unfreeze()
+    await Promise.resolve()
+    expect(() => sem.tryAcquire()).not.toThrow()
+    expect(sem.remain).toBe(0)
+  })
+
+  it('acquire(queued) before freeze', async () => {
+    const sem = new Semaphore(1)
+    const release1 = sem.tryAcquire()
+    const release2 = sem.acquire(100)
+    sem.freeze()
+    release1()
+    expect(sem.remain).toBe(0)
+    jest.runAllTimers()
+    expect(release2).rejects.toThrowErrorMatchingInlineSnapshot(`"timeout"`)
+    sem.unfreeze()
+    expect(sem.remain).toBe(1)
+  })
+
+  it('unfreeze before freeze', async () => {
+    const sem = new Semaphore(1)
+    sem.unfreeze()
+    expect(() => sem.tryAcquire()).not.toThrow()
+    expect(sem.remain).toBe(0)
+    expect(sem.acquire()).resolves.toBeDefined()
+  })
+
   it('grant and revoke infinity should work', async () => {
     const sem = new Semaphore()
     const release = await sem.acquire()
