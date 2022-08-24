@@ -68,7 +68,7 @@ export class Channel<T> implements PipeSource<T>, PipeTarget<T> {
    * will race with {@link Channel.stream}
    */
   public async receive(): Promise<T> {
-    this.bounded ? await transfer(this.recvSem, this.sendSem, 1) : await this.recvSem.revoke()
+    await transfer(this.recvSem, this.sendSem, 1)
     // istanbul ignore if
     if (!this.queue.length) throw new Error('queue is empty, this is a bug in library `flowp`')
     const value = this.queue.shift()!
