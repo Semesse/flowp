@@ -1,4 +1,4 @@
-import { Future } from '../promise/future'
+import { Future } from '../promise'
 import { PipeSource, PipeTarget, read } from '../protocol/pipeable'
 import { Semaphore, transfer } from './semaphore'
 
@@ -111,7 +111,11 @@ export class Channel<T> implements PipeSource<T>, PipeTarget<T> {
    */
   public stream(): ChannelStream<T> {
     return {
-      next: () => this.next().then(({ value, done }) => (done ? Promise.reject(new Error('Finished')) : value)),
+      next: async () => {
+        const next = await this.next()
+        if (next.done) throw new Error('Finished')
+        return next.value
+      },
       [Symbol.asyncIterator]: () => {
         return {
           next: () => this.next(),

@@ -1,12 +1,12 @@
-import { Future } from '../promise/future'
 import { vi } from 'vitest'
+import { Future, timer } from '../promise'
 import { pipe } from '../protocol'
 import { Channel, ChannelFullError, ClosedChannelError } from './channel'
 
 describe('channel', () => {
   beforeAll(() => {
-    jest.useFakeTimers()
-    jest.spyOn(global, 'setTimeout')
+    vi.useFakeTimers()
+    vi.spyOn(global, 'setTimeout')
   })
 
   it('unbound channel should be able to send and receive', async () => {
@@ -104,26 +104,12 @@ describe('channel', () => {
 
   it('receive from empty unbound channel', async () => {
     const channel = new Channel()
-    expect(
-      Promise.race([
-        channel.receive(),
-        new Promise((_, reject) => {
-          setTimeout(() => reject(new Error()), 100)
-        }),
-      ])
-    ).rejects.toBeTruthy()
+    expect(Promise.race([channel.receive(), timer.timeout(100)])).rejects.toBeTruthy()
   })
 
   it('receive from empty bound channel', async () => {
     const channel = new Channel(1)
-    expect(
-      Promise.race([
-        channel.receive(),
-        new Promise((_, reject) => {
-          setTimeout(() => reject(new Error()), 100)
-        }),
-      ])
-    ).rejects.toBeTruthy()
+    expect(Promise.race([channel.receive(), timer.timeout(100)])).rejects.toBeTruthy()
   })
 
   it('try receive from empty unbound channel', async () => {
@@ -207,9 +193,9 @@ describe('channel', () => {
     expect(handler).toBeCalledWith(expect.any(ClosedChannelError))
   })
 
-  it('pause before starting piping', async () => {
+  it('send, pause, pipe', async () => {
     const channel = new Channel()
-    const fn = jest.fn()
+    const fn = vi.fn()
     channel.send(0)
     channel.pause()
     channel.pipe(pipe.to(fn))
@@ -218,11 +204,33 @@ describe('channel', () => {
     expect(fn).toBeCalledTimes(1)
   })
 
-  it('pause after starting piping', async () => {
+  it('pipe, pause, send', async () => {
     const channel = new Channel()
-    const fn = jest.fn()
+    const fn = vi.fn()
     channel.pipe(pipe.to(fn))
     channel.pause()
+    channel.send(0)
+    expect(fn).toBeCalledTimes(0)
+    channel.resume()
+    expect(fn).toBeCalledTimes(1)
+  })
+
+  it('pause, pipe, send', async () => {
+    const channel = new Channel()
+    const fn = vi.fn()
+    channel.pause()
+    channel.pipe(pipe.to(fn))
+    channel.send(0)
+    expect(fn).toBeCalledTimes(0)
+    channel.resume()
+    expect(fn).toBeCalledTimes(1)
+  })
+
+  it('pause, send, pipe', async () => {
+    const channel = new Channel()
+    const fn = vi.fn()
+    channel.pause()
+    channel.pipe(pipe.to(fn))
     channel.send(0)
     expect(fn).toBeCalledTimes(0)
     channel.resume()
@@ -231,23 +239,21 @@ describe('channel', () => {
 
   it('pause blocks receive', async () => {
     const channel = new Channel()
-    const timeout = new Future<void>()
-    expect(Promise.race([channel.receive(), timeout])).rejects.toBeUndefined()
+    expect(Promise.race([channel.receive(), timer.timeout(100)])).rejects.toMatchInlineSnapshot('[Error: timeout]')
     channel.pause()
-    setTimeout(timeout.reject, 100)
-    await channel.send(0)
-    jest.runAllTimers()
+    process.nextTick(() => vi.runAllTimers())
+    // until next tick and run all timers
+    await timer.sleep(0)
   })
 
   it('pause blocks stream', async () => {
     const channel = new Channel()
-    const timeout = new Future<void>()
     const stream = channel.stream()
-    expect(Promise.race([stream.next(), timeout])).rejects.toBeUndefined(0)
+    expect(Promise.race([stream.next(), timer.timeout(100)])).rejects.toMatchInlineSnapshot('[Error: timeout]')
     channel.pause()
-    setTimeout(timeout.reject, 100)
     await channel.send(0)
-    jest.runAllTimers()
+    process.nextTick(() => vi.runAllTimers())
+    await timer.sleep(0)
   })
 
   it('can have only one receivers', async () => {
