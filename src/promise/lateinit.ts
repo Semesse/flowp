@@ -16,7 +16,9 @@ const raw = Symbol('get the raw untouched value')
 
 /**
  * Delegates method calls and member access to the resolved value
- * @param value value to delegate to, must be a promise and should not be resolve with primitives
+ *
+ * @experimental not verified in production use
+ * @param value value to delegate to, must be a promise and should not be resolved with primitives
  * @returns the delegated object, access delegated properties with `${key}`
  * @example
  * const promise = Promise.resolve({ foo: { bar: 'baz' } })

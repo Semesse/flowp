@@ -47,6 +47,7 @@ const to = <T>(fn: (v: T, s?: PipeSource<T>) => any): PipeTarget<T> => {
 }
 
 type ConsoleLevel = 'debug' | 'log' | 'warn' | 'error'
+// istanbul ignore next
 to.console = (level: ConsoleLevel = 'log') => {
   return { [read]: console[level] }
 }

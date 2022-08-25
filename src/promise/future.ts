@@ -41,11 +41,11 @@ export class Future<T = unknown> extends Promise<T> {
   }
 
   /**
-   * resolve the future with given value
+   * reject the future with given value, [UnhandledRejection] will be throwed when rejecting before `.catch`
    *
    * tips: the method has already bound to `this`, so you can write `emitter.on('error', future.reject)`
    */
-  public get reject(): (error: unknown) => void {
+  public get reject(): (error?: unknown) => void {
     return (error) => this._reject(error)
   }
 }

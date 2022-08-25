@@ -1,4 +1,6 @@
-export { Future } from '../promise/future'
+/* istanbul ignore file */
+
+export { Future } from '../promise'
 export { Semaphore } from './semaphore'
 export { Mutex } from './mutex'
 export { Channel } from './channel'
