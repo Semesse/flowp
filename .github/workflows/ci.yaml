@@ -25,6 +25,9 @@ jobs:
       - run: pnpm build
       - run: pnpm test
       - uses: paambaati/codeclimate-action@v3.0.0
+        with:
+          debug: true
+          coverageLocations: ${{github.workspace}}/coverage/clover.xml:clover
         env:
           CC_TEST_REPORTER_ID: ${{secrets.CODECLIMATE_REPORTER_ID}}
   lint:

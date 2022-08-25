@@ -7,7 +7,7 @@ describe('timers', async () => {
   })
 
   it('sleep', async () => {
-    expect(sleep(100)).resolves.toBe(42)
+    expect(sleep(100)).resolves.toBeUndefined()
     vi.runAllTimers()
   })
 
