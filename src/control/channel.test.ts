@@ -180,6 +180,15 @@ describe('channel', () => {
     expect(handler).toBeCalledWith(expect.any(ClosedChannelError))
   })
 
+  it('pause before piping', async () => {
+    const channel = new Channel()
+    const fn = jest.fn()
+    channel.send(0)
+    channel.pause()
+    channel.pipe(pipe.to.console())
+    expect(fn).toBeCalledTimes(0)
+  })
+
   it('can have only one receivers', async () => {
     const channel = new Channel()
     const value = 42

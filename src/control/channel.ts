@@ -1,3 +1,4 @@
+import { Future } from '../promise/future'
 import { PipeSource, PipeTarget, read } from '../protocol/pipeable'
 import { Semaphore, transfer } from './semaphore'
 
@@ -15,7 +16,7 @@ export interface ChannelStream<T> extends AsyncIterable<T> {
 
 export interface ChannelPipeOptions {
   /**
-   * called when piping to a closed target or throws, might be called multiple times
+   * called when piping to a closed target or target[read] throws, might be called multiple times
    */
   onPipeError?: (err: unknown) => any
 }
@@ -28,6 +29,7 @@ export class Channel<T> implements PipeSource<T>, PipeTarget<T> {
   private recvSem: Semaphore
   private pipeTarget: PipeTarget<T> | null = null
   private pipeOptions?: ChannelPipeOptions
+  private paused?: Future<void>
   /**
    * should use sendSem to control maximum messages queued,
    * `false` if capacity is Infinity
@@ -57,7 +59,9 @@ export class Channel<T> implements PipeSource<T>, PipeTarget<T> {
    */
   public async send(value: T) {
     if (this._closed) throw new ClosedChannelError()
-    if (!this.pipeTarget) this.bounded ? await transfer(this.sendSem, this.recvSem, 1) : this.recvSem.grant()
+    if (!this.pipeTarget) {
+      this.bounded ? await transfer(this.sendSem, this.recvSem, 1) : this.recvSem.grant()
+    }
     this.writeValue(value)
   }
 
@@ -134,11 +138,7 @@ export class Channel<T> implements PipeSource<T>, PipeTarget<T> {
   public pipe(target: PipeTarget<T>, options?: ChannelPipeOptions) {
     this.pipeTarget = target
     this.pipeOptions = options
-    // empty current queue
-    for (const v of this.queue) {
-      this.writeValue(v)
-    }
-    this.queue = []
+    this.flushQueue()
   }
 
   /**
@@ -147,6 +147,20 @@ export class Channel<T> implements PipeSource<T>, PipeTarget<T> {
   public unpipe() {
     this.pipeTarget = null
     this.pipeOptions = undefined
+  }
+
+  /**
+   * stop streaming / piping / sending new items until {@link resume} is called
+   *
+   * items sending to the channel will be queued despite pipe enabled
+   */
+  public pause() {
+    this.paused = new Future()
+  }
+
+  public resume() {
+    this.paused?.resolve()
+    this.flushQueue()
   }
 
   /**
@@ -160,8 +174,18 @@ export class Channel<T> implements PipeSource<T>, PipeTarget<T> {
     return this._closed
   }
 
+  /**
+   * Get the number of maximum items in queue
+   */
   public get capacity() {
     return this._capacity
+  }
+
+  /**
+   * Get the number of current queued items
+   */
+  public get size() {
+    return this.queue.length
   }
 
   /**
@@ -171,7 +195,7 @@ export class Channel<T> implements PipeSource<T>, PipeTarget<T> {
    * while writeValue is `asynchronosly` called in `send` and will unexpectedly throw an error
    */
   private writeValue(value: T) {
-    if (this.pipeTarget) {
+    if (this.pipeTarget && !this.paused) {
       try {
         this.pipeTarget[read](value, this)
       } catch (err) {
@@ -180,6 +204,14 @@ export class Channel<T> implements PipeSource<T>, PipeTarget<T> {
     } else {
       this.queue.push(value)
     }
+  }
+
+  // empty current queue
+  private flushQueue() {
+    for (const v of this.queue) {
+      this.writeValue(v)
+    }
+    this.queue = []
   }
 
   private async next(): Promise<IteratorResult<T, undefined>> {
