@@ -15,14 +15,14 @@ describe('future', () => {
   })
 
   it('should finally', async () => {
-    const fin = jest.fn().mockImplementation(console.log)
+    const fin = jest.fn()
     const future = new Future<number>()
     future.resolve(42)
     await future.finally(fin)
     expect(fin).toBeCalledTimes(1)
   })
 
-  it('should work with EventEmitter', async () => {
+  it('should work with EventEmitter with bound resolve', async () => {
     const future = new Future<number>()
     const emitter = new EventEmitter()
     emitter.on('test', future.resolve)

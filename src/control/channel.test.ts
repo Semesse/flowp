@@ -1,11 +1,18 @@
+import { Future } from '../promise/future'
 import { pipe } from '../protocol'
 import { Channel, ChannelFullError, ClosedChannelError } from './channel'
 
 describe('channel', () => {
+  beforeAll(() => {
+    jest.useFakeTimers()
+    jest.spyOn(global, 'setTimeout')
+  })
+
   it('unbound channel should be able to send and receive', async () => {
     const channel = new Channel()
     const value = 42
     await channel.send(value)
+    expect(channel.size).toBe(1)
     expect(await channel.receive()).toBe(value)
     await channel.send(value)
     expect(await channel.receive()).toBe(value)
@@ -13,15 +20,17 @@ describe('channel', () => {
 
   it('bound channel should be able to send and receive', async () => {
     const channel = new Channel(1)
+    expect(channel.size).toBe(0)
     expect(channel.capacity).toBe(1)
     const value = 42
     await channel.send(value)
+    expect(channel.size).toBe(1)
     expect(await channel.receive()).toBe(value)
     await channel.send(value)
     expect(await channel.receive()).toBe(value)
   })
 
-  it('async iterates', async () => {
+  it('async iterates, close before stream', async () => {
     const channel = new Channel()
     const value = 42
     await channel.send(value)
@@ -29,15 +38,31 @@ describe('channel', () => {
     for await (const v of channel.stream()) {
       expect(v).toBe(value)
     }
+  })
 
-    const channel2 = new Channel()
-    channel2.send(value)
+  it('async iterates, break', async () => {
+    const value = 42
+    const channel = new Channel()
+    channel.send(value)
+    channel.send(value)
     // eslint-disable-next-line no-unreachable-loop
-    for await (const v of channel2.stream()) {
+    for await (const v of channel.stream()) {
       expect(v).toBe(value)
       break
     }
-    channel2.close()
+    expect(channel.size).toBe(1)
+    channel.close()
+  })
+
+  it('stream, next', async () => {
+    const channel = new Channel()
+    const value = 42
+    await channel.send(value)
+    const stream = channel.stream()
+    expect(channel.size).toBe(1)
+    expect(await stream.next()).toBe(value)
+    channel.close()
+    expect(stream.next()).rejects.toThrow()
   })
 
   it('try send to unbound channel', async () => {
@@ -45,6 +70,7 @@ describe('channel', () => {
     const value = 42
 
     channel.trySend(value)
+    expect(channel.size).toBe(1)
     expect(channel.tryReceive()).toBe(value)
 
     channel.trySend(value)
@@ -180,13 +206,47 @@ describe('channel', () => {
     expect(handler).toBeCalledWith(expect.any(ClosedChannelError))
   })
 
-  it('pause before piping', async () => {
+  it('pause before starting piping', async () => {
     const channel = new Channel()
     const fn = jest.fn()
     channel.send(0)
     channel.pause()
-    channel.pipe(pipe.to.console())
+    channel.pipe(pipe.to(fn))
     expect(fn).toBeCalledTimes(0)
+    channel.resume()
+    expect(fn).toBeCalledTimes(1)
+  })
+
+  it('pause after starting piping', async () => {
+    const channel = new Channel()
+    const fn = jest.fn()
+    channel.pipe(pipe.to(fn))
+    channel.pause()
+    channel.send(0)
+    expect(fn).toBeCalledTimes(0)
+    channel.resume()
+    expect(fn).toBeCalledTimes(1)
+  })
+
+  it('pause blocks receive', async () => {
+    const channel = new Channel()
+    const timeout = new Future<void>()
+    expect(Promise.race([channel.receive(), timeout])).rejects.toBeUndefined()
+    channel.pause()
+    setTimeout(timeout.reject, 100)
+    await channel.send(0)
+    jest.runAllTimers()
+  })
+
+  it('pause blocks stream', async () => {
+    const channel = new Channel()
+    const timeout = new Future<void>()
+    const stream = channel.stream()
+    expect(Promise.race([stream.next(), timeout])).rejects.toBeUndefined(0)
+    channel.pause()
+    setTimeout(timeout.reject, 100)
+    await channel.send(0)
+    jest.runAllTimers()
   })
 
   it('can have only one receivers', async () => {

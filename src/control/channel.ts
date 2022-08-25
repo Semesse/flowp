@@ -138,7 +138,7 @@ export class Channel<T> implements PipeSource<T>, PipeTarget<T> {
   public pipe(target: PipeTarget<T>, options?: ChannelPipeOptions) {
     this.pipeTarget = target
     this.pipeOptions = options
-    this.flushQueue()
+    if (!this.paused) this.flushQueue()
   }
 
   /**
@@ -155,12 +155,15 @@ export class Channel<T> implements PipeSource<T>, PipeTarget<T> {
    * items sending to the channel will be queued despite pipe enabled
    */
   public pause() {
+    this.recvSem.freeze()
     this.paused = new Future()
   }
 
   public resume() {
     this.paused?.resolve()
-    this.flushQueue()
+    if (this.pipeTarget) {
+      this.flushQueue()
+    }
   }
 
   /**
@@ -196,22 +199,26 @@ export class Channel<T> implements PipeSource<T>, PipeTarget<T> {
    */
   private writeValue(value: T) {
     if (this.pipeTarget && !this.paused) {
-      try {
-        this.pipeTarget[read](value, this)
-      } catch (err) {
-        this.pipeOptions?.onPipeError?.(err)
-      }
+      this.flushValue(value)
     } else {
       this.queue.push(value)
     }
   }
 
-  // empty current queue
+  // empty current queue by writing all values to pipe target
   private flushQueue() {
     for (const v of this.queue) {
-      this.writeValue(v)
+      this.flushValue(v)
     }
     this.queue = []
+  }
+
+  private flushValue(value: T) {
+    try {
+      this.pipeTarget?.[read](value, this)
+    } catch (err) {
+      this.pipeOptions?.onPipeError?.(err)
+    }
   }
 
   private async next(): Promise<IteratorResult<T, undefined>> {
