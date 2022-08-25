@@ -1,8 +1,9 @@
 import { once } from './functools'
+import { expect, vi } from 'vitest'
 
 describe('functools', () => {
   it('should be able to call once', () => {
-    const fn = jest.fn()
+    const fn = vi.fn()
     const onceFn = once(fn)
     onceFn()
     onceFn()
@@ -11,7 +12,7 @@ describe('functools', () => {
 
   it('subsequent calls to once when subsequent handler not provided', async () => {
     const mockValue = 42
-    const fn = jest.fn().mockReturnValue(mockValue)
+    const fn = vi.fn().mockReturnValue(mockValue)
     const onced = once(fn)
     const first = onced()
     const succ = onced()
@@ -22,8 +23,8 @@ describe('functools', () => {
 
   it('subsequent calls to once when subsequent handler provided', async () => {
     const mockValue = 42
-    const fn = jest.fn().mockReturnValue(mockValue)
-    const handler = jest.fn().mockReturnValue(0)
+    const fn = vi.fn().mockReturnValue(mockValue)
+    const handler = vi.fn().mockReturnValue(0)
     const onced = once(fn, handler)
     const first = onced()
     const succ = onced()

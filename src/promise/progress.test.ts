@@ -1,3 +1,4 @@
+import { vi } from 'vitest'
 import { Progress } from './progress'
 
 describe('progress', () => {
@@ -5,7 +6,7 @@ describe('progress', () => {
     const progress = new Progress<number>(0)
     expect(progress.progress).toBe(0)
 
-    const onProgress = jest.fn().mockImplementation((p) => p.current === 100 && progress.resolve(42))
+    const onProgress = vi.fn().mockImplementation((p) => p.current === 100 && progress.resolve(42))
     progress.onProgress(onProgress)
 
     const reports = [

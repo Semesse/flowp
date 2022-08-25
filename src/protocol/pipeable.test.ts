@@ -1,3 +1,4 @@
+import { vi } from 'vitest'
 import { Channel } from '../control'
 import { PipeAdapter } from './pipeable'
 
@@ -13,7 +14,7 @@ describe('pipeable', () => {
   })
 
   it('should not send after unpipe', async () => {
-    const handler = jest.fn()
+    const handler = vi.fn()
     const pipe = new PipeAdapter<number, string>(handler)
     const channel = new Channel<number>()
     channel.pipe(pipe)

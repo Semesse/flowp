@@ -1,3 +1,4 @@
+import { vi } from 'vitest'
 import { lateinit } from './lateinit'
 
 class TestClass extends Promise<any> {
@@ -41,8 +42,8 @@ describe('lateinit', () => {
   })
 
   it('should work with then/catch/finally', async () => {
-    const _catch = jest.fn()
-    const _finally = jest.fn()
+    const _catch = vi.fn()
+    const _finally = vi.fn()
     const content: Buffer = await fs.$promises.$readFile('./package.json').catch(_catch).finally(_finally)
     expect(JSON.parse(content.toString()).name).toMatchInlineSnapshot(`"flowp"`)
     expect(_catch).toHaveBeenCalledTimes(0)
@@ -50,9 +51,9 @@ describe('lateinit', () => {
   })
 
   it('should work with Promise.all', async () => {
-    const then = jest.fn()
-    const _catch = jest.fn()
-    const _finally = jest.fn()
+    const then = vi.fn()
+    const _catch = vi.fn()
+    const _finally = vi.fn()
     await Promise.all([fs.$promises.$readFile('./package.json'), fs.$promises.$readFile('./package.json')])
       .then(then)
       .catch(_catch)
@@ -63,9 +64,9 @@ describe('lateinit', () => {
   })
 
   it('should work with error', async () => {
-    const then = jest.fn()
-    const _catch = jest.fn()
-    const _finally = jest.fn()
+    const then = vi.fn()
+    const _catch = vi.fn()
+    const _finally = vi.fn()
     await fs.$promises.$readFile('./some-non-existent-file').then(then).catch(_catch).finally(_finally)
     expect(then).toHaveBeenCalledTimes(0)
     expect(_catch).toHaveBeenCalledTimes(1)

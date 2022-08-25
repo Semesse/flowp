@@ -1,6 +1,7 @@
 import { Channel } from './channel'
 import { ChannelHub } from './channel_hub'
 import { to } from '../protocol/pipeable'
+import { vi } from 'vitest'
 
 describe('channel hub', () => {
   it('should compose multiple channels into one', async () => {
@@ -41,7 +42,7 @@ describe('channel hub', () => {
     channel1.pipe(hub)
     channel2.pipe(hub)
 
-    const fn = jest.fn()
+    const fn = vi.fn()
     reader.pipe(to((v) => fn(v)))
     await channel1.send('a')
     await channel2.send('b')

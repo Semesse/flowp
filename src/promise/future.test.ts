@@ -1,4 +1,5 @@
 import EventEmitter from 'node:events'
+import { vi } from 'vitest'
 import { Future } from './future'
 
 describe('future', () => {
@@ -15,7 +16,7 @@ describe('future', () => {
   })
 
   it('should finally', async () => {
-    const fin = jest.fn()
+    const fin = vi.fn()
     const future = new Future<number>()
     future.resolve(42)
     await future.finally(fin)

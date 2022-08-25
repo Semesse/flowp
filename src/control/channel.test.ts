@@ -1,4 +1,5 @@
 import { Future } from '../promise/future'
+import { vi } from 'vitest'
 import { pipe } from '../protocol'
 import { Channel, ChannelFullError, ClosedChannelError } from './channel'
 
@@ -180,8 +181,8 @@ describe('channel', () => {
     await channel1.send(1)
     await channel2.send(2)
     await channel2.send(3)
-    const fn1 = jest.fn()
-    const fn2 = jest.fn()
+    const fn1 = vi.fn()
+    const fn2 = vi.fn()
     channel1.pipe(pipe.to(fn1))
     channel2.pipe(pipe.to(fn2))
     expect(fn1).toHaveBeenCalledTimes(1)
@@ -199,7 +200,7 @@ describe('channel', () => {
   it('custom handler when writing to closed channels', async () => {
     const channel1 = new Channel()
     const channel2 = new Channel()
-    const handler = jest.fn()
+    const handler = vi.fn()
     channel1.pipe(channel2, { onPipeError: handler })
     channel2.close()
     await channel1.send(0)
@@ -253,7 +254,7 @@ describe('channel', () => {
     const channel = new Channel()
     const value = 42
     await channel.send(value)
-    const receiver = jest.fn()
+    const receiver = vi.fn()
     const a = channel.stream()
     const b = channel.stream()
     channel.close()

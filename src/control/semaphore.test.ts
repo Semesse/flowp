@@ -1,9 +1,10 @@
 import { Semaphore, transfer } from './semaphore'
+import { vi } from 'vitest'
 
 describe('semaphore', () => {
   beforeAll(() => {
-    jest.useFakeTimers()
-    jest.spyOn(global, 'setTimeout')
+    vi.useFakeTimers()
+    vi.spyOn(global, 'setTimeout')
   })
 
   it('should be able to acquire', async () => {
@@ -45,7 +46,7 @@ describe('semaphore', () => {
     expect(sem.acquire(200)).rejects.toThrowErrorMatchingInlineSnapshot(`"timeout"`)
     expect(sem.acquire(-1)).rejects.toThrowErrorMatchingInlineSnapshot(`"timeout must be valid"`)
     expect(sem.remain).toBe(0)
-    jest.runAllTimers()
+    vi.runAllTimers()
     expect(sem.isFull).toBe(true)
     expect(sem.isEmpty).toBe(false)
     expect(sem.remain).toBe(0)
@@ -70,7 +71,7 @@ describe('semaphore', () => {
     await sem.revoke(1)
     expect(sem.permits).toBe(0)
     expect(sem.acquire(0)).rejects.toThrowErrorMatchingInlineSnapshot(`"timeout"`)
-    jest.runAllTimers()
+    vi.runAllTimers()
     expect(sem.acquire)
 
     expect(sem.revoke(-1)).rejects.toThrowErrorMatchingInlineSnapshot(`"permits must be positive"`)
@@ -92,7 +93,7 @@ describe('semaphore', () => {
     expect(sem.remain).toBe(1)
     expect(sem.acquire(100)).rejects.toThrowErrorMatchingInlineSnapshot(`"timeout"`)
 
-    jest.runAllTimers()
+    vi.runAllTimers()
     sem.unfreeze()
     await Promise.resolve()
     expect(() => sem.tryAcquire()).not.toThrow()
@@ -106,7 +107,7 @@ describe('semaphore', () => {
     sem.freeze()
     release1()
     expect(sem.remain).toBe(0)
-    jest.runAllTimers()
+    vi.runAllTimers()
     expect(release2).rejects.toThrowErrorMatchingInlineSnapshot(`"timeout"`)
     sem.unfreeze()
     expect(sem.remain).toBe(1)
