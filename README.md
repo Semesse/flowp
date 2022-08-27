@@ -1,23 +1,23 @@
-# flowp
+<p align="center"><img src="./assets/flowp.svg" width="128" height="128"/></p>
 
-![](https://img.shields.io/github/workflow/status/Semesse/flowp/Build,%20Test%20and%20Lint/master?style=flat-square)
-![](https://img.shields.io/codeclimate/maintainability/Semesse/flowp?style=flat-square)
-![](https://img.shields.io/codeclimate/coverage/Semesse/flowp?style=flat-square)
+![CI](https://img.shields.io/github/workflow/status/Semesse/flowp/Build,%20Test%20and%20Lint/master?style=flat-square)
+![Maintainability](https://img.shields.io/codeclimate/maintainability/Semesse/flowp?style=flat-square)
+![Coverage](https://img.shields.io/codeclimate/coverage/Semesse/flowp?style=flat-square)
+![Downloads](https://img.shields.io/npm/dw/flowp?style=flat-square)
 
-> CJS and ESM are both supported
+> ✳️ CJS and ESM are both supported
 >
-> Zero dependency & written in pure TS
+> 📦 Zero dependency & written in pure TypeScript
 >
-> Targeting ES2020 and can be run directly on Node.js 16+, or with a transpiler (babel, esbuild, swc, etc.)
+> 🏙 Targeting ES2020 and can be run directly on Node.js 16+, or with a transpiler (babel, esbuild, swc, etc.)
 
-flowp is a promise-based utility library, providing asynchronous components like
+flowp is a promise-based utility library, providing asynchronous API styled utilities like
 
 - **[Future](./docs/Future.md)**: {@stable} Promise that can be resolved anywhere other than where it's defined
 - **[Semaphore](./docs/Semaphore.md) / [Mutex](./docs/Mutex.md)**: controls max concurrency
-- **[Channel](./docs/Channel.md)**: multi producer single consumer channel, includes utilities like ChannelHub
+- **[Channel](./docs/Channel.md)**: multi producer single consumer channel
 - **[lateinit](./docs/Exports.md)**: delegate method calls and property accesses to the fulfilled value of Promises
-- a bunch of features are under development 🚧  
-  there will be a refactor recently
+- a bunch of features are under development 🚧
 
 ### Have a quick look
 
@@ -74,6 +74,24 @@ const mutex = new Mutex()
 const release = await mutex.acquire()
 // do something...
 release()
+```
+
+**[Channel](./docs/Channel.md)** message queue!
+
+```typescript
+import { pipe } from 'flowp'
+const ch = new Channel(10) // can have at most 10 items in queuq
+await ch.send('hello')
+// on the other side
+await ch.receive()
+// or use async iterator
+for await (const el of ch.stream()) {
+  console.log(el)
+}
+// or pipe to other place
+ch.pipe(pipe.to.console())
+ch.pipe(pipe.to((e) => logger.error(e)))
+ch.pipe(ch2)
 ```
 
 ### Contribute

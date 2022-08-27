@@ -6,7 +6,6 @@ describe('semaphore', () => {
   beforeAll(() => {
     vi.useFakeTimers()
     vi.spyOn(globalThis, 'setTimeout')
-    vi.spyOn(globalThis, 'setImmediate')
   })
 
   it('should be able to acquire', async () => {

@@ -21,10 +21,11 @@
     "test": "vitest --coverage",
     "prepare": "husky install",
     "setup-ci": "npm i -g pnpm && pnpm i",
-    "gen-docs": "typedoc"
+    "build:docs": "typedoc && cp -r assets docs"
   },
   "author": "Semesse",
   "repository": "https://github.com/Semesse/flowp",
+  "homepage": "https://flowp.pages.dev",
   "license": "MIT",
   "sideEffects": false,
   "devDependencies": {
@@ -41,9 +42,8 @@
     "husky": "^7.0.4",
     "prettier": "^2.7.1",
     "tsup": "^5.12.9",
-    "typedoc": "^0.23.10",
-    "typedoc-github-wiki-theme": "^1.0.1",
-    "typedoc-plugin-markdown": "^3.13.4",
+    "typedoc": "^0.22.18",
+    "typedoc-theme-oxide": "^0.1.6",
     "typescript": "4.7.4",
     "vitest": "^0.22.1"
   }

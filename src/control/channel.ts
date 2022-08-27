@@ -2,14 +2,23 @@ import { Future } from '../promise'
 import { PipeSource, PipeTarget, read } from '../protocol/pipeable'
 import { Semaphore, transfer } from './semaphore'
 
+/**
+ * Indicates that the buffered items in queue has reached its capacity
+ */
 export class ClosedChannelError extends Error {
   public message = 'write on closed channel'
 }
 
+/**
+ * Indicates that the buffered items in queue has reached its capacity
+ */
 export class ChannelFullError extends Error {
   public message = 'channel queue is full'
 }
 
+/**
+ * Indicates that the buffered items in queue has reached its capacity
+ */
 export interface ChannelStream<T> extends AsyncIterable<T> {
   next: () => Promise<T>
 }
@@ -21,6 +30,19 @@ export interface ChannelPipeOptions {
   onPipeError?: (err: unknown) => any
 }
 
+/**
+ *
+ * Promise based multi producer single consumer channel, with the following capabilities
+ *
+ * - buffered message queue
+ * - `send` / `receive` basic message
+ * - `pipe` piping to other channels (or use `pipe.to()`)
+ * - `stream` ES6 async iterator api
+ * - `freeze` temporarily block all consumers, useful if your target has limited rate of consumption like Node.js {@link net.Socket}
+ *
+ *
+ * @param <T> - type of messages in queue
+ */
 export class Channel<T> implements PipeSource<T>, PipeTarget<T> {
   private _closed = false
   private _capacity
@@ -37,10 +59,11 @@ export class Channel<T> implements PipeSource<T>, PipeTarget<T> {
   private bounded: boolean
 
   /**
-   * create a new multi-producer-single-consumer channel with specified capacity
+   * create a new channel with specified capacity
+   * @param <T> - type of messages in queue
    * @param capacity channel capacity, defaults to `Infinity`
    *
-   * @throws {RangeError} capacity is negative or NaN
+   * @throws {@link RangeError} capacity is negative or NaN
    */
   public constructor(capacity = Infinity) {
     if (capacity < 0 || Number.isNaN(capacity)) {
@@ -55,7 +78,7 @@ export class Channel<T> implements PipeSource<T>, PipeTarget<T> {
   /**
    * send a value to channel
    *
-   * @throws {ClosedChannelError} throw if channel is closed
+   * @throws {@link ClosedChannelError} throw if channel is closed
    */
   public async send(value: T) {
     if (this._closed) throw new ClosedChannelError()
@@ -66,15 +89,17 @@ export class Channel<T> implements PipeSource<T>, PipeTarget<T> {
   }
 
   /**
-   * retrieve a value from channel
+   * retrieve a value from channel.
    *
-   * will never resolve if {@link Channel.pipe} or is enabled;
-   * will race with {@link Channel.stream}
+   * will never resolve if {@link pipe} or is enabled;
+   * will race with {@link stream}
    */
   public async receive(): Promise<T> {
     await transfer(this.recvSem, this.sendSem, 1)
-    // istanbul ignore if
-    if (!this.queue.length) throw new Error('queue is empty, this is a bug in library `flowp`')
+    if (!this.queue.length) {
+      /* istanbul ignore next */
+      throw new Error('queue is empty, this is a bug in library `flowp`')
+    }
     const value = this.queue.shift()!
     return value
   }
@@ -82,8 +107,8 @@ export class Channel<T> implements PipeSource<T>, PipeTarget<T> {
   /**
    * try to send a value synchronosly
    *
-   * @throws {ClosedChannelError} channel is closed
-   * @throws {ChannelFullError} channel is full
+   * @throws {@link ClosedChannelError} channel is closed
+   * @throws {@link ChannelFullError} channel is full
    */
   public trySend(value: T) {
     if (this._closed) throw new ClosedChannelError()
@@ -92,7 +117,7 @@ export class Channel<T> implements PipeSource<T>, PipeTarget<T> {
   }
 
   /**
-   * send a promise to channel
+   * send a promise to channel, after the promise is resolved, send its fullfilled value
    */
   public sendAsync(value: Promise<T>) {
     return value.then((v) => this.send(v))
@@ -154,7 +179,7 @@ export class Channel<T> implements PipeSource<T>, PipeTarget<T> {
   }
 
   /**
-   * stop streaming / piping / sending new items until {@link resume} is called
+   * stop {@link stream} / {@link pipe} / {@link receive} new items until {@link resume} is called
    *
    * items sending to the channel will be queued despite pipe enabled
    */
@@ -163,6 +188,9 @@ export class Channel<T> implements PipeSource<T>, PipeTarget<T> {
     this.paused = new Future()
   }
 
+  /**
+   * resume
+   */
   public resume() {
     this.paused?.resolve()
     if (this.pipeTarget) {
@@ -209,7 +237,9 @@ export class Channel<T> implements PipeSource<T>, PipeTarget<T> {
     }
   }
 
-  // empty current queue by writing all values to pipe target
+  /**
+   * empty current queue by writing all values to pipe target
+   */
   private flushQueue() {
     for (const v of this.queue) {
       this.flushValue(v)
@@ -217,6 +247,10 @@ export class Channel<T> implements PipeSource<T>, PipeTarget<T> {
     this.queue = []
   }
 
+  /**
+   * write single item to pipe target
+   * @param value f
+   */
   private flushValue(value: T) {
     try {
       this.pipeTarget?.[read](value, this)

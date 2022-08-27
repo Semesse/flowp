@@ -1,8 +1,8 @@
 import { once } from '../utils/functools'
-import { Future } from '../promise/future'
+import { Future } from '../promise'
 
 /**
- * Semaphore
+ * Semaphore with async api
  * @param permits number of permits
  *
  * @example
@@ -47,10 +47,9 @@ export class Semaphore {
 
     // throw if self.reject because of timeout
     // otherwise wait frozen & self are all ready
-    if (this.queue.length > this._permits) {
-      this.frozen ? await Promise.all([self, this.frozen]) : await self
-    } else if (this.frozen) {
-      await Promise.all([self, this.frozen])
+    if (this.queue.length > this._permits || this.frozen) {
+      if (this.frozen) await Promise.all([self, this.frozen])
+      else await self
     }
 
     return this.releaser(self)
@@ -112,9 +111,12 @@ export class Semaphore {
     this.frozen = new Future<void>()
   }
 
-  public unfreeze() {
-    this.frozen?.resolve()
+  // mark as async since unfreeze might take effect several
+  public async unfreeze() {
+    const frozen = this.frozen
     this.frozen = undefined
+    frozen?.resolve()
+    return frozen
   }
 
   /**
