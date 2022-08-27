@@ -21,7 +21,7 @@
     "test": "vitest --coverage",
     "prepare": "husky install",
     "setup-ci": "npm i -g pnpm && pnpm i",
-    "build:docs": "typedoc && cp -r assets/* docs"
+    "build:docs": "typedoc && ./scripts/copy-assets.sh"
   },
   "author": "Semesse",
   "repository": "https://github.com/Semesse/flowp",
