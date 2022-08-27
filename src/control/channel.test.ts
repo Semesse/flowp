@@ -1,5 +1,5 @@
-import { vi } from 'vitest'
-import { Future, timer } from '../promise'
+import { vi, describe, it, expect, beforeAll } from 'vitest'
+import { timer } from '../promise'
 import { pipe } from '../protocol'
 import { Channel, ChannelFullError, ClosedChannelError } from './channel'
 
@@ -180,7 +180,7 @@ describe('channel', () => {
     const channel2 = new Channel()
     channel1.pipe(channel2)
     channel2.close()
-    channel1.send(test).catch(console.error)
+    channel1.send('test').catch(console.error)
   })
 
   it('custom handler when writing to closed channels', async () => {

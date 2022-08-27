@@ -1,4 +1,4 @@
-import { vi } from 'vitest'
+import { vi, describe, it, expect, beforeAll } from 'vitest'
 import { immediately, sleep, timeout } from './timer'
 
 describe('timers', async () => {

@@ -1,5 +1,5 @@
+import { vi, describe, it, expect } from 'vitest'
 import { once } from './functools'
-import { expect, vi } from 'vitest'
 
 describe('functools', () => {
   it('should be able to call once', () => {

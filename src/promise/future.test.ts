@@ -1,5 +1,5 @@
 import EventEmitter from 'node:events'
-import { vi } from 'vitest'
+import { vi, describe, it, expect } from 'vitest'
 import { Future } from './future'
 
 describe('future', () => {

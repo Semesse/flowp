@@ -1,7 +1,7 @@
 import { Channel } from './channel'
 import { ChannelHub } from './channel_hub'
 import { to } from '../protocol/pipeable'
-import { vi } from 'vitest'
+import { vi, describe, it, expect } from 'vitest'
 
 describe('channel hub', () => {
   it('should compose multiple channels into one', async () => {
