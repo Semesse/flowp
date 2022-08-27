@@ -11,17 +11,17 @@
 >
 > 🏙 Targeting ES2020 and can be run directly on Node.js 16+, or with a transpiler (babel, esbuild, swc, etc.)
 
-flowp is a promise-based utility library, providing asynchronous API styled utilities like
+flowp is a promise-based utility library, providing async/await API-styled utilities like
 
-- **[Future](./docs/Future.md)**: {@stable} Promise that can be resolved anywhere other than where it's defined
-- **[Semaphore](./docs/Semaphore.md) / [Mutex](./docs/Mutex.md)**: controls max concurrency
-- **[Channel](./docs/Channel.md)**: multi producer single consumer channel
-- **[lateinit](./docs/Exports.md)**: delegate method calls and property accesses to the fulfilled value of Promises
+- **[Future](https://flowp.pages.dev/classes/Future)**: {@stable} Promise that can be resolved anywhere other than where it's defined
+- **[Semaphore](https://flowp.pages.dev/classes/Semaphore) / [Mutex](https://flowp.pages.dev/classes/Mutex)**: controls max concurrency
+- **[Channel](https://flowp.pages.dev/classes/Channel)**: multi producer single consumer channel
+- **[lateinit](https://flowp.pages.dev/modules#lateinit)**: delegate method calls and property accesses to the fulfilled value of Promises
 - a bunch of features are under development 🚧
 
 ### Have a quick look
 
-**[Future](./docs/Future.md)** can be used as a promise, but you can resolve it anywhere, especially useful in tasks like EventEmitter or on other occasions you don't know what to execute immediately in the promise constructor
+**[Future](https://flowp.pages.dev/classes/Future)** can be used as a promise, but you can resolve it anywhere, especially useful in tasks like EventEmitter or on other occasions you don't know what to execute immediately in the promise constructor
 
 ```typescript
 const waitUntilNextEvent = () => {
@@ -42,41 +42,9 @@ class MyClass {
 }
 ```
 
-**[lateinit](./docs/Exports.md)** pretty like the [wavy dot proposal](https://github.com/tc39/proposal-wavy-dot), some configurations are initialized asynchronously, and you may need to await it every time before using it. With `lateinit` you can just call methods and get properties with the prefix `$` and you'll get a new promise representing this action
 
-```typescript
-export const client = initClient()
-// you need to await to use the client every time
-return client
-  .then((c) => c.something)(await client)
-  .fetchI18nTexts(navigator.locale)
 
-// with lateinit, you can access the result directly like it's not a promise
-export const client = lateinit(initClient())
-return client.$fetchI18nTexts(navigator.locale).$t('hello')
-```
-
-**[Semaphore](./docs/Semaphore.md)** controls max concurrency like how many requests can be started at the same time. Unlike other implementations, you can change the capacity by `grant` or `revoke`
-
-```typescript
-const sem = new Semaphore(concurrency)
-const release = await sem.acquire()
-// do something...
-release()
-sem.grant()
-await sem.revoke()
-```
-
-**[Mutex](./docs/Mutex.md)** specialized semaphore with maximum concurrency of 1
-
-```typescript
-const mutex = new Mutex()
-const release = await mutex.acquire()
-// do something...
-release()
-```
-
-**[Channel](./docs/Channel.md)** message queue!
+**[Channel](https://flowp.pages.dev/classes/Channel)** message queue!
 
 ```typescript
 import { pipe } from 'flowp'
@@ -92,6 +60,40 @@ for await (const el of ch.stream()) {
 ch.pipe(pipe.to.console())
 ch.pipe(pipe.to((e) => logger.error(e)))
 ch.pipe(ch2)
+```
+
+**[Semaphore](https://flowp.pages.dev/classes/Semaphore)** controls max concurrency like how many requests can be started at the same time. Unlike other implementations, you can change the capacity by `grant` or `revoke`
+
+```typescript
+const sem = new Semaphore(concurrency)
+const release = await sem.acquire()
+// do something...
+release()
+sem.grant()
+await sem.revoke()
+```
+
+**[Mutex](https://flowp.pages.dev/classes/Mutex)** specialized semaphore with maximum concurrency of 1
+
+```typescript
+const mutex = new Mutex()
+const release = await mutex.acquire()
+// do something...
+release()
+```
+
+**[lateinit](https://flowp.pages.dev/modules#lateinit)** pretty like the [wavy dot proposal](https://github.com/tc39/proposal-wavy-dot), some configurations are initialized asynchronously, and you may need to await it every time before using it. With `lateinit` you can just call methods and get properties with the prefix `$` and you'll get a new promise representing this action
+
+```typescript
+export const client = initClient()
+// you need to await to use the client every time
+return client
+  .then((c) => c.something)(await client)
+  .fetchI18nTexts(navigator.locale)
+
+// with lateinit, you can access the result directly like it's not a promise
+export const client = lateinit(initClient())
+return client.$fetchI18nTexts(navigator.locale).$t('hello')
 ```
 
 ### Contribute
