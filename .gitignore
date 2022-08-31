@@ -1,4 +1,9 @@
 node_modules
 dist
 coverage
-docs
+tmp
+
+# auto generated
+./docs
+site/docs/api
+api-extractor
