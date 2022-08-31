@@ -3,7 +3,8 @@ import { Future } from '../promise'
 
 /**
  * Semaphore with async api
- * @param permits number of permits
+ * @param permits - number of permits
+ * @public
  *
  * @example
  * const sem = new Semaphore(5)
@@ -14,19 +15,19 @@ import { Future } from '../promise'
 export class Semaphore {
   public frozen?: Future<void>
   private _permits: number
-  // the first {permits} items in the queue are running, others are waiting
+  // the first {permits} items in the queue are running tasks or frozen, others are waiting
   private queue: Future<void>[] = []
 
   /**
    * constructs a new Semaphore with n permits
-   * @param permits number of permits
+   * @param permits - number of permits
    */
   public constructor(permits?: number) {
     this._permits = permits ?? Infinity
   }
 
   /**
-   * Acquire a permit, resolve when resouce is available
+   * Acquire a permit, resolve when resouce is available.
    * @returns a function to release semaphore
    */
   public async acquire(timeout?: number) {
@@ -70,9 +71,9 @@ export class Semaphore {
   }
 
   /**
-   * Give n permits to semaphore, will immediately start this number of waiting tasks if not frozen
-   * @param permits
-   * @throws RangeError if permits < 0
+   * Give n permits to the semaphore, will immediately start this number of waiting tasks if not frozen
+   * @param permits - number of permits
+   * @throws RangeError - if permits is less than 0
    */
   public grant(permits = 1) {
     if (permits < 0) throw RangeError('permits must be positive')
@@ -84,8 +85,8 @@ export class Semaphore {
    * Destroy n permits, effective until `remain` fills the n permits
    *
    * **note**: you may need to check if `permits > semaphore.permits`, or it will wait until granted that many permits
-   * @param permits number of permits
-   * @throws RangeError if permits < 0
+   * @param permits - number of permits
+   * @throws RangeError - if permits is less than 0
    */
   public async revoke(permits = 1) {
     if (permits < 0) throw new Error('permits must be positive')
@@ -105,16 +106,22 @@ export class Semaphore {
   /**
    * Freeze this semaphore, calling `acquire` won't resolve and `tryAcquire` will throw (release can still be called).
    *
-   * NOTE: don't call this again if {@link frozen}, not supported yet
+   * NOTE: don't call this again if {@link Semaphore.frozen}, not supported yet
    */
   public freeze() {
     this.frozen = new Future<void>()
   }
 
-  // mark as async since unfreeze might take effect several
-  public async unfreeze() {
+  /**
+   * unfreeze this semaphore, it is synchronos and the returned value should be ignored
+   * @returns a promise that's already resolved you can add a
+   */
+  public unfreeze(): Promise<void> {
+    if (!this.frozen) return Promise.resolve()
+
     const frozen = this.frozen
     this.frozen = undefined
+    // this will trigger all promises
     frozen?.resolve()
     return frozen
   }
@@ -156,6 +163,12 @@ export class Semaphore {
     })
   }
 
+  /**
+   * resolves next n values in the queue.
+   *
+   * If semaphore is frozen, wait for `frozen` to resolve first.
+   * These queued items are although the first {permits} elements in the queue, they are not resolved.
+   */
   private async resolveNext(count = 1) {
     for (let i = this._permits; i < this._permits + count; i++) {
       this.frozen ? this.frozen.then(() => this.queue.at(i)?.resolve()) : this.queue.at(i)?.resolve()
@@ -165,8 +178,9 @@ export class Semaphore {
   private remove(token: Future<void>) {
     const index = this.queue.indexOf(token)
     // this is already removed, do nothing
-    // istanbul ignore if
+    /* c8 ignore start */
     if (index === -1) return
+    /* c8 ignore end */
 
     this.queue.splice(index, 1)
   }
@@ -174,9 +188,11 @@ export class Semaphore {
 
 /**
  * transfer n permits from one semaphore to another
- * @param from semaphore to revoke permits
- * @param to semaphore to grant permits
- * @param tokens number of permits, defaults to 1
+ * @param from - semaphore to revoke permits
+ * @param to - semaphore to grant permits
+ * @param tokens - number of permits, defaults to 1
+ *
+ * @internal
  */
 export const transfer = async (from: Semaphore, to: Semaphore, tokens = 1) => {
   await from.revoke(tokens)

@@ -1,4 +1,5 @@
 export { lateinit, Delegated } from './lateinit'
-export * as timer from './timer'
+import * as timers from './timer'
+export { timers }
 export * from './future'
 export * from './progress'

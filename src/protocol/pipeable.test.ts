@@ -1,10 +1,10 @@
 import { vi, describe, it, expect } from 'vitest'
 import { Channel } from '../control'
-import { PipeAdapter } from './pipeable'
+import { Transform } from './pipeable'
 
 describe('pipeable', () => {
   it('transform data in pipe', async () => {
-    const pipe = new PipeAdapter<number, string>((v) => v.toFixed(2))
+    const pipe = new Transform<number, string>((v) => v.toFixed(2))
     const channel1 = new Channel<number>()
     const channel2 = new Channel<string>()
     channel1.pipe(pipe)
@@ -15,7 +15,7 @@ describe('pipeable', () => {
 
   it('should not send after unpipe', async () => {
     const handler = vi.fn()
-    const pipe = new PipeAdapter<number, string>(handler)
+    const pipe = new Transform<number, string>(handler)
     const channel = new Channel<number>()
     channel.pipe(pipe)
     pipe.unpipe()

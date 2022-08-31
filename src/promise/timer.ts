@@ -4,6 +4,8 @@
 
 /**
  * **resolve** after timeout (in miliseconds)
+ *
+ * @public
  */
 export const sleep = (ms: number) => {
   return new Promise((r) => {
@@ -13,6 +15,8 @@ export const sleep = (ms: number) => {
 
 /**
  * **reject** after timeout (in miliseconds)
+ *
+ * @public
  */
 export const timeout = (ms: number, err?: string | Error) => {
   return new Promise((_, r) => {
@@ -25,6 +29,8 @@ export const timeout = (ms: number, err?: string | Error) => {
 
 /**
  * **resolve** with given value immediately (aka. setImmediate)
+ *
+ * @public
  */
 export const immediately = <T>(value?: T): Promise<T | undefined> => {
   return new Promise((r) => {

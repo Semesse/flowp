@@ -1,7 +1,7 @@
 /**
  * Future is a resolve-later Promise, you can resolve it any time after a future is created.
  *
- * @stable this feature is stable and is guaranteed to not have breaking change before v1.0.0
+ * @public this feature is stable and is guaranteed to not have breaking change before v1.0.0
  * @example
  *
  * ```typescript
@@ -14,8 +14,8 @@
  */
 export class Future<T = unknown> extends Promise<T> {
   private static _constructors: [(value: any | PromiseLike<any>) => void, (error: unknown) => void][] = []
-  private _resolve: (value: T | PromiseLike<T>) => void
-  private _reject: (error: unknown) => void
+  protected _resolve: (value: T | PromiseLike<T>) => void
+  protected _reject: (error: unknown) => void
 
   public static get [Symbol.species]() {
     return Promise

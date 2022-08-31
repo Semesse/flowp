@@ -1,5 +1,10 @@
 import { Semaphore } from './semaphore'
 
+/**
+ * Asynchronos style mutex lock
+ *
+ * @public
+ */
 export class Mutex {
   #semaphore: Semaphore
 
@@ -11,7 +16,7 @@ export class Mutex {
   }
 
   /**
-   * alias for {@link acquire}
+   * alias for {@link Mutex.acquire}
    */
   public async lock() {
     return this.acquire()

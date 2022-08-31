@@ -3,6 +3,8 @@ import { PipeTarget, read } from '../protocol/pipeable'
 
 /**
  * compose multiple channels into one
+ *
+ * @public
  */
 export class ChannelHub<T = unknown> implements PipeTarget<T> {
   /** a helper function, equivalant to ChannelHub.constructor */
@@ -47,6 +49,9 @@ export class ChannelHub<T = unknown> implements PipeTarget<T> {
     return ch
   }
 
+  /**
+   * @internal
+   */
   public [read](value: T) {
     this.broadcast(value)
   }

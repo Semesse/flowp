@@ -1,5 +1,8 @@
 import { Callable } from '../types'
 
+/**
+ * @internal
+ */
 export type Delegated<T> = {
   readonly [K in keyof Awaited<T> & string as `$${K}`]: Awaited<T>[K] extends Callable
     ? (...args: Parameters<Awaited<T>[K]>) => ReturnType<Awaited<T>[K]>
@@ -17,13 +20,15 @@ const raw = Symbol('get the raw untouched value')
 /**
  * Delegates method calls and member access to the resolved value
  *
- * @experimental not verified in production use
- * @param value value to delegate to, must be a promise and should not be resolved with primitives
+ * @alpha not verified in production use
+ * @param value - value to delegate to, must be a promise and should not be resolved with primitives
  * @returns the delegated object, access delegated properties with `${key}`
  * @example
+ * ```typescript
  * const promise = Promise.resolve({ foo: { bar: 'baz' } })
  * const delegated = lateinit(promise)
  * await delegated.$foo.$bar // 'baz'
+ * ```
  */
 export function lateinit<T extends Promise<unknown>>(value: T): Delegated<T> {
   // proxy on a function so the returned value is callable

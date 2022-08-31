@@ -4,8 +4,8 @@ import { Callable } from '../types'
  * ensure function to be called once, and only once
  *
  * note: `this` is dropped
- * @param fn the function to call for the first time
- * @param subsequent the function to call after the first one
+ * @param fn - the function to call for the first time
+ * @param subsequent - the function to call after the first one
  * @returns function that will call `fn` for the first time, and then `subsequent`
  */
 export function once<T extends Callable>(

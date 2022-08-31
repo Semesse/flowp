@@ -1,5 +1,5 @@
 import { vi, describe, it, expect, beforeAll } from 'vitest'
-import { timer } from '../promise'
+import { timers } from '../promise'
 import { pipe } from '../protocol'
 import { Channel, ChannelFullError, ClosedChannelError } from './channel'
 
@@ -104,12 +104,12 @@ describe('channel', () => {
 
   it('receive from empty unbound channel', async () => {
     const channel = new Channel()
-    expect(Promise.race([channel.receive(), timer.timeout(100)])).rejects.toBeTruthy()
+    expect(Promise.race([channel.receive(), timers.timeout(100)])).rejects.toBeTruthy()
   })
 
   it('receive from empty bound channel', async () => {
     const channel = new Channel(1)
-    expect(Promise.race([channel.receive(), timer.timeout(100)])).rejects.toBeTruthy()
+    expect(Promise.race([channel.receive(), timers.timeout(100)])).rejects.toBeTruthy()
   })
 
   it('try receive from empty unbound channel', async () => {
@@ -239,21 +239,21 @@ describe('channel', () => {
 
   it('pause blocks receive', async () => {
     const channel = new Channel()
-    expect(Promise.race([channel.receive(), timer.timeout(100)])).rejects.toMatchInlineSnapshot('[Error: timeout]')
+    expect(Promise.race([channel.receive(), timers.timeout(100)])).rejects.toMatchInlineSnapshot('[Error: timeout]')
     channel.pause()
     process.nextTick(() => vi.runAllTimers())
     // until next tick and run all timers
-    await timer.sleep(0)
+    await timers.sleep(0)
   })
 
   it('pause blocks stream', async () => {
     const channel = new Channel()
     const stream = channel.stream()
-    expect(Promise.race([stream.next(), timer.timeout(100)])).rejects.toMatchInlineSnapshot('[Error: timeout]')
+    expect(Promise.race([stream.next(), timers.timeout(100)])).rejects.toMatchInlineSnapshot('[Error: timeout]')
     channel.pause()
     await channel.send(0)
     process.nextTick(() => vi.runAllTimers())
-    await timer.sleep(0)
+    await timers.sleep(0)
   })
 
   it('can have only one receivers', async () => {

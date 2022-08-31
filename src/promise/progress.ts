@@ -1,9 +1,18 @@
 import { Future } from './future'
 
-export class Progress<Result, ProgressInfo = unknown> extends Future<Result> {
+/**
+ * Create a promise, but with progress reporting
+ *
+ * @beta
+ */
+// eslint-disable-next-line @typescript-eslint/no-invalid-void-type
+export class Progress<Result = void, ProgressInfo = unknown> extends Future<Result> {
   private currentProgress: ProgressInfo
   private listeners: Set<(progress: ProgressInfo) => unknown> = new Set()
 
+  /**
+   * Create a promise, but with progress reporting
+   */
   public constructor(initialProgress: ProgressInfo) {
     super()
     this.currentProgress = initialProgress
@@ -11,6 +20,8 @@ export class Progress<Result, ProgressInfo = unknown> extends Future<Result> {
 
   /**
    * get current progress
+   *
+   * @throws err if progress has rejected
    */
   public get progress(): ProgressInfo | undefined {
     return this.currentProgress
@@ -18,10 +29,15 @@ export class Progress<Result, ProgressInfo = unknown> extends Future<Result> {
 
   public onProgress(listener: (progress: Readonly<ProgressInfo>) => unknown) {
     this.listeners.add(listener)
+    return () => this.listeners.delete(listener)
   }
 
   public report(progress: ProgressInfo) {
     this.currentProgress = progress
     this.listeners.forEach((callback) => callback(progress))
+  }
+
+  public override get reject(): (error?: unknown) => void {
+    return (error) => this._reject(error)
   }
 }

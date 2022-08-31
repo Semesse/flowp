@@ -1,6 +1,6 @@
 import { Semaphore, transfer } from './semaphore'
 import { vi, describe, it, beforeAll, expect, afterAll } from 'vitest'
-import { timer } from '../promise'
+import { timers } from '../promise'
 
 describe('semaphore', () => {
   beforeAll(() => {
@@ -80,8 +80,8 @@ describe('semaphore', () => {
   })
 
   it('can revoke then grant again', async () => {
-    const sem = new Semaphore(1)
-    await sem.revoke(1)
+    const sem = new Semaphore(2)
+    await sem.revoke(2)
     expect(sem.permits).toBe(0)
     sem.grant(1)
     expect(sem.permits).toBe(1)
@@ -175,7 +175,7 @@ describe('semaphore', () => {
 
     expect(sem1.permits).toBe(1)
     expect(sem2.permits).toBe(1)
-    expect(Promise.race([t, timer.timeout(100, new Error('timeout'))])).rejects.toThrow()
+    expect(Promise.race([t, timers.timeout(100, new Error('timeout'))])).rejects.toThrow()
 
     vi.runAllTimers()
 

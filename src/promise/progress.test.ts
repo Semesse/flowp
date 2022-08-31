@@ -20,4 +20,14 @@ describe('progress', () => {
     expect(onProgress).toHaveBeenNthCalledWith(2, reports[1])
     expect(await progress).toBe(42)
   })
+
+  it('remove listener', async () => {
+    const progress = new Progress<number>(0)
+    const callback = vi.fn()
+    const cancel = progress.onProgress(callback)
+    progress.report(1)
+    cancel()
+    progress.report(2)
+    expect(callback).toBeCalledTimes(1)
+  })
 })
