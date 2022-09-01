@@ -23,7 +23,7 @@
     "prepare": "husky install",
     "setup-ci": "npm i -g pnpm && pnpm i",
     "build:api": "api-extractor run --local --verbose",
-    "build:docs": "pnpm build && pnpm tsc && pnpm build:api && pnpm script ./scripts/build.ts"
+    "build:docs": "./scripts/build-docs.sh"
   },
   "author": "Semesse",
   "repository": "https://github.com/Semesse/flowp",

@@ -1,0 +1,19 @@
+.features {
+  display: flex;
+  justify-content: space-around;
+  align-items: stretch;
+  padding: 2rem 0;
+  width: 100%;
+  gap: 12px;
+  margin: 32px 0;
+  padding: 0 24px;
+  flex-wrap: wrap;
+}
+
+.feature {
+  flex: 0 1 320px;
+  background: #eaeaea30;
+  /* border: 1px solid #eaeaea30; */
+  border-radius: 12px;
+  padding: var(--ifm-leading) 0 0;
+}
