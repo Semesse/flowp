@@ -30,7 +30,7 @@ describe('semaphore', () => {
     expect(sem.isEmpty).toBe(true)
   })
 
-  it('should be able to acquire', async () => {
+  it('complex acquire', async () => {
     const permits = 5
     const sem = new Semaphore(permits)
     const release = await sem.acquire()
@@ -55,6 +55,13 @@ describe('semaphore', () => {
 
     expect(sem.acquire()).resolves.toBeUndefined()
     setTimeout(release2, 200)
+  })
+
+  it('should schedule task', async () => {
+    const sem = new Semaphore(1)
+    const task = vi.fn().mockImplementation((v: any) => v)
+    expect(sem.schedule(() => task(1))).resolves.toBe(1)
+    expect(sem.schedule(() => task(2))).resolves.toBe(2)
   })
 
   it('should be able to grant', async () => {

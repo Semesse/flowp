@@ -71,6 +71,16 @@ export class Semaphore {
   }
 
   /**
+   * Schedule a task to run when a permit is available and automatically release after run.
+   */
+  public async schedule<T>(fn: () => T): Promise<Awaited<T>> {
+    const release = await this.acquire()
+    const res = fn()
+    release()
+    return await res
+  }
+
+  /**
    * Give n permits to the semaphore, will immediately start this number of waiting tasks if not frozen
    * @param permits - number of permits
    * @throws RangeError - if permits is less than 0

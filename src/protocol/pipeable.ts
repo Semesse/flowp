@@ -73,5 +73,7 @@ export type ConsoleLevel = 'debug' | 'log' | 'warn' | 'error'
 to.console = (level: ConsoleLevel = 'log') => {
   return { [read]: console[level] }
 }
-
+/* c8 ignore start */
+// don't know why c8 is reporting an empty line :(
 export { to }
+/* c8 ignore end */

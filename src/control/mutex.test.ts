@@ -2,9 +2,9 @@ import { vi, describe, it, expect } from 'vitest'
 import { Mutex } from './mutex'
 
 describe('mutex', () => {
-  it('should be able to acquire', async () => {
+  it('should be able to lock', async () => {
     const mutex = new Mutex()
-    const release = await mutex.acquire()
+    const release = await mutex.lock()
     expect(mutex.canLock).toBe(false)
     release()
     expect(mutex.canLock).toBe(true)
@@ -20,7 +20,7 @@ describe('mutex', () => {
 
   it('try acquire', async () => {
     const mutex = new Mutex()
-    const release = mutex.tryAcquire()
+    const release = mutex.tryLock()
     expect(mutex.canLock).toBe(false)
     release()
     expect(mutex.canLock).toBe(true)

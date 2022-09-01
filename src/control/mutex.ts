@@ -6,43 +6,54 @@ import { Semaphore } from './semaphore'
  * @public
  */
 export class Mutex {
-  #semaphore: Semaphore
+  private semaphore: Semaphore
 
   /**
    * {@link Semaphore} with capacity of 1
    */
   public constructor() {
-    this.#semaphore = new Semaphore(1)
+    this.semaphore = new Semaphore(1)
   }
 
   /**
-   * alias for {@link Mutex.acquire}
+   * same as {@link Semaphore.acquire}
    */
   public async lock() {
-    return this.acquire()
+    return this.semaphore.acquire()
   }
 
   /**
-   * acquire mutex lock, will resolve once ready
-   * @returns a function to release lock
+   * same as {@link Semaphore.tryAcquire}
    */
-  public async acquire() {
-    return await this.#semaphore.acquire()
-  }
-
-  /**
-   * Try to synchronosly acquire
-   * @returns a function to release mutex lock
-   * @throws Error if mutex is already acquired
-   */
-  public tryAcquire() {
-    return this.#semaphore.tryAcquire()
+  public tryLock() {
+    return this.semaphore.tryAcquire()
   }
 
   /**
    * check if mutex is available
    */
   public get canLock() {
-    return this.#semaphore.isEmpty
+    return this.semaphore.isEmpty
+  }
+
+  /**
+   * Schedule a task to run when mutex is not locked.
+   */
+  public schedule<T>(fn: () => T) {
+    return this.semaphore.schedule(fn)
+  }
+
+  /**
+   * freeze the mutex lock, see {@link Semaphore.freeze}
+   */
+  public freeze() {
+    return this.semaphore.freeze()
+  }
+
+  /**
+   * unfreeze the mutex lock, see {@link Semaphore.unfreeze}}
+   */
+  public unfreeze() {
+    return this.semaphore.unfreeze()
   }
 }
