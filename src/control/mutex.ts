@@ -30,10 +30,10 @@ export class Mutex {
   }
 
   /**
-   * check if mutex is available
+   * check if mutex is available, returns true if it is not locked and frozen
    */
   public get canLock() {
-    return this.semaphore.isEmpty
+    return this.semaphore.isEmpty && !this.semaphore.frozen
   }
 
   /**
