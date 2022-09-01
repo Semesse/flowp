@@ -3,7 +3,7 @@ import { Future } from './future'
 /**
  * Create a promise, but with progress reporting
  *
- * @beta
+ * @alpha not finalized
  */
 // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
 export class Progress<Result = void, ProgressInfo = unknown> extends Future<Result> {
@@ -27,6 +27,11 @@ export class Progress<Result = void, ProgressInfo = unknown> extends Future<Resu
     return this.currentProgress
   }
 
+  /**
+   * register a listener on progress
+   *
+   * @throws err if progress has rejected
+   */
   public onProgress(listener: (progress: Readonly<ProgressInfo>) => unknown) {
     this.listeners.add(listener)
     return () => this.listeners.delete(listener)
