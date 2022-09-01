@@ -4,14 +4,14 @@
   align-items: stretch;
   padding: 2rem 0;
   width: 100%;
-  gap: 12px;
+  gap: 16px;
   margin: 32px 0;
   padding: 0 24px;
   flex-wrap: wrap;
 }
 
 .feature {
-  flex: 0 1 320px;
+  flex: 1 1 256px;
   background: #eaeaea30;
   /* border: 1px solid #eaeaea30; */
   border-radius: 12px;
