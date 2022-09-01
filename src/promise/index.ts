@@ -1,5 +1,5 @@
 /* c8 ignore start */
-export { lateinit, Delegated } from './lateinit'
+export { delegate, Delegated } from './delegate'
 import * as timers from './timer'
 export { timers }
 export * from './future'

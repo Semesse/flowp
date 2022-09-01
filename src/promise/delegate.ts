@@ -3,11 +3,14 @@ import { Callable } from '../types'
 /**
  * @internal
  */
-export type Delegated<T> = {
-  readonly [K in keyof Awaited<T> & string as `$${K}`]: Awaited<T>[K] extends Callable
-    ? (...args: Parameters<Awaited<T>[K]>) => ReturnType<Awaited<T>[K]>
-    : Delegated<Awaited<T>[K]>
-} & Promise<Awaited<T>>
+export type Delegated<T> = Awaited<T> extends Callable
+  ? // @ts-ignore
+    (...args: Parameters<Awaited<T>>) => ReturnType<Awaited<T>>
+  : {
+      readonly [K in keyof Awaited<T> & string as `$${K}`]: Awaited<T>[K] extends Callable
+        ? (...args: Parameters<Awaited<T>[K]>) => ReturnType<Awaited<T>[K]>
+        : Delegated<Awaited<T>[K]>
+    } & Promise<Awaited<T>>
 
 function isPromiseProtoMethods(
   v: any
@@ -26,18 +29,18 @@ const raw = Symbol('get the raw untouched value')
  * @example
  * ```typescript
  * const promise = Promise.resolve({ foo: { bar: 'baz' } })
- * const delegated = lateinit(promise)
+ * const delegated = delegate(promise)
  * await delegated.$foo.$bar // 'baz'
  * ```
  */
-export function lateinit<T extends Promise<unknown>>(value: T): Delegated<T> {
+export function delegate<T extends Promise<unknown>>(value: T): Delegated<T> {
   // proxy on a function so the returned value is callable
   // eslint-disable-next-line no-new-func
   return new Proxy(new Function() as unknown as T, {
     get(_, key, receiver) {
       if (key === raw) return value
       if (typeof key === 'string' && key.startsWith('$')) {
-        return lateinit(
+        return delegate(
           value.then((v) => {
             // FIXME: pass unit test
             // if (typeof v !== 'object' || typeof v !== 'function') throw new Error('Cound not delegate primitives')
@@ -55,7 +58,7 @@ export function lateinit<T extends Promise<unknown>>(value: T): Delegated<T> {
     },
     apply(_, thisPromise, args) {
       return (async () => {
-        const thisArg = await thisPromise[raw]
+        const thisArg = await thisPromise?.[raw]
         const fn = (await value) as Function
         return Reflect.apply(fn, thisArg, args)
       })()

@@ -1,5 +1,5 @@
 import { vi, describe, it, expect } from 'vitest'
-import { lateinit } from './lateinit'
+import { delegate } from './delegate'
 
 class TestClass extends Promise<any> {
   public test = 42
@@ -16,19 +16,19 @@ class PrivateClass {
     return this.#field
   }
 }
-const tee = lateinit(
+const tee = delegate(
   new Promise<Console>((resolve) => {
     setTimeout(() => resolve(console), 1000)
   })
 )
-const fs = lateinit(import('fs'))
-const u = lateinit(Promise.resolve({ universe: { value: 42 } }))
-const objectWithPrivateField = lateinit(Promise.resolve(new PrivateClass()))
+const fs = delegate(import('fs'))
+const u = delegate(Promise.resolve({ universe: { value: 42 } }))
+const objectWithPrivateField = delegate(Promise.resolve(new PrivateClass()))
 
-describe('lateinit', () => {
+describe('delegate', () => {
   it('should not proxy other properties', async () => {
     const v = new TestClass(() => 42)
-    const delegated = lateinit(v)
+    const delegated = delegate(v)
     // typescript does not support HKTs the return type is always `Promise`
     // @ts-ignore
     expect(delegated.test).toBe(v.test)
@@ -73,6 +73,15 @@ describe('lateinit', () => {
     expect(_finally).toHaveBeenCalledTimes(1)
   })
 
+  it('should work with function', async () => {
+    const fn = (i: number) => i
+    const delegated = delegate(Promise.resolve(fn))
+    // `call` only exists on function prototype
+    // @ts-ignore
+    expect(await delegated.$call(null, 42)).toBe(42)
+    expect(await delegated(777)).toBe(777)
+  })
+
   it('work with instances that access private fields', async () => {
     expect(await objectWithPrivateField.$field).toBe(1)
     expect(await objectWithPrivateField.$fn()).toBe(1)
@@ -92,7 +101,7 @@ describe('lateinit', () => {
       }
     }
     const foo = new Foo(42)
-    const delegated = lateinit(Promise.resolve(foo))
+    const delegated = delegate(Promise.resolve(foo))
     expect(await delegated.$foo()).toBe(foo)
     expect(await delegated.$bar()).toBe(42)
     const f = await delegated.$bar
