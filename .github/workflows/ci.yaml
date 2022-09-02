@@ -22,7 +22,7 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
       - run: npm run setup-ci
-      - run: pnpm build
+      - run: pnpm build && pnpm tsc
       - run: pnpm test
       - uses: paambaati/codeclimate-action@v3.0.0
         with:
