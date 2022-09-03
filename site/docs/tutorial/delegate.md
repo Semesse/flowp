@@ -36,12 +36,13 @@ function delegate<T extends Promise<unknown>>(value: T): Delegated<T>
 ```
 Where:
 ```typescript
-// for all properties in T, create a corresponding $prop property and 
-type Delegated<T> = {
-  readonly [K in keyof Awaited<T> & string as `$${K}`]: Awaited<T>[K] extends Callable
-    ? (...args: Parameters<Awaited<T>[K]>) => ReturnType<Awaited<T>[K]>
-    : Delegated<Awaited<T>[K]>
-} & Promise<Awaited<T>>
+// for all properties in T, create a corresponding $prop property recursively
+type Delegated<T> = (Awaited<T> extends Callable
+  ? (...args: Parameters<Awaited<T>>) => ReturnType<Awaited<T>>
+  : {
+      readonly [K in keyof Awaited<T> & string as `$${K}`]: Delegated<Awaited<T>[K]>
+    }
+) & Promise<Awaited<T>>
 ```
 
 Delegates method calls and member access to the resolved value, and this is type safe! You can access delegated properties with `$key`, e.g. `(await arr).map()` => `arr.$map` and the [delegated object](#) behaves like a normal promise so to retrive the resolved value at any level just use `.then()` or `await`
@@ -72,3 +73,12 @@ It returns a proxy trapping a no-op function to make returned value able to be i
 
 ## Examples
 
+### dynamic import
+
+```typescript
+const fs = import('fs')
+
+await fs.$promises.$writeFile('hello.ts', `export default () => 'hello world!'`)
+```
+
+### with 

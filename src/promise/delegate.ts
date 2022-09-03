@@ -3,14 +3,13 @@ import { Callable } from '../types'
 /**
  * @internal
  */
-export type Delegated<T> = Awaited<T> extends Callable
+export type Delegated<T> = (Awaited<T> extends Callable
   ? // @ts-ignore
     (...args: Parameters<Awaited<T>>) => ReturnType<Awaited<T>>
   : {
-      readonly [K in keyof Awaited<T> & string as `$${K}`]: Awaited<T>[K] extends Callable
-        ? (...args: Parameters<Awaited<T>[K]>) => ReturnType<Awaited<T>[K]>
-        : Delegated<Awaited<T>[K]>
-    } & Promise<Awaited<T>>
+      readonly [K in keyof Awaited<T> & string as `$${K}`]: Delegated<Awaited<T>[K]>
+    }) &
+  Promise<Awaited<T>>
 
 function isPromiseProtoMethods(
   v: any
