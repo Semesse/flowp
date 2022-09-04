@@ -1,7 +1,7 @@
 import { vi, describe, it, expect, beforeAll } from 'vitest'
 import { timers } from '../promise'
 import { pipe } from '../protocol'
-import { Channel, ChannelFullError, ClosedChannelError } from './channel'
+import { Channel } from './channel'
 
 describe('channel', () => {
   beforeAll(() => {
@@ -91,14 +91,14 @@ describe('channel', () => {
     expect(channel.capacity).toBe(1)
     const value = 42
     channel.trySend(value)
-    expect(() => channel.trySend(value)).toThrow(ChannelFullError)
+    expect(() => channel.trySend(value)).toThrow(Channel.ChannelFullError)
   })
 
   it('try send to closed channel', async () => {
     const channel = new Channel()
     expect(channel.closed).toBe(false)
     channel.close()
-    expect(() => channel.trySend(42)).toThrow(ClosedChannelError)
+    expect(() => channel.trySend(42)).toThrow(Channel.ClosedChannelError)
     expect(channel.closed).toBe(true)
   })
 
@@ -129,7 +129,7 @@ describe('channel', () => {
   it('should not send to closed channel', async () => {
     const channel = new Channel()
     channel.close()
-    expect(channel.send(42)).rejects.toThrow(ClosedChannelError)
+    expect(channel.send(42)).rejects.toThrow(Channel.ClosedChannelError)
     expect(channel.receive)
   })
 
@@ -190,7 +190,7 @@ describe('channel', () => {
     channel1.pipe(channel2, { onPipeError: handler })
     channel2.close()
     await channel1.send(0)
-    expect(handler).toBeCalledWith(expect.any(ClosedChannelError))
+    expect(handler).toBeCalledWith(expect.any(Channel.ClosedChannelError))
   })
 
   it('send, pause, pipe', async () => {

@@ -7,7 +7,7 @@ import { Semaphore, transfer } from './semaphore'
  *
  * @internal
  */
-export class ClosedChannelError extends Error {
+class ClosedChannelError extends Error {
   public message = 'write on closed channel'
 }
 
@@ -16,7 +16,7 @@ export class ClosedChannelError extends Error {
  *
  * @internal
  */
-export class ChannelFullError extends Error {
+class ChannelFullError extends Error {
   public message = 'channel queue is full'
 }
 
@@ -60,6 +60,19 @@ export interface ChannelPipeOptions {
  * @public
  */
 export class Channel<T> implements PipeSource<T>, PipeTarget<T> {
+  /**
+   * ```
+   * class ClosedChannelError extends Error
+   * ```
+   */
+  public static ClosedChannelError = ClosedChannelError
+  /**
+   * ```
+   * class ChannelFullError extends Error
+   * ```
+   */
+  public static ChannelFullError = ChannelFullError
+
   private _closed = false
   private _capacity
   private queue: T[] = []
