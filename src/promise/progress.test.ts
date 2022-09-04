@@ -21,6 +21,16 @@ describe('progress', () => {
     expect(await progress).toBe(42)
   })
 
+  it('progress.run', async () => {
+    const prog = Progress.run((progress) => {
+      progress.report(50)
+      progress.resolve(100)
+    }, 0)
+    // last report
+    expect(prog.progress).toBe(50)
+    expect(prog).resolves.toBe(100)
+  })
+
   it('remove listener', async () => {
     const progress = new Progress<number>(0)
     const callback = vi.fn()
@@ -29,5 +39,39 @@ describe('progress', () => {
     cancel()
     progress.report(2)
     expect(callback).toBeCalledTimes(1)
+  })
+
+  it('inspect progress', async () => {
+    const progress = new Progress<number, number>(0)
+    expect(progress.inspect()).toMatchInlineSnapshot(`
+      {
+        "progress": 0,
+        "state": "pending",
+      }
+    `)
+    progress.report(12)
+    expect(progress.inspect()).toMatchInlineSnapshot(`
+      {
+        "progress": 12,
+        "state": "pending",
+      }
+    `)
+    progress.resolve(Infinity)
+    expect(progress.inspect()).toMatchInlineSnapshot(`
+      {
+        "state": "fulfilled",
+        "value": Infinity,
+      }
+    `)
+
+    const progress2 = new Progress<number, number>(0)
+    const err = new Error('rejected')
+    progress2.reject(err)
+    expect(progress2.inspect()).toMatchInlineSnapshot(`
+      {
+        "reason": [Error: rejected],
+        "state": "rejected",
+      }
+    `)
   })
 })
