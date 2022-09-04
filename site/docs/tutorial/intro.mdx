@@ -80,7 +80,7 @@ Checkout async components you like or continue reading tutorial.
 Provides functionalities that JavaScript's Promise don't yet have:
 
 - [Future](./future) A promise that can be filled in results anywhere other than its definition
-- [Progress](api/flowp.progress) A promise but with progress report
+- [Progress](./progress) A promise but with progress report
 
 ### Promise helpers
 
@@ -91,12 +91,12 @@ Provides functionalities that JavaScript's Promise don't yet have:
 These classes utilize JavaScript's Promise to
 
 - [Semaphore](./semaphore/overview) Controls concurrent access to a common resource
-- [Mutex](api/flowp.mutex) Specialized Semaphore(1)
-- [Channel](api/flowp.channel) Powerful asynchronos message queue
+- [Mutex](./semaphore/api#mutex-class) Specialized Semaphore(1)
+- [Channel](./channel/overview) Powerful asynchronos message queue
 - [ChannelHub](api/flowp.channelhub) Broadcast messages to its every reader Channel
 
 ### Experimental blackmagick
 
 These features are not well tested in production environment, use with caution
 
-- [lateinit](api/flowp.lateinit) deletgate property access and function calls of a promise, powered by [Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy)
+- [delegate](./delegate) deletgate property access and function calls of a promise, powered by [Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy)
