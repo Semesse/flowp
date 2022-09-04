@@ -21,6 +21,7 @@ export class Future<T = unknown> extends Promise<T> {
   protected _resolve: (value: T | PromiseLike<T>) => void
   protected _reject: (error: unknown) => void
   protected promiseState = pending
+  protected settledValue?: T | unknown
 
   public static get [Symbol.species]() {
     return Promise
@@ -43,8 +44,11 @@ export class Future<T = unknown> extends Promise<T> {
    */
   public get resolve(): (value: T | PromiseLike<T>) => void {
     return (value) => {
-      this._resolve(value)
-      if (this.pending) this.promiseState = fulfilled
+      if (this.pending) {
+        this.promiseState = fulfilled
+        this.settledValue = value
+        this._resolve(value)
+      }
     }
   }
 
@@ -58,20 +62,41 @@ export class Future<T = unknown> extends Promise<T> {
    */
   public get reject(): (error?: unknown) => void {
     return (error) => {
-      this._reject(error)
-      if (this.pending) this.promiseState = rejected
+      if (this.pending) {
+        this.promiseState = rejected
+        this.settledValue = error
+        // catch UnhandledRejection
+        this.catch(() => {})
+        this._reject(error)
+      }
     }
   }
 
+  /**
+   * check if the promise is neither fulfilled nor rejected
+   */
   public get pending() {
     return this.promiseState === pending
   }
 
+  /**
+   * check if future has been fullfilled.
+   */
   public get fulfilled() {
     return this.promiseState === fulfilled
   }
 
+  /**
+   * check if future has been rejected.
+   */
   public get rejected() {
     return this.promiseState === rejected
+  }
+
+  /**
+   * get the promise settled result, for debug purpose only.
+   */
+  public get settled() {
+    return this.settledValue
   }
 }
