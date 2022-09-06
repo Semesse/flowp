@@ -64,6 +64,13 @@ describe('semaphore', () => {
     expect(sem.schedule(() => task(2))).resolves.toBe(2)
   })
 
+  it('should schedule async task', async () => {
+    const sem = new Semaphore(1)
+    const task = vi.fn().mockImplementation((v: any) => Promise.resolve(v))
+    expect(sem.schedule(() => task(1))).resolves.toBe(1)
+    expect(sem.schedule(() => task(2))).resolves.toBe(2)
+  })
+
   it('should be able to grant', async () => {
     const sem = new Semaphore(1)
     await sem.acquire()
