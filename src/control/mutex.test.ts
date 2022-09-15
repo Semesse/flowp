@@ -31,8 +31,10 @@ describe('mutex', () => {
 
   it('should freeze', async () => {
     const mutex = new Mutex()
+    expect(mutex.frozen).toBe(false)
     mutex.freeze()
     expect(mutex.canLock).toBe(false)
+    expect(mutex.frozen).toBe(true)
     expect(Promise.race([mutex.lock(), timers.timeout(100)])).rejects.toThrow()
   })
 

@@ -56,4 +56,11 @@ export class Mutex {
   public unfreeze() {
     return this.semaphore.unfreeze()
   }
+
+  /**
+   * unfreeze the mutex lock, see {@link Semaphore.unfreeze}}
+   */
+  public get frozen() {
+    return !!this.semaphore.frozen
+  }
 }

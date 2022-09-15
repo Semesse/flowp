@@ -31,7 +31,6 @@ get remain(): number
 
 Inspects current remaining permits of this semaphore.
 
-
 ### isFull
 
 ```typescript
@@ -86,7 +85,6 @@ schedule<T>(fn: () => T): Promise<Awaited<T>>
 
 Schedule a task to run when a permit is available and automatically release after run.
 
-
 Examples:
 
 ```typescript
@@ -123,7 +121,6 @@ grant(permits?: number): void
 
 Give n permits to semaphore, will immediately start this number of waiting tasks if not frozen.
 
-
 ### revoke
 
 ```typescript
@@ -145,7 +142,7 @@ emitter.on('event', (e) => {
 })
 
 // this is basically the same as how flowp's Channel works
-while(await sem.revoke()) {
+while (await sem.revoke()) {
   const data = queue.pop()
 }
 ```
@@ -186,7 +183,7 @@ const sem = new Semaphore(1)
 let socket = net.connect(host, port)
 
 // socket disconnected, freeze the semaphore until reconnection
-socket.on('close', err => {
+socket.on('close', (err) => {
   sem.freeze()
   socket = net.connect(host, port)
   socket.on('connect', () => sem.unfreeze())
@@ -216,6 +213,14 @@ get canLock(): boolean
 ```
 
 Alias for [Semaphore.isEmpty](#isempty)
+
+### frozen
+
+```typescript
+get frozen(): boolean
+```
+
+Check if mutex is frozen
 
 ## Methods
 
@@ -250,7 +255,6 @@ schedule<T>(fn: () => T): Promise<Awaited<T>>
 ```
 
 Same as [Semaphore.schedule](#schedule).
-
 
 Examples:
 

@@ -13,6 +13,9 @@ import { Future } from '../promise'
  * release()
  */
 export class Semaphore {
+  /**
+   * check if semaphore is frozen (non-undefined value), other uses are not guaranteed
+   */
   public frozen?: Future<void>
   private _permits: number
   // the first {permits} items in the queue are running tasks or frozen, others are waiting
