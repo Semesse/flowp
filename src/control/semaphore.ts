@@ -155,16 +155,20 @@ export class Semaphore {
 
   /**
    * Check if all permits are being used
+   *
+   * always return `true` if `permits = 0`
    */
   public get isFull() {
     return this.queue.length >= this._permits
   }
 
   /**
-   * Check if no task is using the semaphore
+   * Check if no task is using the semaphore'
+   *
+   * always return `true` if `permits = 0`
    */
   public get isEmpty() {
-    return this.queue.length === 0
+    return this.queue.length === 0 || this.permits === 0
   }
 
   private releaser(token: Future<void>) {

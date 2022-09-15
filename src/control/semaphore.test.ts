@@ -150,6 +150,14 @@ describe('semaphore', () => {
     expect(sem.acquire()).resolves.toBeDefined()
   })
 
+  it('zero permits', async () => {
+    const sem = new Semaphore(0)
+    expect(sem.remain).toBe(0)
+    expect(sem.permits).toBe(0)
+    expect(sem.isFull).toBe(true)
+    expect(sem.isEmpty).toBe(true)
+  })
+
   it('grant and revoke infinity should work', async () => {
     const sem = new Semaphore()
     const release = await sem.acquire()

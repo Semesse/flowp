@@ -37,7 +37,7 @@ Inspects current remaining permits of this semaphore.
 get isFull(): boolean
 ```
 
-Check if the semaphore has drained its permits.
+Check if the semaphore has drained its permits. Always return `true` if `permits = 0`
 
 ### isEmpty
 
@@ -45,7 +45,7 @@ Check if the semaphore has drained its permits.
 get isEmpty(): boolean
 ```
 
-Check if the semaphore has not yet give out any permits.
+Check if the semaphore has not yet give out any permits. Always return `true` if `permits = 0`
 
 ## Methods
 
