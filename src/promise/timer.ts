@@ -2,28 +2,32 @@
  * util.promisify only works on browser
  */
 
+export interface SleepTimer {
+  (ms: number): Promise<void>
+  <T>(ms: number, value: T): Promise<T>
+}
+
 /**
- * **resolve** after timeout (in miliseconds)
+ * **resolve** after timeout (in miliseconds), can pass in an optional resolved value
  *
  * @public
  */
-export const sleep = (ms: number) => {
-  return new Promise((r) => {
-    setTimeout(r, ms)
+export const sleep: SleepTimer = <T = unknown>(ms: number, value?: T) => {
+  return new Promise<T>((r) => {
+    setTimeout(() => r(value!), ms)
   })
 }
 
 /**
  * **reject** after timeout (in miliseconds)
  *
+ * By default, reject with `Error('timeout')`, but can pass in an optional rejected value
+ *
  * @public
  */
 export const timeout = (ms: number, err?: string | Error) => {
   return new Promise((_, r) => {
-    setTimeout(
-      () => r(typeof err === 'string' ? new Error(err) : typeof err === 'undefined' ? new Error('timeout') : err),
-      ms
-    )
+    setTimeout(() => r(err ?? new Error('timeout')), ms)
   })
 }
 

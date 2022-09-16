@@ -7,6 +7,8 @@ describe('timers', async () => {
   })
 
   it('sleep', async () => {
+    const err = new Error('snooze')
+    expect(sleep(100, err)).resolves.toBe(err)
     expect(sleep(100)).resolves.toBeUndefined()
     vi.runAllTimers()
   })
