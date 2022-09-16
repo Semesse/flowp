@@ -8,6 +8,8 @@ import FlowP from '@site/src/theme/flowp'
 
 ## Overview
 
+> <i>A promising future, though it may never come.</i>
+
 Sometimes you may need to create a promise but resolve it later in other places. Unfortunately `Promise` constructor only accepts callbacks and you need to manually hold a reference to `resolve` or `reject` like this:
 
 ```typescript
@@ -124,7 +126,6 @@ reject the future with given value.
 
 the method has already bound to `this`, so you can write `emitter.on('error', future.reject)`
 
-:::warning
-`UnhandledRejection` will be thrown if `reject` is called before adding a `.catch` handler,
-which might cause Node.js to exit, see [DEP0018](https://nodejs.org/api/deprecations.html#DEP0018).
+:::tip
+`UnhandledRejection` will be automatically consumed if `reject` is called before adding a `.catch` handler. You can safely use this without adding a explicit handler.
 :::

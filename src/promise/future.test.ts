@@ -65,6 +65,13 @@ describe('future', () => {
     expect(await future).toBe(42)
   })
 
+  it('consume UnhandledRejection on reject', async () => {
+    const future = new Future<number>()
+    future.reject(37)
+    // no UnhandledRejection, since it will cause the whole test file to fail
+    expect(future).rejects.toBe(37)
+  })
+
   it('fulfill state', async () => {
     const future = new Future<number>()
     expect(future.pending).toBe(true)

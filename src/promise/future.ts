@@ -56,9 +56,6 @@ export class Future<T = unknown> extends Promise<T> {
    * reject the future with given value.
    *
    * the method has already bound to `this`, so you can write `emitter.on('error', future.reject)`
-   *
-   * **WARN** [`UnhandledRejection`] will be thrown if `reject` is called before adding a `.catch` handler,
-   * which might cause Node.js to exit, see [DEP0018](https://nodejs.org/api/deprecations.html#DEP0018)
    */
   public get reject(): (error?: unknown) => void {
     return (error) => {
