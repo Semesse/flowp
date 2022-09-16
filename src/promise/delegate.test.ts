@@ -24,6 +24,7 @@ const tee = delegate(
 const fs = delegate(import('fs'))
 const u = delegate(Promise.resolve({ universe: { value: 42 } }))
 const objectWithPrivateField = delegate(Promise.resolve(new PrivateClass()))
+const deepObject = delegate(Promise.resolve({ a: { b: 114514, c: new WeakRef(u), d: () => '🐳' } }))
 
 describe('delegate', () => {
   it('should not proxy other properties', async () => {
@@ -85,6 +86,12 @@ describe('delegate', () => {
   it('work with instances that access private fields', async () => {
     expect(await objectWithPrivateField.$field).toBe(1)
     expect(await objectWithPrivateField.$fn()).toBe(1)
+  })
+
+  it('recursive delegate', async () => {
+    expect(await deepObject.$a.$b).toBe(114514)
+    expect(await deepObject.$a.$c.$deref()).toBe(await u)
+    expect(await deepObject.$a.$d()).toMatchInlineSnapshot('"🐳"')
   })
 
   it('preserves this', async () => {

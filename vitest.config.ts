@@ -10,7 +10,7 @@ export default defineConfig({
     globals: true,
     coverage: {
       provider: 'c8',
-      reporter: ['html', 'clover'],
+      reporter: ['text', 'html', 'clover'],
     },
   },
 })
