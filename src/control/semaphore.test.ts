@@ -64,11 +64,37 @@ describe('semaphore', () => {
     expect(sem.schedule(() => task(2))).resolves.toBe(2)
   })
 
+  it('should schedule task which throws', async () => {
+    const sem = new Semaphore(1)
+    const task = () => {
+      throw new Error()
+    }
+    const promise = sem.schedule(task)
+    expect(promise).rejects.toBeDefined()
+    await promise.catch(() => {})
+    expect(sem.remain).toBe(1)
+  })
+
   it('should schedule async task', async () => {
     const sem = new Semaphore(1)
     const task = vi.fn().mockImplementation((v: any) => Promise.resolve(v))
     expect(sem.schedule(() => task(1))).resolves.toBe(1)
     expect(sem.schedule(() => task(2))).resolves.toBe(2)
+  })
+
+  it('should schedule async task which rejects', async () => {
+    const sem = new Semaphore(1)
+    const task = async () => {
+      throw new Error()
+    }
+    const rejected = vi.fn()
+    try {
+      await sem.schedule(task)
+    } catch (e) {
+      rejected()
+    }
+    expect(sem.remain).toBe(1)
+    expect(rejected).toBeCalledTimes(1)
   })
 
   it('should be able to grant', async () => {

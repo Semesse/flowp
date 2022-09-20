@@ -78,9 +78,13 @@ export class Semaphore {
    */
   public async schedule<T>(fn: () => T): Promise<Awaited<T>> {
     const release = await this.acquire()
-    const res = await fn()
-    release()
-    return res
+    try {
+      const res = await fn()
+      release()
+      return res
+    } finally {
+      release()
+    }
   }
 
   /**

@@ -54,4 +54,15 @@ describe('mutex', () => {
     await Promise.resolve()
     expect(task).toBeCalledTimes(1)
   })
+
+  it('scheduled task rejected', async () => {
+    const mutex = new Mutex()
+    const task = async () => {
+      throw new Error('failed')
+    }
+    const rejectHandler = vi.fn()
+    await mutex.schedule(task).catch(rejectHandler)
+    expect(mutex.canLock).toBe(true)
+    expect(rejectHandler).toBeCalledTimes(1)
+  })
 })
