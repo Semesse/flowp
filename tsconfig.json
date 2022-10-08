@@ -11,8 +11,8 @@
     "declarationMap": true,
     "skipDefaultLibCheck": true,
     "skipLibCheck": true,
-    "emitDeclarationOnly": true,
     "outDir": "dist"
   },
   "include": ["src"],
+  "exclude": ["src/**/*.test.ts"]
 }
