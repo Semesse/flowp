@@ -27,6 +27,20 @@ const longasync = async () => {
 
 longasync()
 v.push('hello')
+
+/* and typescript's type narrowing won't tell you */
+let s: string | number
+
+const b = async (): string => {
+    if(typeof s === 'number') return
+    await new Promise<void>((r) => {
+        s = 123456
+        r()
+    })
+    // typeof s === number but in TS it's string
+    // no error will be thrown
+    return s
+}
 ```
 
 These bugs are really hard to reproduce and capture, but why don't we write code that forbids such race conditions?
