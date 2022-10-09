@@ -8,11 +8,29 @@
     "semaphore",
     "channel"
   ],
-  "main": "dist/index.js",
+  "main": "dist/index.cjs",
   "exports": {
     ".": {
       "require": "./dist/index.cjs",
       "import": "./dist/index.js"
+    },
+    "./future": {
+      "import": "./dist/promise/future.js"
+    },
+    "./delegate": {
+      "import": "./dist/promise/delegate.js"
+    },
+    "./progress": {
+      "import": "./dist/promise/progress.js"
+    },
+    "./channel": {
+      "import": "./dist/control/channel.js"
+    },
+    "./semaphore": {
+      "import": "./dist/control/semaphore.js"
+    },
+    "./mutex": {
+      "import": "./dist/control/mutex.js"
     }
   },
   "types": "./dist/index.d.ts",

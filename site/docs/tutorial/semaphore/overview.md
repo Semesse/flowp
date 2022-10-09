@@ -7,7 +7,7 @@ description: Overview of Semaphore's features
 
 Semaphore with async interface, which limits simultaneous access to a resouce. When a resouce is ready, it "signals" the acquirer by resolve the promise returned from [acquire](./api#acquire).
 
-But it's more powerful than any other semaphores, thanks to the extra [grant](./api#grant) | [revoke](./api#revoke)  and [freeze](./api#freeze) | [unfreeze](./api#unfreeze) primitives which will be introduced later.
+But it's more powerful than any other semaphores, thanks to the extra [grant](./api#grant) | [revoke](./api#revoke)  and [freeze](./api#freeze) | [unfreeze](./api#unfreeze) primitives which will be introduced later. For more examples, see [examples](./examples).
 
 :::info
 Terminology:
