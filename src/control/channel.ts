@@ -194,6 +194,8 @@ export class Channel<T> implements PipeSource<T>, PipeTarget<T> {
 
   /**
    * pipe channel output to target
+   *
+   * there is only one target at the same time, use `ChannelHub` if you want to have multiple readers
    */
   public pipe(target: PipeTarget<T>, options?: ChannelPipeOptions) {
     this.pipeTarget = target
