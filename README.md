@@ -3,7 +3,7 @@
 ![CI](https://img.shields.io/github/workflow/status/Semesse/flowp/Build,%20Test%20and%20Lint/master?style=flat-square)
 ![Maintainability](https://img.shields.io/codeclimate/maintainability/Semesse/flowp?style=flat-square)
 ![Coverage](https://img.shields.io/codeclimate/coverage/Semesse/flowp?style=flat-square)
-![Test Cases](https://img.shields.io/badge/Test%20Cases-89-green?style=flat-square)
+![Test Cases](https://img.shields.io/badge/Test%20Cases-92-green?style=flat-square)
 ![Downloads](https://img.shields.io/npm/dm/flowp?style=flat-square)
 
 flowp aims to provide promise based utilities with modern and simple interface.

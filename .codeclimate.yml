@@ -1,0 +1,7 @@
+
+# exclude test files
+exclude_patterns:
+- "tests/"
+- "spec/"
+- "**/*.test.ts"
+- "**/*.spec.ts"
