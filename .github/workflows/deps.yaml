@@ -1,0 +1,33 @@
+name: upgrade dependencies
+on:
+  schedule:
+    # automatically upgrade dependencies at the first day every month
+    - cron:  '0 12 1 * *'
+  workflow_dispatch: {}
+jobs:
+  deps:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '16'
+          registry-url: 'https://registry.npmjs.org'
+      - run: git config --global user.email "i@sem.ms"
+      - run: git config --global user.name "Semesse"
+      - run: npm i -g pnpm
+      - run: pnpm up --latest
+      - name: test if build & test pass
+        run: pnpm build && pnpm tsc && pnpm test
+      - run: 'git checkout -b "auto-deps-$GITHUB_RUN_ID"'
+      - run: git add -A
+      - run: 'git commit -m "chore: auto deps dependencies"'
+      - uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ format('auto-deps-{0}', github.run_id) }}
+          force: true
+      - name: create pull request
+        run: 'gh pr create -l "auto deps" -B master -H "auto-deps-$GITHUB_RUN_ID" --title "[CI] deps dependencies" --body "This PR passes all tests"'
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
