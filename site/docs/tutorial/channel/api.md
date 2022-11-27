@@ -158,6 +158,8 @@ interface ChannelPipeOptions {
 
 Sets channel's output mode to `pipe` and all messages will be directly written to target (unless [frozen](#freeze)). You can pass an extra `options` param to setup an error handler. Capacity related checks are skipped so this is faster than [receive](#receive) and [stream](#stream).
 
+You can only have one pipe target at a time, but you can use `ChannelHub` if you want multiple readers
+
 Some pipe helpers are available and exported under [pipe](../pipe) namespace.
 
 #### unpipe

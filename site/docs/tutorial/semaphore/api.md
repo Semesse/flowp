@@ -196,11 +196,34 @@ socket.write(buf)
 
 # Mutex Class
 
+## Interface
+
+### MutexGuard
+
+a value created by `mutex.lock()`, `mutex.tryLock()` or `mutex.schedule()`. It contains a `value` property which is a temporary reference to the value stored in the mutex, and you can access its properties as long as you didn't release the lock.
+
+```typescript
+/**
+ * calling the `guard()` or `guard.release()` will release the mutex and revoke `MutexGuard.value`
+ * so that any subsequent access to the value will throw a TypeError
+ */
+export type MutexGuard<V> = V extends object
+  ? {
+      (): void
+      release: () => void
+      value: V
+    }
+  : () => void
+```
+
 ## Class
 
 ```typescript
-class Mutex
+class Mutex<V = void>
 ```
+Where:
+
+`V`: type of the object wrapped by the mutex, and a immutable T does not make sense
 
 [Mutex](#mutex-class) does not extend Semaphore because it removes some unnecessary methods / props from Semaphore.
 
@@ -232,26 +255,43 @@ constructor()
 
 Constructs a Mutex and its capacity is always 1.
 
-### acquire
+### lock
 
 ```typescript
-acquire(timeout?: number): Promise<() => void>
+lock(timeout?: number): Promise<MutexGuard<V>>
 ```
 
-Same as [Semaphore.acquire](#acquire).
-
-### tryAcquire
+acquire lock, returns a [`MutexGuard`](#mutexguard)
 
 ```typescript
-tryAcquire(): () => void
+const mutex = new Mutex({ a: 1 })
+const { release, value } = await mutex.lock()
+const ref = value
+ref.a // => 1
+release()
+ref.a // => TypeError, temporary reference destroyed
+
+### tryLock
+
+```typescript
+tryLock(): () => void
 ```
 
-Same as [Semaphore.tryAcquire](#tryacquire).
+acquire lock, returns a [`MutexGuard`](#mutexguard)
+
+```typescript
+const mutex = new Mutex({ a: 1 })
+const { release, value } = mutex.tryLock()
+const ref = value
+ref.a // => 1
+release()
+ref.a // => TypeError, temporary reference destroyed
+```
 
 ### schedule
 
 ```typescript
-schedule<T>(fn: () => T): Promise<Awaited<T>>
+schedule<T>(fn: (v: V) => T): Promise<Awaited<T>>
 ```
 
 Same as [Semaphore.schedule](#schedule).
@@ -288,3 +328,10 @@ unfreeze(): Promise<void>
 ```
 
 Same as [Semaphore.unfreeze](#unfreeze).
+
+### frozen
+
+```typescript
+get frozen(): boolean
+```
+Same as [Semaphore.frozen](#frozen).

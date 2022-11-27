@@ -67,6 +67,7 @@ You can freeze the semaphore so it stops granting any new permits because the re
 const sem = new Semaphore(5)
 
 sem.freeze()
+sem.frozen // true
 
 await sem.revoke() // hanging forever
 await sem.acquire() // hanging forever
@@ -100,3 +101,32 @@ sem.isFull // false
 sem.permits // 5
 sem.remain // 5
 ```
+
+# Mutex
+
+Mutex is a special type of semaphore with only 1 permit, and its interfaces are different. You can optionally wrap an object to protect it from concurrent access.
+
+## lock & release
+
+```typescript
+const mutex = new Mutex()
+// canLock and tryLock are seperated into two operations, but it's okay to assume we run in a single main thread
+if (!mutex.canLock()) return
+const release = mutex.tryLock()
+// do something
+release()
+
+// wrap an object
+const mutex = new Mutex({ a: 1 })
+const { release, value } = await mutex.lock()
+const ref = value // value is a temporary reference which does not equal the value stores in mutex
+ref.a // => 1
+release()
+ref.a // => TypeError, temporary reference destroyed
+```
+
+## freeze & unfreeze
+
+same as [Semaphore.freeze](#freeze--unfreeze)
+
+## 
