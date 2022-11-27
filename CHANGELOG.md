@@ -1,3 +1,65 @@
+## <small>0.3.8 (2022-11-16)</small>
+
+* 0.3.8 ([c5a8fe6](https://github.com/Semesse/flowp/commit/c5a8fe6))
+* docs: update badges ([579daa9](https://github.com/Semesse/flowp/commit/579daa9))
+* chore: bump deps version ([7c56869](https://github.com/Semesse/flowp/commit/7c56869))
+* feat: channel can be disconnected from ChannelHub ([ce9e64e](https://github.com/Semesse/flowp/commit/ce9e64e))
+
+
+
+## <small>0.3.7 (2022-10-10)</small>
+
+* 0.3.7 ([1dfd32e](https://github.com/Semesse/flowp/commit/1dfd32e))
+* chore: bump deps version ([94571de](https://github.com/Semesse/flowp/commit/94571de))
+* chore: conditional export esm apis ([e24f247](https://github.com/Semesse/flowp/commit/e24f247))
+* chore: no bundle for esm ([029c907](https://github.com/Semesse/flowp/commit/029c907))
+* docs: update examples for future ([aecc659](https://github.com/Semesse/flowp/commit/aecc659))
+
+
+
+## <small>0.3.6 (2022-09-20)</small>
+
+* 0.3.6 ([04646b0](https://github.com/Semesse/flowp/commit/04646b0))
+* fix: semaphore schedule tasks which throw / reject ([dbf3efd](https://github.com/Semesse/flowp/commit/dbf3efd))
+* fix: semaphore with zero permits ([4ade684](https://github.com/Semesse/flowp/commit/4ade684))
+* test: recursive delegate test case ([e465501](https://github.com/Semesse/flowp/commit/e465501))
+* feat: optional sleep param, remove timeout error wrap ([9d534b7](https://github.com/Semesse/flowp/commit/9d534b7))
+* docs: add semaphore examples and playground ([bae3f48](https://github.com/Semesse/flowp/commit/bae3f48))
+* docs: automatically handle rejection ([5c8851c](https://github.com/Semesse/flowp/commit/5c8851c))
+
+
+
+## <small>0.3.5 (2022-09-15)</small>
+
+* 0.3.5 ([1b6fad4](https://github.com/Semesse/flowp/commit/1b6fad4))
+* feat: mutex.frozen ([e149453](https://github.com/Semesse/flowp/commit/e149453))
+
+
+
+## <small>0.3.4 (2022-09-06)</small>
+
+* 0.3.4 ([09b472a](https://github.com/Semesse/flowp/commit/09b472a))
+* fix: semaphore schedule async task ([6e181a4](https://github.com/Semesse/flowp/commit/6e181a4))
+
+
+
+## <small>0.3.3 (2022-09-04)</small>
+
+* 0.3.3 ([f655722](https://github.com/Semesse/flowp/commit/f655722))
+* docs: add CHANGELOG ([c0dd16e](https://github.com/Semesse/flowp/commit/c0dd16e))
+* docs: add progress section ([93a3a77](https://github.com/Semesse/flowp/commit/93a3a77))
+* test: add exports test ([a727970](https://github.com/Semesse/flowp/commit/a727970))
+* feat: improve future inspection ([7adb986](https://github.com/Semesse/flowp/commit/7adb986))
+* feat: move channel errors into static fields of channel ([6a310d4](https://github.com/Semesse/flowp/commit/6a310d4))
+* feat: progress impl ([05737d3](https://github.com/Semesse/flowp/commit/05737d3))
+* fix: remove redundant type in Delegated<T> ([60dcab9](https://github.com/Semesse/flowp/commit/60dcab9))
+
+
+### BREAKING CHANGE
+
+* access channel errors from Channel.XXXError
+
+
 ## <small>0.3.2 (2022-09-02)</small>
 
 * 0.3.2 ([33286f1](https://github.com/Semesse/flowp/commit/33286f1))
