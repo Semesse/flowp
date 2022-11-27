@@ -1,3 +1,12 @@
+## <small>0.3.9 (2022-11-27)</small>
+
+* 0.3.9 ([8d5206b](https://github.com/Semesse/flowp/commit/8d5206b))
+* chore: add versioning script ([9db7fc9](https://github.com/Semesse/flowp/commit/9db7fc9))
+* docs: update docs & site ([a6d5e97](https://github.com/Semesse/flowp/commit/a6d5e97))
+* feat: mutex can now wrap an object ([bfa8e15](https://github.com/Semesse/flowp/commit/bfa8e15))
+
+
+
 ## <small>0.3.8 (2022-11-16)</small>
 
 * 0.3.8 ([c5a8fe6](https://github.com/Semesse/flowp/commit/c5a8fe6))
