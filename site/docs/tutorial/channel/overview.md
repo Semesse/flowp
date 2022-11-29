@@ -2,6 +2,7 @@
 sidebar_position: 1
 description: Overview of Channel's features
 ---
+import FlowP from '@site/src/theme/flowp'
 
 # Overview
 
@@ -67,7 +68,7 @@ for await (const v of stream) {
 }
 ```
 
-## temporarily block all consumers
+## temporarily block consumer
 
 Block `receive` / `tryReceive` / `stream` / `pipe` from retriving new messages. It's useful if your target has limited rate of consumption like Node.js `net.Socket`
 
@@ -80,4 +81,21 @@ channel.pipe(
     }
   })
 )
+```
+
+## multiple consumers
+
+A channel can only have one consumer at a time, but sometimes we have many consumers (e.g. EventEmitter). <FlowP> provides a `ChannelHub` in this case.
+
+```typescript
+class EventChannel<T> {
+  private hub: ChannelHub<T>
+  constructor(){ this.hub = new ChannelHub<T>() }
+  event(handler: (v: T) => any) {
+    const reader = this.hub.reader()
+    reader.pipe(pipe.to(handler))
+    return () => reader.unpipe()
+  }
+  fire(v: T) { this.hub.broadcast(v) }
+}
 ```

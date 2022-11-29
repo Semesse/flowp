@@ -2,7 +2,7 @@
 sidebar_position: 2
 ---
 
-# API
+# Channel
 
 ## Class
 
@@ -68,9 +68,7 @@ const ch = new Channel<string>(50)
 const ch = new Channel(-1) // => throw RangeError
 ```
 
-### Send & Receive
-
-#### send
+### send
 
 ```typescript
 send(value: T): Promise<void>;
@@ -80,7 +78,7 @@ Sends a value to channel, and returns a promise which is resolved when the value
 
 If the channel has reached its capacity, then call to send will be blocked until any message is consumed.
 
-#### receive
+### receive
 
 ```typescript
 receive(): Promise<T>;
@@ -88,7 +86,7 @@ receive(): Promise<T>;
 
 Retrieves a value from channel. The returned promise will never resolve if [pipe](#pipe) is enabled, and may race with [stream](#stream). It's suggested to use only one style at the same time.
 
-#### trySend
+### trySend
 
 ```typescript
 trySend(value: T): void;
@@ -96,7 +94,7 @@ trySend(value: T): void;
 
 Synchronosly sends a value to channel, and may throw `ChannelFullError` if not able to push to queue or `ClosedChannelError` if the channel is closed.
 
-#### tryReceive
+### tryReceive
 
 ```typescript
 tryReceive(): T | undefined;
@@ -104,7 +102,7 @@ tryReceive(): T | undefined;
 
 Synchronosly receives a value from channel, returns value or undefined if no message is available.
 
-#### sendAsync
+### sendAsync
 
 ```typescript
 sendAsync(value: Promise<T>): Promise<void>
@@ -139,9 +137,7 @@ if (res) {
 }
 ```
 
-### Pipe to other targets
-
-#### pipe
+### pipe
 
 ```typescript
 pipe(target: PipeTarget<T>, options?: ChannelPipeOptions): void
@@ -162,7 +158,7 @@ You can only have one pipe target at a time, but you can use `ChannelHub` if you
 
 Some pipe helpers are available and exported under [pipe](../pipe) namespace.
 
-#### unpipe
+### unpipe
 
 ```typescript
 unpipe(): void
@@ -188,11 +184,9 @@ ch1.pipe(
 )
 ```
 
-### Async iterates through channel
-
-![ES2018](https://img.shields.io/badge/ECMAScript-2018-blue?style=flat-square)
 
 #### stream
+![ES2018](https://img.shields.io/badge/ECMAScript-2018-blue?style=flat-square)
 
 ```typescript
 stream(): ChannelStream<T>
@@ -214,9 +208,7 @@ for await (const v of channel.stream()) {
 }
 ```
 
-### Pause and resume
-
-#### pause
+### pause
 
 ```typescript
 pause(): void
@@ -224,7 +216,7 @@ pause(): void
 
 Pauses the channel, blocking [receive](#receive) | [tryReceive](#tryreceive) | [stream](#stream) | [pipe](#pipe) from retriving messages. This is useful when downstream consumes messages at a limited rate. 
 
-#### resume
+### resume
 
 ```typescript
 pause(): void
@@ -246,9 +238,7 @@ channel.pipe(pipe.to((buffer) => {
 }))
 ```
 
-### Close the channel
-
-#### close
+### close
 
 ```typescript
 close(): void
@@ -258,3 +248,79 @@ Closes the channel and subsequent calls to [send](#send) will throw an error.
 
 Existing messages can still be consumed until the last message in queue has been received,
 then call to [receive](#receive) will return a rejected promise.
+
+# ChannelHub
+
+## Class
+
+```typescript
+class class ChannelHub<T = unknown> implements PipeTarget<T>
+```
+
+Where:
+
+`T`: type of messages in ChannelHub, defaults to `unknown`. Note `void` or `undefined` is allowed but this will make return values from [tryReceive](#tryreceive) indistinguishable from message itself.
+
+`PipeTarget<T>`: it has an internal method that accepts messages from `PipeSource`.
+
+## Methods
+
+### from
+
+```typescript
+static from<T>(writers?: Channel<T>[], readers?: Channel<T>[])
+```
+
+equivalent to `ChannelHub.constructor`
+
+### reader
+
+```typescript
+reader(): Channel<T>
+```
+
+Get a reader channel that receives messages from the channel hub.
+
+Example:
+
+```typescript
+addEventListener(listener: (e: T) => void) {
+  hub.reader().pipe(pipe.to(listener))
+}
+```
+
+### writer
+
+```typescript
+reader(): Channel<T>
+```
+
+Get a writer channel that send messages to the channel hub.
+
+### broadcast
+
+```typescript
+broadcast(value: T): void
+```
+
+Broadcast a message to all readers.
+
+### disconnect
+
+```typescript
+disconnect(ch: Channel<T>): void
+```
+
+Diconnect a channel from the hub, could be a reader or a writer
+
+:::note
+Disconnected channel will NOT be closed automatically, they can still be used to send and receive messages
+:::
+
+### close
+
+```typescript
+close(): void
+```
+
+Close the hub and all readers/writers connected to it.

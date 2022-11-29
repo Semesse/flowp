@@ -92,7 +92,9 @@ export class Progress<Result = unknown, CurrentProgress = unknown> extends Futur
   }
 
   /**
-   * report current progress, will have no effect if progress has already fulfilled or rejected.
+   * report current progress
+   *
+   * no-op if progress has already fulfilled or rejected
    */
   public report(progress: CurrentProgress) {
     if (!this.pending) return
