@@ -12,6 +12,7 @@ export class ChannelHub<T = unknown> implements PipeTarget<T> {
     return new ChannelHub(writers, readers)
   }
 
+  private closed = false
   private readers: Channel<T>[]
   private writers: Channel<T>[]
 
@@ -24,10 +25,12 @@ export class ChannelHub<T = unknown> implements PipeTarget<T> {
   }
 
   /**
-   * send a valut to the hub, will be received by all readers or pipe target
+   * send a value to the hub, will be received by all readers
    * @param value
+   * @throws `Channel.ClosedChannelError` - if ChannelHub is closed
    */
   public broadcast(value: T) {
+    if (this.closed) throw new Channel.ClosedChannelError()
     this.readers.forEach((r) => r.send(value))
   }
 
@@ -35,8 +38,10 @@ export class ChannelHub<T = unknown> implements PipeTarget<T> {
    * get a reader channel that can get messages from channel hub
    *
    * use {@link ChannelHub.disconnect} if you don't want to receive messages from the hub
+   * @throws `Channel.ClosedChannelError` - if ChannelHub is closed
    */
   public reader() {
+    if (this.closed) throw new Channel.ClosedChannelError()
     const ch = new Channel<T>()
     this.readers.push(ch)
     return ch
@@ -46,8 +51,10 @@ export class ChannelHub<T = unknown> implements PipeTarget<T> {
    * get a writer channel that can send messages to channel hub
    *
    * use {@link ChannelHub.disconnect} if you don't want to send messages to the hub
+   * @throws `Channel.ClosedChannelError` - if ChannelHub is closed
    */
   public writer() {
+    if (this.closed) throw new Channel.ClosedChannelError()
     const ch = new Channel<T>()
     ch.pipe(this)
     this.writers.push(ch)
@@ -63,7 +70,7 @@ export class ChannelHub<T = unknown> implements PipeTarget<T> {
   public disconnect(ch: Channel<T>) {
     let index = this.readers.indexOf(ch)
     if (index !== -1) {
-      return this.readers.splice(index, 1)
+      this.readers.splice(index, 1)
     }
     index = this.writers.indexOf(ch)
     if (index !== -1) {
@@ -79,7 +86,14 @@ export class ChannelHub<T = unknown> implements PipeTarget<T> {
     this.broadcast(value)
   }
 
+  /**
+   * close the hub and all readers/writers connected to it
+   *
+   * no-op if already closed
+   */
   public close() {
+    if (this.closed) return
+    this.closed = true
     this.writers.forEach((ch) => ch.close())
     this.readers.forEach((ch) => ch.close())
   }

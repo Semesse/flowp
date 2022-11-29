@@ -81,4 +81,14 @@ describe('channel hub', () => {
     writer.send(1)
     expect(Promise.race([reader.receive(), timers.timeout(100)])).rejects.toMatchInlineSnapshot('[Error: timeout]')
   })
+
+  it('closed', async () => {
+    const hub = new ChannelHub<number>()
+    const reader = hub.reader()
+    hub.close()
+    expect(reader.closed).toBe(true)
+    expect(() => hub.reader()).toThrowError(Channel.ClosedChannelError)
+    expect(() => hub.writer()).toThrowError(Channel.ClosedChannelError)
+    expect(() => hub.broadcast(0)).toThrowError(Channel.ClosedChannelError)
+  })
 })

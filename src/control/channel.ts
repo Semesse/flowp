@@ -8,7 +8,7 @@ import { Semaphore, transfer } from './semaphore'
  * @internal
  */
 class ClosedChannelError extends Error {
-  public message = 'write on closed channel'
+  public message = 'channel is closed'
 }
 
 /**
