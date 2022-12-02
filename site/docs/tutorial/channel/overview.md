@@ -85,7 +85,7 @@ channel.pipe(
 
 ## multiple consumers
 
-A channel can only have one consumer at a time, but sometimes we have many consumers (e.g. EventEmitter). <FlowP> provides a `ChannelHub` in this case.
+A channel can only have one consumer at a time, but sometimes we have many consumers (e.g. EventEmitter). <FlowP/> provides a `ChannelHub` in this case.
 
 ```typescript
 class EventChannel<T> {
