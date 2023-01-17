@@ -1,3 +1,28 @@
+## <small>0.3.9 (2023-01-17)</small>
+
+* fix: exports types ([b0a6b5a](https://github.com/Semesse/flowp/commit/b0a6b5a))
+* chore: add versioning script ([9db7fc9](https://github.com/Semesse/flowp/commit/9db7fc9))
+* chore: auto deps dependencies ([3692230](https://github.com/Semesse/flowp/commit/3692230))
+* chore: auto deps dependencies ([a0b9ae6](https://github.com/Semesse/flowp/commit/a0b9ae6))
+* docs: fix docs site build failed ([7632eed](https://github.com/Semesse/flowp/commit/7632eed))
+* docs: update ChannelHub docs ([a9d741d](https://github.com/Semesse/flowp/commit/a9d741d))
+* docs: update docs & site ([a6d5e97](https://github.com/Semesse/flowp/commit/a6d5e97))
+* 0.3.9 ([852c5e0](https://github.com/Semesse/flowp/commit/852c5e0))
+* feat!: now ChannelHub.close closes itself and disallow creating new channels ([bf86649](https://github.com/Semesse/flowp/commit/bf86649))
+* ci: auto bump deps ([8a787e9](https://github.com/Semesse/flowp/commit/8a787e9))
+* feat: mutex can now wrap an object ([bfa8e15](https://github.com/Semesse/flowp/commit/bfa8e15))
+
+
+
+## <small>0.3.8 (2022-11-16)</small>
+
+* 0.3.8 ([c5a8fe6](https://github.com/Semesse/flowp/commit/c5a8fe6))
+* docs: update badges ([579daa9](https://github.com/Semesse/flowp/commit/579daa9))
+* chore: bump deps version ([7c56869](https://github.com/Semesse/flowp/commit/7c56869))
+* feat: channel can be disconnected from ChannelHub ([ce9e64e](https://github.com/Semesse/flowp/commit/ce9e64e))
+
+
+
 ## <small>0.3.9 (2022-11-27)</small>
 
 * 0.3.9 ([8d5206b](https://github.com/Semesse/flowp/commit/8d5206b))

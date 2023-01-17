@@ -11,25 +11,32 @@
   "main": "dist/index.cjs",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "require": "./dist/index.cjs",
       "import": "./dist/index.js"
     },
     "./future": {
+      "types": "./dist/promise/future.d.ts",
       "import": "./dist/promise/future.js"
     },
     "./delegate": {
+      "types": "./dist/promise/delegate.d.ts",
       "import": "./dist/promise/delegate.js"
     },
     "./progress": {
+      "types": "./dist/promise/progress.d.ts",
       "import": "./dist/promise/progress.js"
     },
     "./channel": {
+      "types": "./dist/control/channel.d.ts",
       "import": "./dist/control/channel.js"
     },
     "./semaphore": {
+      "types": "./dist/control/semaphore.d.ts",
       "import": "./dist/control/semaphore.js"
     },
     "./mutex": {
+      "types": "./dist/control/mutex.d.ts",
       "import": "./dist/control/mutex.js"
     }
   },
