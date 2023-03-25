@@ -1,5 +1,8 @@
 lockfileVersion: 5.4
 
+overrides:
+  typescript: ^4.9.5
+
 importers:
 
   .:
@@ -40,8 +43,8 @@ importers:
       '@types/node': 18.14.2
       '@typescript-eslint/eslint-plugin': 5.54.0_6mj2wypvdnknez7kws2nfdgupi
       '@typescript-eslint/parser': 5.54.0_ycpbpc6yetojsgtrx3mwntkhsu
-      '@vitest/coverage-c8': 0.29.2_vitest@0.29.2
-      '@vitest/coverage-istanbul': 0.29.2_vitest@0.29.2
+      '@vitest/coverage-c8': 0.29.7_vitest@0.29.2
+      '@vitest/coverage-istanbul': 0.29.7_vitest@0.29.2
       benchmark: 2.1.4
       conventional-changelog-cli: 2.2.2
       esbuild: 0.17.10
@@ -3230,7 +3233,7 @@ packages:
       resolve: 1.22.1
       semver: 7.3.8
       source-map: 0.6.1
-      typescript: 4.8.4
+      typescript: 4.9.5
     transitivePeerDependencies:
       - '@types/node'
     dev: true
@@ -3986,8 +3989,8 @@ packages:
       eslint-visitor-keys: 3.3.0
     dev: true
 
-  /@vitest/coverage-c8/0.29.2_vitest@0.29.2:
-    resolution: {integrity: sha512-NmD3WirQCeQjjKfHu4iEq18DVOBFbLn9TKVdMpyi5YW2EtnS+K22/WE+9/wRrepOhyeTxuEFgxUVkCAE1GhbnQ==}
+  /@vitest/coverage-c8/0.29.7_vitest@0.29.2:
+    resolution: {integrity: sha512-TSubtP9JFBuI/wuApxwknHe40VDkX8hFbBak0OXj4/jCeXrEu5B5GPWcxzyk9YvzXgCaDvoiZV79I7AvhNI9YQ==}
     peerDependencies:
       vitest: '>=0.29.0 <1'
     dependencies:
@@ -3997,8 +4000,8 @@ packages:
       vitest: 0.29.2
     dev: true
 
-  /@vitest/coverage-istanbul/0.29.2_vitest@0.29.2:
-    resolution: {integrity: sha512-Wf0WOqviYRqP0nrD0oq12u+W5PqGKER1WSz22sOLSaKeU97R0DcMIqs6CSUdp4Jvd8YGrxHodt7d+RMC65ckCA==}
+  /@vitest/coverage-istanbul/0.29.7_vitest@0.29.2:
+    resolution: {integrity: sha512-PPnvqEkwSSgjJ1cOgkm5g49/3UiPGPLC5qmWvrx2ITF9AfN2NejnjaEKxoYrX7oQQyBFgf/ph/BraxsqOOo+Kg==}
     peerDependencies:
       vitest: '>=0.28.0 <1'
     dependencies:
@@ -10596,12 +10599,6 @@ packages:
     resolution: {integrity: sha512-C0WQT0gezHuw6AdY1M2jxUO83Rjf0HP7Sk1DtXj6j1EwkQNZrHAg2XPWlq62oqEhYvONq5pkC2Y9oPljWToLmQ==}
     engines: {node: '>=4.2.0'}
     hasBin: true
-
-  /typescript/4.8.4:
-    resolution: {integrity: sha512-QCh+85mCy+h0IGff8r5XWzOVSbBO+KfeYrMQh7NJ58QujwcE22u+NUSmUxqF+un70P9GXKxa2HCNiTTMJknyjQ==}
-    engines: {node: '>=4.2.0'}
-    hasBin: true
-    dev: true
 
   /typescript/4.9.5:
     resolution: {integrity: sha512-1FXk9E2Hm+QzZQ7z+McJiHL4NW1F2EzMu9Nq9i3zAaGqibafqYwCVU6WyWAuyQRRzOlxou8xZSyXLEN8oKj24g==}

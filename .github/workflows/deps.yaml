@@ -1,4 +1,4 @@
-name: upgrade dependencies
+name: auto upgrade dev dependencies
 on:
   schedule:
     # automatically upgrade dependencies at the first day every month
@@ -28,6 +28,6 @@ jobs:
           branch: ${{ format('auto-deps-{0}', github.run_id) }}
           force: true
       - name: create pull request
-        run: 'gh pr create -l "auto deps" -B master -H "auto-deps-$GITHUB_RUN_ID" --title "[CI] deps dependencies" --body "This PR passes all tests"'
+        run: 'gh pr create -l "auto deps" -B master -H "auto-deps-$GITHUB_RUN_ID" --title "[CI] update dependencies" --body "This PR passes all tests"'
         env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
