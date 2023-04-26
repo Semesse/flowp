@@ -23,7 +23,8 @@ export class Barrier implements PromiseLike<void> {
   public get unlocked() {
     return this.future.fulfilled
   }
-  then<TResult1 = void, TResult2 = never>(
+  public then<TResult1 = void, TResult2 = never>(
+    // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
     onfulfilled?: ((value: void) => TResult1 | PromiseLike<TResult1>) | null | undefined,
     onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | null | undefined
   ): PromiseLike<TResult1 | TResult2> {
