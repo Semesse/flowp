@@ -5,4 +5,5 @@ import * as timers from './timer'
 export { timers }
 export * from './future'
 export * from './progress'
+export * from './barrier'
 /* c8 ignore end */

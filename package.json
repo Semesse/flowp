@@ -19,6 +19,10 @@
       "types": "./dist/promise/future.d.ts",
       "import": "./dist/promise/future.js"
     },
+    "./barrier": {
+      "types": "./dist/promise/barrier.d.ts",
+      "import": "./dist/promise/barrier.js"
+    },
     "./delegate": {
       "types": "./dist/promise/delegate.d.ts",
       "import": "./dist/promise/delegate.js"

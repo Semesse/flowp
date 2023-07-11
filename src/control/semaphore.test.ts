@@ -49,7 +49,7 @@ describe('semaphore', () => {
     expect((async () => sem.tryAcquire())()).rejects.toThrowErrorMatchingInlineSnapshot(`"can't acquire semaphore"`)
 
     expect(sem.acquire(200)).rejects.toThrowErrorMatchingInlineSnapshot(`"timeout"`)
-    expect(sem.acquire(-1)).rejects.toThrowErrorMatchingInlineSnapshot(`"timeout must be non negative"`)
+    expect(sem.acquire(-1)).rejects.toThrowErrorMatchingInlineSnapshot(`"timeout must be non-negative"`)
     expect(sem.remain).toBe(0)
     vi.runAllTimers()
     expect(sem.isFull).toBe(true)
@@ -228,7 +228,8 @@ describe('semaphore', () => {
 
     expect(sem1.permits).toBe(1)
     expect(sem2.permits).toBe(1)
-    expect(Promise.race([t, timers.timeout(100, new Error('timeout'))])).rejects.toThrow()
+    expect(Promise.race([t, timers.timeout(100)])).rejects.toThrow()
+    vi.runAllTimers()
 
     sem1.grant(4)
     await sem1.unfreeze()

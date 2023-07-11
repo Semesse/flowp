@@ -6,6 +6,7 @@ describe('exports', () => {
   it('exported members', () => {
     expect(flowp).toMatchInlineSnapshot(`
       {
+        "Barrier": [Function],
         "Channel": [Function],
         "ChannelHub": [Function],
         "Future": [Function],
