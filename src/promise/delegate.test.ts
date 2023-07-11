@@ -97,7 +97,6 @@ describe('delegate', () => {
 
   it('preserves this', async () => {
     class Foo {
-      // eslint-disable-next-line @typescript-eslint/no-parameter-properties
       public constructor(public v: number) {
         this.v = v
       }

@@ -5,4 +5,12 @@ module.exports = {
   rules: {
     'no-undef': 'off',
   },
+  overrides: [
+    {
+      files: ['*.ts'],
+      parserOptions: {
+        project: ['./tsconfig.json'],
+      },
+    },
+  ],
 }
