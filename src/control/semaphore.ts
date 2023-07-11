@@ -35,7 +35,6 @@ export class Semaphore {
    */
   public async acquire(timeout?: number) {
     const self = new Future<void>()
-    this.queue.push(self)
 
     if (!Number.isFinite(timeout) || timeout === undefined) {
       // continue
@@ -46,8 +45,9 @@ export class Semaphore {
         this.remove(self)
       }, timeout)
     } else {
-      throw new Error('timeout must be valid')
+      throw new Error('timeout must be non-negative')
     }
+    this.queue.push(self)
 
     // throw if self.reject because of timeout
     // otherwise wait frozen & self are all ready

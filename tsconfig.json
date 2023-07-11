@@ -4,9 +4,7 @@
     "module": "NodeNext",
     "moduleResolution": "Node",
     "strict": true,
-    "lib": [
-      "ESNext"
-    ],
+    "lib": ["ESNext"],
     "declaration": true,
     "declarationMap": true,
     "skipDefaultLibCheck": true,

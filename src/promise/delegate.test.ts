@@ -1,3 +1,4 @@
+/// <reference lib="esnext.weakref" />
 import { vi, describe, it, expect } from 'vitest'
 import { delegate } from './delegate'
 
@@ -18,7 +19,7 @@ class PrivateClass {
 }
 const tee = delegate(
   new Promise<Console>((resolve) => {
-    setTimeout(() => resolve(console), 1000)
+    setTimeout(() => resolve(console), 100)
   })
 )
 const fs = delegate(import('fs'))

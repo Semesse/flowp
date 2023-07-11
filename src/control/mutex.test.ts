@@ -79,26 +79,26 @@ describe('mutex', () => {
     expect(mutex.canLock).toBe(true)
   })
 
-  it.skip('[ES2022] wrap an object with private field', async () => {
-    const v = new (class {
-      #a = 1
-      public get a() {
-        return this.#a
-      }
-      public set a(v: number) {
-        this.#a = v
-      }
-    })()
-    const mutex = new Mutex(v)
-    await mutex.schedule((v) => {
-      expect(v.a).toBe(1)
-      v.a = 2
-      expect(v.a).toBe(2)
-    })
-    const { release, value } = mutex.tryLock()
-    expect(value.a).toBe(2)
-    release()
-    expect(() => value.a).toThrowError("Cannot perform 'get' on a proxy that has been revoked")
-    expect(mutex.canLock).toBe(true)
-  })
+  // it.skip('[ES2022] wrap an object with private field', async () => {
+  //   const v = new (class {
+  //     #a = 1
+  //     public get a() {
+  //       return this.#a
+  //     }
+  //     public set a(v: number) {
+  //       this.#a = v
+  //     }
+  //   })()
+  //   const mutex = new Mutex(v)
+  //   await mutex.schedule((v) => {
+  //     expect(v.a).toBe(1)
+  //     v.a = 2
+  //     expect(v.a).toBe(2)
+  //   })
+  //   const { release, value } = mutex.tryLock()
+  //   expect(value.a).toBe(2)
+  //   release()
+  //   expect(() => value.a).toThrowError("Cannot perform 'get' on a proxy that has been revoked")
+  //   expect(mutex.canLock).toBe(true)
+  // })
 })

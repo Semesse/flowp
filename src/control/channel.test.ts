@@ -4,11 +4,6 @@ import { pipe } from '../protocol'
 import { Channel } from './channel'
 
 describe('channel', () => {
-  beforeAll(() => {
-    vi.useFakeTimers()
-    vi.spyOn(global, 'setTimeout')
-  })
-
   it('unbound channel should be able to send and receive', async () => {
     const channel = new Channel()
     const value = 42
@@ -241,8 +236,6 @@ describe('channel', () => {
     const channel = new Channel()
     expect(Promise.race([channel.receive(), timers.timeout(100)])).rejects.toMatchInlineSnapshot('[Error: timeout]')
     channel.pause()
-    process.nextTick(() => vi.runAllTimers())
-    // until next tick and run all timers
     await timers.sleep(0)
   })
 
@@ -252,7 +245,6 @@ describe('channel', () => {
     expect(Promise.race([stream.next(), timers.timeout(100)])).rejects.toMatchInlineSnapshot('[Error: timeout]')
     channel.pause()
     await channel.send(0)
-    process.nextTick(() => vi.runAllTimers())
     await timers.sleep(0)
   })
 

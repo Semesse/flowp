@@ -1,14 +1,18 @@
 import { Semaphore, transfer } from './semaphore'
-import { vi, describe, it, beforeAll, expect, afterAll } from 'vitest'
+import { vi, describe, it, beforeEach, expect, afterEach } from 'vitest'
 import { timers } from '../promise'
 
 describe('semaphore', () => {
-  beforeAll(() => {
+  beforeEach(() => {
     vi.useFakeTimers()
     vi.spyOn(globalThis, 'setTimeout')
   })
+  afterEach(() => {
+    vi.runAllTimers()
+    vi.restoreAllMocks()
+  })
 
-  it('should be able to acquire', async () => {
+  it.concurrent('should be able to acquire', async () => {
     const sem = new Semaphore()
     const release = await sem.acquire()
     expect(sem.remain).toBe(Infinity)
@@ -16,7 +20,7 @@ describe('semaphore', () => {
     expect(sem.remain).toBe(Infinity)
   })
 
-  it('should release once', async () => {
+  it.concurrent('should release once', async () => {
     const permits = 5
     const sem = new Semaphore(permits)
     expect(sem.permits).toBe(permits)
@@ -30,7 +34,7 @@ describe('semaphore', () => {
     expect(sem.isEmpty).toBe(true)
   })
 
-  it('complex acquire', async () => {
+  it.concurrent('complex acquire', async () => {
     const permits = 5
     const sem = new Semaphore(permits)
     const release = await sem.acquire()
@@ -40,12 +44,12 @@ describe('semaphore', () => {
     await sem.acquire()
     release()
     await sem.acquire()
-    // will not release
+    // will not release twice
     release()
     expect((async () => sem.tryAcquire())()).rejects.toThrowErrorMatchingInlineSnapshot(`"can't acquire semaphore"`)
 
     expect(sem.acquire(200)).rejects.toThrowErrorMatchingInlineSnapshot(`"timeout"`)
-    expect(sem.acquire(-1)).rejects.toThrowErrorMatchingInlineSnapshot(`"timeout must be valid"`)
+    expect(sem.acquire(-1)).rejects.toThrowErrorMatchingInlineSnapshot(`"timeout must be non negative"`)
     expect(sem.remain).toBe(0)
     vi.runAllTimers()
     expect(sem.isFull).toBe(true)
@@ -53,18 +57,19 @@ describe('semaphore', () => {
     expect(sem.remain).toBe(0)
     expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 200)
 
-    expect(sem.acquire()).resolves.toBeUndefined()
+    expect(sem.acquire()).resolves.toBeDefined()
     setTimeout(release2, 200)
+    vi.runAllTimers()
   })
 
-  it('should schedule task', async () => {
+  it.concurrent('should schedule task', async () => {
     const sem = new Semaphore(1)
     const task = vi.fn().mockImplementation((v: any) => v)
     expect(sem.schedule(() => task(1))).resolves.toBe(1)
     expect(sem.schedule(() => task(2))).resolves.toBe(2)
   })
 
-  it('should schedule task which throws', async () => {
+  it.concurrent('should schedule task which throws', async () => {
     const sem = new Semaphore(1)
     const task = () => {
       throw new Error()
@@ -75,14 +80,14 @@ describe('semaphore', () => {
     expect(sem.remain).toBe(1)
   })
 
-  it('should schedule async task', async () => {
+  it.concurrent('should schedule async task', async () => {
     const sem = new Semaphore(1)
     const task = vi.fn().mockImplementation((v: any) => Promise.resolve(v))
     expect(sem.schedule(() => task(1))).resolves.toBe(1)
     expect(sem.schedule(() => task(2))).resolves.toBe(2)
   })
 
-  it('should schedule async task which rejects', async () => {
+  it.concurrent('should schedule async task which rejects', async () => {
     const sem = new Semaphore(1)
     const task = async () => {
       throw new Error()
@@ -97,7 +102,7 @@ describe('semaphore', () => {
     expect(rejected).toBeCalledTimes(1)
   })
 
-  it('should be able to grant', async () => {
+  it.concurrent('should be able to grant', async () => {
     const sem = new Semaphore(1)
     await sem.acquire()
     sem.grant(1)
@@ -108,18 +113,17 @@ describe('semaphore', () => {
     await Promise.resolve()
   })
 
-  it('should be able to revoke', async () => {
+  it.concurrent('should be able to revoke', async () => {
     const sem = new Semaphore(1)
     await sem.revoke(1)
     expect(sem.permits).toBe(0)
     expect(sem.acquire(0)).rejects.toThrowErrorMatchingInlineSnapshot(`"timeout"`)
-    vi.runAllTimers()
     expect(sem.acquire)
 
     expect(sem.revoke(-1)).rejects.toThrowErrorMatchingInlineSnapshot(`"permits must be positive"`)
   })
 
-  it('can revoke then grant again', async () => {
+  it.concurrent('can revoke then grant again', async () => {
     const sem = new Semaphore(2)
     await sem.revoke(2)
     expect(sem.permits).toBe(0)
@@ -128,7 +132,7 @@ describe('semaphore', () => {
     expect(sem.acquire()).resolves.toBeDefined()
   })
 
-  it('tryAcquire after freeze', async () => {
+  it.concurrent('tryAcquire after freeze', async () => {
     const sem = new Semaphore(1)
     sem.freeze()
     expect(() => sem.tryAcquire()).toThrowError()
@@ -141,7 +145,7 @@ describe('semaphore', () => {
     expect(sem.remain).toBe(0)
   })
 
-  it('acquire after freeze', async () => {
+  it.concurrent('acquire after freeze', async () => {
     const sem = new Semaphore(1)
     sem.freeze()
     expect(sem.acquire(100)).rejects.toThrowErrorMatchingInlineSnapshot('"timeout"')
@@ -156,7 +160,7 @@ describe('semaphore', () => {
     expect(sem.remain).toBe(0)
   })
 
-  it('acquire(queued) before freeze', async () => {
+  it.concurrent('acquire(queued) before freeze', async () => {
     const sem = new Semaphore(1)
     const release1 = sem.tryAcquire()
     sem.acquire()
@@ -168,15 +172,16 @@ describe('semaphore', () => {
     await Promise.resolve()
   })
 
-  it('unfreeze before freeze', async () => {
+  it.concurrent('unfreeze before freeze', async () => {
     const sem = new Semaphore(1)
     sem.unfreeze()
     expect(() => sem.tryAcquire()).not.toThrow()
     expect(sem.remain).toBe(0)
-    expect(sem.acquire()).resolves.toBeDefined()
+    expect(sem.acquire(100)).rejects.toMatchInlineSnapshot('[Error: timeout]')
+    vi.runAllTimers()
   })
 
-  it('zero permits', async () => {
+  it.concurrent('zero permits', () => {
     const sem = new Semaphore(0)
     expect(sem.remain).toBe(0)
     expect(sem.permits).toBe(0)
@@ -184,7 +189,7 @@ describe('semaphore', () => {
     expect(sem.isEmpty).toBe(true)
   })
 
-  it('grant and revoke infinity should work', async () => {
+  it.concurrent('grant and revoke infinity should work', async () => {
     const sem = new Semaphore()
     const release = await sem.acquire()
     sem.grant(Infinity)
@@ -196,7 +201,7 @@ describe('semaphore', () => {
     expect(sem.remain).toBe(0)
   })
 
-  it('transfer permits between semaphores', async () => {
+  it.concurrent('transfer permits between semaphores', async () => {
     const sem1 = new Semaphore(5)
     const sem2 = new Semaphore(1)
     const release1 = await sem1.acquire()
@@ -214,7 +219,7 @@ describe('semaphore', () => {
     expect(sem2.permits).toBe(6)
   })
 
-  it('interrupt transfer', async () => {
+  it.concurrent('interrupt transfer', async () => {
     const sem1 = new Semaphore(1)
     const sem2 = new Semaphore(1)
     // exceed sem1's capacity so we can test if freeze can stop `revoke`
@@ -224,8 +229,6 @@ describe('semaphore', () => {
     expect(sem1.permits).toBe(1)
     expect(sem2.permits).toBe(1)
     expect(Promise.race([t, timers.timeout(100, new Error('timeout'))])).rejects.toThrow()
-
-    vi.runAllTimers()
 
     sem1.grant(4)
     await sem1.unfreeze()
