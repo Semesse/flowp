@@ -1,4 +1,4 @@
-import { Callable } from '../types'
+import type { Callable } from '../types'
 
 /**
  * ensure function to be called once, and only once

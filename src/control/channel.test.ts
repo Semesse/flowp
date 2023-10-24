@@ -1,4 +1,4 @@
-import { vi, describe, it, expect, beforeAll } from 'vitest'
+import { vi, describe, it, expect } from 'vitest'
 import { timers } from '../promise'
 import { pipe } from '../protocol'
 import { Channel } from './channel'

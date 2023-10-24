@@ -1,5 +1,6 @@
 import { Future } from '../promise'
-import { PipeSource, PipeTarget, read } from '../protocol/pipeable'
+import type { PipeSource, PipeTarget} from '../protocol/pipeable';
+import { read } from '../protocol/pipeable'
 import { Semaphore, transfer } from './semaphore'
 
 /**

@@ -1,4 +1,4 @@
-import { Callable } from '../types'
+import type { Callable } from '../types'
 
 /**
  * @internal
