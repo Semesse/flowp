@@ -1,5 +1,6 @@
 import { Channel } from './channel'
-import { PipeTarget, read } from '../protocol/pipeable'
+import type { PipeTarget} from '../protocol/pipeable';
+import { read } from '../protocol/pipeable'
 
 /**
  * compose multiple channels into one
