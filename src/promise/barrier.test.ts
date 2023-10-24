@@ -1,4 +1,3 @@
-import EventEmitter from 'node:events'
 import { vi, describe, it, expect } from 'vitest'
 import { Barrier } from './barrier'
 
