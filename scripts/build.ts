@@ -1,9 +1,10 @@
 import { dirname, join } from 'path'
-import { ensureDirSync, writeFileSync, readFileSync, renameSync, cpSync } from 'fs-extra'
+import fs from 'fs-extra'
 import type { IConfigFile } from '@microsoft/api-extractor'
 import { ApiItemKind, ApiModel } from '@microsoft/api-extractor-model'
 import { StandardMarkdownDocumenter } from 'standard-markdown-documenter'
-import { DocusaurusContainerNode, DocusaurusTerminalNode, isContainerNode, SIDEBAR_VISITOR } from './site/sidebar'
+import type { DocusaurusContainerNode, DocusaurusTerminalNode } from './site/sidebar'
+import { isContainerNode, SIDEBAR_VISITOR } from './site/sidebar'
 import json5 from 'json5'
 import { DocDelegate } from './site/delegate'
 
@@ -15,7 +16,7 @@ export async function generateMarkdownFiles(
   config: IConfigFile
 ): Promise<void> {
   try {
-    ensureDirSync(outDir)
+    fs.ensureDirSync(outDir)
 
     const model = new ApiModel()
     const modelDir = config.docModel?.apiJsonFilePath
@@ -36,7 +37,7 @@ export async function generateMarkdownFiles(
       type: 'doc',
       label: 'Index',
     })
-    writeFileSync(join(outDir, 'sidebar.ts'), `export default ${JSON.stringify(spine, null, 2)}`)
+    fs.writeFileSync(join(outDir, 'sidebar.ts'), `export default ${JSON.stringify(spine, null, 2)}`)
   } catch (e) {
     console.error(e)
     process.exitCode = 1
@@ -83,7 +84,7 @@ function isSideBarItem(item: DocusaurusTerminalNode | DocusaurusContainerNode): 
 }
 
 ;(async () => {
-  const extractorConfig = json5.parse(readFileSync('./api-extractor.json').toString())
-  await generateMarkdownFiles(join(__dirname, '..'), './site/docs/api', 'api', extractorConfig)
-  cpSync(join(__dirname, './site/api-index.md'), './site/docs/api/index.md')
+  const extractorConfig = json5.parse(fs.readFileSync('./api-extractor.json').toString())
+  await generateMarkdownFiles(process.cwd(), './site/docs/api', 'api', extractorConfig)
+  fs.copySync(join(process.cwd(), 'scripts/site/api-index.md'), './site/docs/api/index.md')
 })()

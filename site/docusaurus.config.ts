@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/consistent-type-assertions */
 // use esbuild-register to transpile this file before run
-import lightCodeTheme from 'prism-react-renderer/themes/nightOwlLight'
-import darkCodeTheme from 'prism-react-renderer/themes/nightOwl'
+import { themes } from 'prism-react-renderer'
+// import darkCodeTheme from 'prism-react-renderer/themes/nightOwl'
 import type { Config, ThemeConfig } from '@docusaurus/types'
 import type { Options } from '@docusaurus/preset-classic'
 
@@ -74,8 +74,8 @@ const config: Config = {
       copyright: `Copyright © ${new Date().getFullYear()} Semesse. Built with Docusaurus.`,
     },
     prism: {
-      theme: lightCodeTheme,
-      darkTheme: darkCodeTheme,
+      theme: themes.nightOwlLight,
+      darkTheme: themes.nightOwl,
     },
   } as ThemeConfig,
 }

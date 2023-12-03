@@ -5,6 +5,7 @@ module.exports = {
   rules: {
     'no-undef': 'off',
   },
+  plugins: ['eslint-plugin-tsdoc'],
   overrides: [
     {
       files: ['*.ts'],
