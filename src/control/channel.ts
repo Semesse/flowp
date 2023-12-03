@@ -129,6 +129,8 @@ export class Channel<T> implements PipeSource<T>, PipeTarget<T> {
   public async receive(): Promise<T> {
     await transfer(this.recvSem, this.sendSem, 1)
     // since we already acquired 1 token fron recvSem, queue should not be empty
+    // if channel is closed, the queue should be empty
+    if (this.queue.length === 0) throw new ClosedChannelError()
     const value = this.queue.shift()!
     return value
   }
@@ -237,6 +239,7 @@ export class Channel<T> implements PipeSource<T>, PipeTarget<T> {
    */
   public close() {
     this._closed = true
+    this.recvSem.grant(1)
   }
 
   /**

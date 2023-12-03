@@ -232,6 +232,12 @@ describe('channel', () => {
     expect(fn).toBeCalledTimes(1)
   })
 
+  it('close after calling receive', async () => {
+    const channel = new Channel()
+    expect(() => channel.receive()).rejects.toMatchInlineSnapshot('[Error: channel is closed]')
+    channel.close()
+  })
+
   it('pause blocks receive', async () => {
     const channel = new Channel()
     expect(Promise.race([channel.receive(), timers.timeout(100)])).rejects.toMatchInlineSnapshot('[Error: timeout]')
