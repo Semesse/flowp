@@ -1,5 +1,8 @@
 import { Future } from './future'
 
+/**
+ * @internal
+ */
 export type ProgressInspectionResult<Result, Progress> =
   | {
       state: 'pending'
@@ -29,10 +32,12 @@ export class Progress<Result = unknown, CurrentProgress = unknown> extends Futur
    * the function should report progress and call `progress.resolve` / `progress.reject` once done.
    *
    * @example
+   * ```typescript
    * Progress.run((progress) => {
    *   progress.report(100)
    *   progress.resolve('hello')
    * }, 0)
+   * ```
    */
   public static run<Result = unknown, CurrentProgress = unknown>(
     fn: (progress: Progress<Result, CurrentProgress>) => unknown,

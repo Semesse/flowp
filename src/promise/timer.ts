@@ -1,5 +1,7 @@
 /**
  * util.promisify only works on browser
+ *
+ * @public
  */
 
 export interface SleepTimer {

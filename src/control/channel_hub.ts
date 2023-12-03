@@ -27,7 +27,7 @@ export class ChannelHub<T = unknown> implements PipeTarget<T> {
 
   /**
    * send a value to the hub, will be received by all readers
-   * @param value
+   * @param T - value
    * @throws `Channel.ClosedChannelError` - if ChannelHub is closed
    */
   public broadcast(value: T) {

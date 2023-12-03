@@ -1,5 +1,5 @@
 import { Future } from '../promise'
-import type { PipeSource, PipeTarget} from '../protocol/pipeable';
+import type { PipeSource, PipeTarget } from '../protocol/pipeable'
 import { read } from '../protocol/pipeable'
 import { Semaphore, transfer } from './semaphore'
 
@@ -110,7 +110,7 @@ export class Channel<T> implements PipeSource<T>, PipeTarget<T> {
    *
    * if the channel has reached its capacity, then call to `send` will be blocked
    *
-   * @throws {@link ClosedChannelError} throw if channel is closed
+   * @throws -{@link Channel.ClosedChannelError} throw if channel is closed
    */
   public async send(value: T) {
     if (this._closed) throw new ClosedChannelError()
@@ -136,8 +136,8 @@ export class Channel<T> implements PipeSource<T>, PipeTarget<T> {
   /**
    * try to send a value synchronosly
    *
-   * @throws {@link ClosedChannelError} channel is closed
-   * @throws {@link ChannelFullError} channel is full
+   * @throws -{@link Channel.ClosedChannelError} channel is closed
+   * @throws -{@link Channel.ChannelFullError} channel is full
    */
   public trySend(value: T) {
     if (this._closed) throw new ClosedChannelError()
@@ -233,7 +233,7 @@ export class Channel<T> implements PipeSource<T>, PipeTarget<T> {
   }
 
   /**
-   * close the channel, future `send` will throw a {@link ClosedChannelError}
+   * close the channel, future `send` will throw a {@link Channel.ClosedChannelError}
    */
   public close() {
     this._closed = true

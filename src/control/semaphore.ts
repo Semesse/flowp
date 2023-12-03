@@ -188,7 +188,7 @@ export class Semaphore {
    * resolves next n values in the queue.
    *
    * If semaphore is frozen, wait for `frozen` to resolve first.
-   * These queued items are although the first {permits} elements in the queue, they are not resolved.
+   * These queued items are although the first _permits_ elements in the queue, they are not resolved.
    */
   private async resolveNext(count = 1) {
     for (let i = this._permits; i < this._permits + count; i++) {

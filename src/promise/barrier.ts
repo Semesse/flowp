@@ -11,6 +11,8 @@ import { Future } from './future'
  * server.on('listening', () => barrier.unlock())
  * await serverReady
  * ```
+ *
+ * @public
  */
 export class Barrier implements PromiseLike<void> {
   private future: Future<void>
