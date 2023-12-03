@@ -1,4 +1,4 @@
-lockfileVersion: '6.1'
+lockfileVersion: '6.0'
 
 settings:
   autoInstallPeers: true
@@ -32,6 +32,9 @@ devDependencies:
     specifier: ^4.20.0
     version: 4.20.0
   '@docusaurus/module-type-aliases':
+    specifier: 3.0.1
+    version: 3.0.1(esbuild@0.19.8)(react-dom@18.2.0)(react@18.2.0)
+  '@docusaurus/types':
     specifier: 3.0.1
     version: 3.0.1(esbuild@0.19.8)(react-dom@18.2.0)(react@18.2.0)
   '@tsconfig/docusaurus':

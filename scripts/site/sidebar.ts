@@ -1,5 +1,7 @@
-import { ApiItem, ApiItemKind } from '@microsoft/api-extractor-model'
-import { Visitor, ContainerNode, TerminalNode, IVisitMeta } from 'standard-markdown-documenter'
+import type { ApiItem } from '@microsoft/api-extractor-model'
+import { ApiItemKind } from '@microsoft/api-extractor-model'
+import type { Visitor, IVisitMeta } from 'standard-markdown-documenter'
+import { ContainerNode, TerminalNode } from 'standard-markdown-documenter'
 
 export interface DocusaurusContainerNode extends ContainerNode {
   id: string
@@ -56,10 +58,6 @@ export const SIDEBAR_VISITOR: Visitor<DocusaurusContainerNode, DocusaurusTermina
   },
 
   [ApiItemKind.IndexSignature](apiItem: ApiItem, meta: IVisitMeta) {
-    return TerminalNode(apiItem, meta)
-  },
-
-  [ApiItemKind.Method](apiItem: ApiItem, meta: IVisitMeta) {
     return TerminalNode(apiItem, meta)
   },
 
