@@ -25,12 +25,12 @@ Checkout the official documentation, API references and tutorials at [https://fl
 ```typescript
 class MyServer {
   public ready = new Future<void>()
-  private server!: HttpServer
+  private server: HttpServer
   constructor() {
-    this.ready = this.initServer()
+    this.server = this.initServer()
   }
   initServer() {
-    this.server = http.listen(8080, this.ready.resolve)
+    return http.listen(8080, this.ready.resolve)
   }
   foo() {
     await this.ready
