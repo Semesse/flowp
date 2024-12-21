@@ -35,7 +35,7 @@ describe('mutex', () => {
     mutex.freeze()
     expect(mutex.canLock).toBe(false)
     expect(mutex.frozen).toBe(true)
-    expect(Promise.race([mutex.lock(), timers.timeout(100)])).rejects.toThrow()
+    await expect(Promise.race([mutex.lock(), timers.timeout(100)])).rejects.toThrow()
   })
 
   it('should unfreeze', async () => {
@@ -74,7 +74,7 @@ describe('mutex', () => {
     expect(value.a).toBe(1)
     release()
     expect(() => value.a).toThrowErrorMatchingInlineSnapshot(
-      '"Cannot perform \'get\' on a proxy that has been revoked"'
+      `[TypeError: Cannot perform 'get' on a proxy that has been revoked]`
     )
     expect(mutex.canLock).toBe(true)
   })

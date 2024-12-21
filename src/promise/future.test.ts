@@ -55,60 +55,60 @@ describe('future', () => {
     const future = new Future<number>()
     future.reject(42)
     future.reject(37)
-    expect(future).rejects.toBe(42)
+    await expect(future).rejects.toBe(42)
   })
 
   it('should not resolve or reject more than once', async () => {
     const future = new Future<number>()
     future.resolve(42)
     future.reject(37)
-    expect(await future).toBe(42)
+    await expect(future).resolves.toBe(42)
   })
 
   it('consume UnhandledRejection on reject', async () => {
     const future = new Future<number>()
     future.reject(37)
     // no UnhandledRejection, since it will cause the whole test file to fail
-    expect(future).rejects.toBe(37)
+    await expect(future).rejects.toBe(37)
   })
 
   it('fulfill state', async () => {
     const future = new Future<number>()
-    expect(future.pending).toBe(true)
-    expect(future.fulfilled).toBe(false)
-    expect(future.rejected).toBe(false)
+    await expect(future.pending).toBe(true)
+    await expect(future.fulfilled).toBe(false)
+    await expect(future.rejected).toBe(false)
     future.resolve(42)
-    expect(future.pending).toBe(false)
-    expect(future.fulfilled).toBe(true)
-    expect(future.rejected).toBe(false)
+    await expect(future.pending).toBe(false)
+    await expect(future.fulfilled).toBe(true)
+    await expect(future.rejected).toBe(false)
     future.reject(42)
-    expect(future.pending).toBe(false)
-    expect(future.fulfilled).toBe(true)
-    expect(future.rejected).toBe(false)
+    await expect(future.pending).toBe(false)
+    await expect(future.fulfilled).toBe(true)
+    await expect(future.rejected).toBe(false)
 
     const future2 = new Future<number>()
     future2.catch(() => {})
     future2.reject(new Error('XXD'))
-    expect(future2.pending).toBe(false)
-    expect(future2.fulfilled).toBe(false)
-    expect(future2.rejected).toBe(true)
+    await expect(future2.pending).toBe(false)
+    await expect(future2.fulfilled).toBe(false)
+    await expect(future2.rejected).toBe(true)
   })
 
-  it('inspect settled result, pending', () => {
+  it('inspect settled result, pending', async () => {
     const future = new Future<number>()
-    expect(future.settled).toBe(undefined)
+    await expect(future.settled).toBe(undefined)
   })
 
-  it('inspect settled result, fulfilled', () => {
+  it('inspect settled result, fulfilled', async () => {
     const future = new Future<number>()
     future.resolve(42)
-    expect(future.settled).toBe(42)
+    await expect(future.settled).toBe(42)
   })
 
-  it('inspect settled result, rejected', () => {
+  it('inspect settled result, rejected', async () => {
     const future = new Future<number>()
     const err = new Error('canceled')
     future.reject(err)
-    expect(future.settled).toBe(err)
+    await expect(future.settled).toBe(err)
   })
 })

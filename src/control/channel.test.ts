@@ -1,10 +1,10 @@
-import { vi, describe, it, expect } from 'vitest'
+import { vi, describe, it } from 'vitest'
 import { timers } from '../promise'
 import { pipe } from '../protocol'
 import { Channel } from './channel'
 
 describe('channel', () => {
-  it('unbound channel should be able to send and receive', async () => {
+  it.concurrent('unbound channel should be able to send and receive', async ({ expect }) => {
     const channel = new Channel()
     const value = 42
     await channel.send(value)
@@ -14,7 +14,7 @@ describe('channel', () => {
     expect(await channel.receive()).toBe(value)
   })
 
-  it('bound channel should be able to send and receive', async () => {
+  it.concurrent('bound channel should be able to send and receive', async ({ expect }) => {
     const channel = new Channel(1)
     expect(channel.size).toBe(0)
     expect(channel.capacity).toBe(1)
@@ -26,17 +26,20 @@ describe('channel', () => {
     expect(await channel.receive()).toBe(value)
   })
 
-  it('async iterates, close before stream', async () => {
+  it.concurrent('async iterates, close before stream', async ({ expect }) => {
     const channel = new Channel()
     const value = 42
     await channel.send(value)
     channel.close()
+    let count = 0
     for await (const v of channel.stream()) {
       expect(v).toBe(value)
+      count++
     }
+    expect(count).toBe(1)
   })
 
-  it('async iterates, break', async () => {
+  it.concurrent('async iterates, break', async ({ expect }) => {
     const value = 42
     const channel = new Channel()
     channel.send(value)
@@ -50,7 +53,7 @@ describe('channel', () => {
     channel.close()
   })
 
-  it('stream, next', async () => {
+  it.concurrent('stream, next', async ({ expect }) => {
     const channel = new Channel()
     const value = 42
     await channel.send(value)
@@ -58,10 +61,10 @@ describe('channel', () => {
     expect(channel.size).toBe(1)
     expect(await stream.next()).toBe(value)
     channel.close()
-    expect(stream.next()).rejects.toThrow()
+    await expect(stream.next()).rejects.toThrow()
   })
 
-  it('try send to unbound channel', async () => {
+  it.concurrent('try send to unbound channel', async ({ expect }) => {
     const channel = new Channel(1)
     const value = 42
 
@@ -78,10 +81,10 @@ describe('channel', () => {
     expect(await channel.receive()).toBe(value)
 
     // send an error
-    expect(channel.sendAsync(Promise.reject(new Error('test')))).rejects.toThrow('test')
+    await expect(channel.sendAsync(Promise.reject(new Error('test')))).rejects.toThrow('test')
   })
 
-  it('try send to bound channel exceeding its capacity', async () => {
+  it.concurrent('try send to bound channel exceeding its capacity', async ({ expect }) => {
     const channel = new Channel(1)
     expect(channel.capacity).toBe(1)
     const value = 42
@@ -89,7 +92,7 @@ describe('channel', () => {
     expect(() => channel.trySend(value)).toThrow(Channel.ChannelFullError)
   })
 
-  it('try send to closed channel', async () => {
+  it.concurrent('try send to closed channel', async ({ expect }) => {
     const channel = new Channel()
     expect(channel.closed).toBe(false)
     channel.close()
@@ -97,38 +100,38 @@ describe('channel', () => {
     expect(channel.closed).toBe(true)
   })
 
-  it('receive from empty unbound channel', async () => {
+  it.concurrent('receive from empty unbound channel', async ({ expect }) => {
     const channel = new Channel()
-    expect(Promise.race([channel.receive(), timers.timeout(100)])).rejects.toBeTruthy()
+    await expect(Promise.race([channel.receive(), timers.timeout(100)])).rejects.toBeTruthy()
   })
 
-  it('receive from empty bound channel', async () => {
+  it.concurrent('receive from empty bound channel', async ({ expect }) => {
     const channel = new Channel(1)
-    expect(Promise.race([channel.receive(), timers.timeout(100)])).rejects.toBeTruthy()
+    await expect(Promise.race([channel.receive(), timers.timeout(100)])).rejects.toBeTruthy()
   })
 
-  it('try receive from empty unbound channel', async () => {
+  it.concurrent('try receive from empty unbound channel', async ({ expect }) => {
     const channel = new Channel()
     expect(channel.tryReceive()).toBe(undefined)
   })
 
-  it('try receive from empty bound channel', async () => {
+  it.concurrent('try receive from empty bound channel', async ({ expect }) => {
     const channel = new Channel(1)
     expect(channel.tryReceive()).toBe(undefined)
   })
 
-  it('validate channel capacity', () => {
+  it.concurrent('validate channel capacity', async ({ expect }) => {
     expect(() => new Channel(-1)).toThrow(RangeError)
   })
 
-  it('should not send to closed channel', async () => {
+  it.concurrent('should not send to closed channel', async ({ expect }) => {
     const channel = new Channel()
     channel.close()
-    expect(channel.send(42)).rejects.toThrow(Channel.ClosedChannelError)
+    await expect(channel.send(42)).rejects.toThrow(Channel.ClosedChannelError)
     expect(channel.receive)
   })
 
-  it('unbound channel should pipe', async () => {
+  it.concurrent('unbound channel should pipe', async ({ expect }) => {
     const channel1 = new Channel()
     const channel2 = new Channel()
     channel1.pipe(channel2)
@@ -141,7 +144,7 @@ describe('channel', () => {
     expect(channel2.tryReceive()).toBeUndefined()
   })
 
-  it('bound channel should pipe', async () => {
+  it.concurrent('bound channel should pipe', async ({ expect }) => {
     const channel1 = new Channel(1)
     const channel2 = new Channel(5)
     channel1.pipe(channel2)
@@ -156,7 +159,7 @@ describe('channel', () => {
     expect(channel2.tryReceive()).toBeUndefined()
   })
 
-  it('pipe should clear existing queue', async () => {
+  it.concurrent('pipe should clear existing queue', async ({ expect }) => {
     const channel1 = new Channel(1)
     const channel2 = new Channel()
     await channel1.send(1)
@@ -170,7 +173,7 @@ describe('channel', () => {
     expect(fn2).toHaveBeenCalledTimes(2)
   })
 
-  it('do nothing when piping to closed channels', async () => {
+  it.concurrent('do nothing when piping to closed channels', async ({ expect }) => {
     const channel1 = new Channel()
     const channel2 = new Channel()
     channel1.pipe(channel2)
@@ -178,7 +181,7 @@ describe('channel', () => {
     channel1.send('test').catch(console.error)
   })
 
-  it('custom handler when writing to closed channels', async () => {
+  it.concurrent('custom handler when writing to closed channels', async ({ expect }) => {
     const channel1 = new Channel()
     const channel2 = new Channel()
     const handler = vi.fn()
@@ -188,7 +191,7 @@ describe('channel', () => {
     expect(handler).toBeCalledWith(expect.any(Channel.ClosedChannelError))
   })
 
-  it('send, pause, pipe', async () => {
+  it.concurrent('send, pause, pipe', async ({ expect }) => {
     const channel = new Channel()
     const fn = vi.fn()
     channel.send(0)
@@ -199,7 +202,7 @@ describe('channel', () => {
     expect(fn).toBeCalledTimes(1)
   })
 
-  it('pipe, pause, send', async () => {
+  it.concurrent('pipe, pause, send', async ({ expect }) => {
     const channel = new Channel()
     const fn = vi.fn()
     channel.pipe(pipe.to(fn))
@@ -210,7 +213,7 @@ describe('channel', () => {
     expect(fn).toBeCalledTimes(1)
   })
 
-  it('pause, pipe, send', async () => {
+  it.concurrent('pause, pipe, send', async ({ expect }) => {
     const channel = new Channel()
     const fn = vi.fn()
     channel.pause()
@@ -221,7 +224,7 @@ describe('channel', () => {
     expect(fn).toBeCalledTimes(1)
   })
 
-  it('pause, send, pipe', async () => {
+  it.concurrent('pause, send, pipe', async ({ expect }) => {
     const channel = new Channel()
     const fn = vi.fn()
     channel.pause()
@@ -232,29 +235,32 @@ describe('channel', () => {
     expect(fn).toBeCalledTimes(1)
   })
 
-  it('close after calling receive', async () => {
+  it.concurrent('close after calling receive', async ({ expect }) => {
     const channel = new Channel()
-    expect(() => channel.receive()).rejects.toMatchInlineSnapshot('[Error: channel is closed]')
+    const r = channel.receive()
     channel.close()
+    await expect(r).rejects.toMatchInlineSnapshot('[Error: channel is closed]')
   })
 
-  it('pause blocks receive', async () => {
+  it.concurrent('pause blocks receive', async ({ expect }) => {
     const channel = new Channel()
-    expect(Promise.race([channel.receive(), timers.timeout(100)])).rejects.toMatchInlineSnapshot('[Error: timeout]')
+    await expect(Promise.race([channel.receive(), timers.timeout(100)])).rejects.toMatchInlineSnapshot(
+      '[Error: timeout]'
+    )
     channel.pause()
     await timers.sleep(0)
   })
 
-  it('pause blocks stream', async () => {
+  it.concurrent('pause blocks stream', async ({ expect }) => {
     const channel = new Channel()
     const stream = channel.stream()
-    expect(Promise.race([stream.next(), timers.timeout(100)])).rejects.toMatchInlineSnapshot('[Error: timeout]')
+    await expect(Promise.race([stream.next(), timers.timeout(100)])).rejects.toMatchInlineSnapshot('[Error: timeout]')
     channel.pause()
     await channel.send(0)
     await timers.sleep(0)
   })
 
-  it('can have only one receivers', async () => {
+  it.concurrent('can have only one receivers', async ({ expect }) => {
     const channel = new Channel()
     const value = 42
     await channel.send(value)

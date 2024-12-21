@@ -1,11 +1,11 @@
 import { Channel } from './channel'
 import { ChannelHub } from './channel_hub'
 import { to } from '../protocol/pipeable'
-import { vi, describe, it, expect } from 'vitest'
+import { vi, describe, it } from 'vitest'
 import { timers } from '../promise'
 
 describe('channel hub', () => {
-  it('should compose multiple channels into one', async () => {
+  it('should compose multiple channels into one', async ({ expect }) => {
     const channel1 = new Channel()
     const channel2 = new Channel()
     const channel3 = new Channel()
@@ -20,12 +20,12 @@ describe('channel hub', () => {
     channelHub.close()
   })
 
-  it('refuse to have a channel as both reader and writer', async () => {
+  it('refuse to have a channel as both reader and writer', async ({ expect }) => {
     const ch = new Channel()
     expect(() => new ChannelHub([ch], [ch])).toThrow()
   })
 
-  it('create writer', async () => {
+  it('create writer', async ({ expect }) => {
     const hub = new ChannelHub()
     const w = hub.writer()
     const r = hub.reader()
@@ -33,14 +33,14 @@ describe('channel hub', () => {
     expect(await r.receive()).toBe(0)
   })
 
-  it('should not write on closed hub', async () => {
+  it('should not write on closed hub', async ({ expect }) => {
     const hub = new ChannelHub()
     const ch = hub.writer()
     hub.close()
-    expect(ch.send(0)).rejects.toThrow()
+    await expect(ch.send(0)).rejects.toThrow()
   })
 
-  it('should pipe', async () => {
+  it('should pipe', async ({ expect }) => {
     const hub = new ChannelHub()
     const channel1 = new Channel()
     const channel2 = new Channel()
@@ -60,7 +60,7 @@ describe('channel hub', () => {
     expect(fn).toBeCalledTimes(2)
   })
 
-  it('disconnect writer channel', async () => {
+  it('disconnect writer channel', async ({ expect }) => {
     const hub = new ChannelHub<number>()
     const reader = hub.reader()
     const writer = hub.writer()
@@ -68,10 +68,12 @@ describe('channel hub', () => {
     hub.disconnect(writer)
     expect(await reader.receive()).toBe(0)
     writer.send(1)
-    expect(Promise.race([reader.receive(), timers.timeout(100)])).rejects.toMatchInlineSnapshot('[Error: timeout]')
+    await expect(Promise.race([reader.receive(), timers.timeout(100)])).rejects.toMatchInlineSnapshot(
+      '[Error: timeout]'
+    )
   })
 
-  it('disconnect reader channel', async () => {
+  it('disconnect reader channel', async ({ expect }) => {
     const hub = new ChannelHub<number>()
     const reader = hub.reader()
     const writer = hub.writer()
@@ -79,10 +81,12 @@ describe('channel hub', () => {
     hub.disconnect(reader)
     expect(await reader.receive()).toBe(0)
     writer.send(1)
-    expect(Promise.race([reader.receive(), timers.timeout(100)])).rejects.toMatchInlineSnapshot('[Error: timeout]')
+    await expect(Promise.race([reader.receive(), timers.timeout(100)])).rejects.toMatchInlineSnapshot(
+      '[Error: timeout]'
+    )
   })
 
-  it('closed', async () => {
+  it('closed', async ({ expect }) => {
     const hub = new ChannelHub<number>()
     const reader = hub.reader()
     hub.close()

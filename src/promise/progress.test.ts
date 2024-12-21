@@ -1,8 +1,8 @@
-import { vi, describe, it, expect } from 'vitest'
+import { vi, describe, it } from 'vitest'
 import { Progress } from './progress'
 
 describe('progress', () => {
-  it('can report progress and resolve', async () => {
+  it('can report progress and resolve', async ({ expect }) => {
     const progress = new Progress<number>(0)
     expect(progress.progress).toBe(0)
 
@@ -21,17 +21,17 @@ describe('progress', () => {
     expect(await progress).toBe(42)
   })
 
-  it('progress.run', async () => {
+  it('progress.run', async ({ expect }) => {
     const prog = Progress.run((progress) => {
       progress.report(50)
       progress.resolve(100)
     }, 0)
     // last report
     expect(prog.progress).toBe(50)
-    expect(prog).resolves.toBe(100)
+    await expect(prog).resolves.toBe(100)
   })
 
-  it('remove listener', async () => {
+  it('remove listener', async ({ expect }) => {
     const progress = new Progress<number>(0)
     const callback = vi.fn()
     const cancel = progress.onProgress(callback)
@@ -41,7 +41,7 @@ describe('progress', () => {
     expect(callback).toBeCalledTimes(1)
   })
 
-  it('inspect progress', async () => {
+  it('inspect progress', async ({ expect }) => {
     const progress = new Progress<number, number>(0)
     expect(progress.inspect()).toMatchInlineSnapshot(`
       {
