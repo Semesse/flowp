@@ -117,6 +117,7 @@ export class Channel<T> implements PipeSource<T>, PipeTarget<T> {
     if (!this.pipeTarget) {
       this.bounded ? await transfer(this.sendSem, this.recvSem, 1) : this.recvSem.grant()
     }
+
     this.writeValue(value)
   }
 
@@ -127,10 +128,13 @@ export class Channel<T> implements PipeSource<T>, PipeTarget<T> {
    * will race with {@link Channel.stream}
    */
   public async receive(): Promise<T> {
-    await transfer(this.recvSem, this.sendSem, 1)
+    // if pipe is enabled, recvSem will not receive any token
+    if (!this.pipeTarget) {
+      await transfer(this.recvSem, this.sendSem, 1)
+    }
     // since we already acquired 1 token fron recvSem, queue should not be empty
     // if channel is closed, the queue should be empty
-    if (this.queue.length === 0) throw new ClosedChannelError()
+    if (this._closed && this.queue.length === 0) throw new ClosedChannelError()
     const value = this.queue.shift()!
     return value
   }
@@ -239,6 +243,8 @@ export class Channel<T> implements PipeSource<T>, PipeTarget<T> {
    */
   public close() {
     this._closed = true
+    // since transfer from recvSem to sendSem is possibly blocking
+    // we need to grant 1 token to recvSem, after which Channel will be invalid
     this.recvSem.grant(1)
   }
 
@@ -303,6 +309,12 @@ export class Channel<T> implements PipeSource<T>, PipeTarget<T> {
       const value = this.queue.shift()
       return value === undefined ? { value: undefined, done: true } : { value, done: false }
     }
-    return this.receive().then((value) => ({ value, done: false }))
+
+    try {
+      return { value: await this.receive(), done: false }
+    } catch (e) {
+      if (e instanceof ClosedChannelError) return { value: undefined, done: true }
+      throw e
+    }
   }
 }

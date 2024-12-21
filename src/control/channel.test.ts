@@ -26,6 +26,25 @@ describe('channel', () => {
     expect(await channel.receive()).toBe(value)
   })
 
+  it.concurrent('async iterates', async ({ expect }) => {
+    const channel = new Channel<number>()
+    const value = 42
+    const stream = channel.stream()
+    await channel.send(value)
+
+    let count = 0
+    for await (const v of stream) {
+      expect(v).toBe(value)
+      count++
+      break
+    }
+
+    channel.close()
+    for await (const v of stream) {
+      // should not cause error
+    }
+  })
+
   it.concurrent('async iterates, close before stream', async ({ expect }) => {
     const channel = new Channel()
     const value = 42

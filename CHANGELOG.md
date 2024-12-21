@@ -1,3 +1,10 @@
+## <small>0.4.4 (2023-12-24)</small>
+
+* 0.4.4 ([40c2270](https://github.com/Semesse/flowp/commit/40c2270))
+* fix: publish missing esm & dts ([b2fb794](https://github.com/Semesse/flowp/commit/b2fb794))
+
+
+
 ## <small>0.4.2 (2023-10-24)</small>
 
 * 0.4.2 ([5dfb649](https://github.com/Semesse/flowp/commit/5dfb649))
