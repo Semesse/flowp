@@ -1,3 +1,12 @@
+## 0.5.0 (2024-12-21)
+
+* 0.5.0 ([7549a6e](https://github.com/Semesse/flowp/commit/7549a6e))
+* fix: async iterator does not throw on finish anymore ([30926a3](https://github.com/Semesse/flowp/commit/30926a3))
+* chore: bump dev dependencies & update tests ([55ba736](https://github.com/Semesse/flowp/commit/55ba736))
+* doc: better future example ([5e6837f](https://github.com/Semesse/flowp/commit/5e6837f))
+
+
+
 ## <small>0.4.4 (2023-12-24)</small>
 
 * 0.4.4 ([40c2270](https://github.com/Semesse/flowp/commit/40c2270))
