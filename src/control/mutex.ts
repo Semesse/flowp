@@ -33,7 +33,6 @@ export class Mutex<V = void> {
    * @param value - you may optionally wrap an object with mutex
    */
   public constructor()
-  // eslint-disable-next-line @typescript-eslint/unified-signatures
   public constructor(value: V)
   public constructor(value?: V) {
     this.semaphore = new Semaphore(1)
@@ -96,7 +95,7 @@ export class Mutex<V = void> {
     // create a guard but keep it secret until we have acquired the lock
     const guard = this.createLockGuard(() => {})
     const ret = this.semaphore.schedule(async () => {
-      // @ts-ignore for runtime undefined value == void
+      // @ts-expect-error for runtime undefined value == void
       // but it's slightly different to call fn() and fn(undefined) since the latter's arguments.length is 1
       return this._value !== undefined ? await fn(guard.value) : await fn()
     })

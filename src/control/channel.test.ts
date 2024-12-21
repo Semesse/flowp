@@ -32,10 +32,8 @@ describe('channel', () => {
     const stream = channel.stream()
     await channel.send(value)
 
-    let count = 0
     for await (const v of stream) {
       expect(v).toBe(value)
-      count++
       break
     }
 
@@ -63,7 +61,6 @@ describe('channel', () => {
     const channel = new Channel()
     channel.send(value)
     channel.send(value)
-    // eslint-disable-next-line no-unreachable-loop
     for await (const v of channel.stream()) {
       expect(v).toBe(value)
       break

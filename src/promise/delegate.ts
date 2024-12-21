@@ -4,7 +4,7 @@ import type { Callable } from '../types'
  * @internal
  */
 export type Delegated<T> = (Awaited<T> extends Callable
-  ? // @ts-ignore
+  ? // @ts-expect-error ts cannot infer Awaited<T> here
     (...args: Parameters<Awaited<T>>) => ReturnType<Awaited<T>>
   : {
       readonly [K in keyof Awaited<T> & string as `$${K}`]: Delegated<Awaited<T>[K]>
@@ -34,7 +34,6 @@ const raw = Symbol('get the raw untouched value')
  */
 export function delegate<T extends Promise<unknown>>(value: T): Delegated<T> {
   // proxy on a function so the returned value is callable
-  // eslint-disable-next-line no-new-func
   return new Proxy(new Function() as unknown as T, {
     get(_, key, receiver) {
       if (key === raw) return value
@@ -58,7 +57,7 @@ export function delegate<T extends Promise<unknown>>(value: T): Delegated<T> {
     apply(_, thisPromise, args) {
       return (async () => {
         const thisArg = await thisPromise?.[raw]
-        const fn = (await value) as Function
+        const fn = (await value) as Callable
         return Reflect.apply(fn, thisArg, args)
       })()
     },

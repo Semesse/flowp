@@ -192,7 +192,11 @@ export class Semaphore {
    */
   private async resolveNext(count = 1) {
     for (let i = this._permits; i < this._permits + count; i++) {
-      this.frozen ? this.frozen.then(() => this.queue.at(i)?.resolve()) : this.queue.at(i)?.resolve()
+      if (this.frozen) {
+        this.frozen.then(() => this.queue.at(i)?.resolve())
+      } else {
+        this.queue.at(i)?.resolve()
+      }
     }
   }
 

@@ -115,7 +115,11 @@ export class Channel<T> implements PipeSource<T>, PipeTarget<T> {
   public async send(value: T) {
     if (this._closed) throw new ClosedChannelError()
     if (!this.pipeTarget) {
-      this.bounded ? await transfer(this.sendSem, this.recvSem, 1) : this.recvSem.grant()
+      if (this.bounded) {
+        await transfer(this.sendSem, this.recvSem, 1)
+      } else {
+        this.recvSem.grant()
+      }
     }
 
     this.writeValue(value)
